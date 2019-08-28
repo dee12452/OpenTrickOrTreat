@@ -79,24 +79,28 @@ void PlayScreen::onKeyboardUpdate(GameState & /*gameState*/, const unsigned char
 {
     if(keyboardState[SDL_SCANCODE_UP])
     {
+        player->setSpeedX(0);
         player->setSpeedY(-2);
     }
-    if(keyboardState[SDL_SCANCODE_DOWN])
+    else if(keyboardState[SDL_SCANCODE_DOWN])
     {
+        player->setSpeedX(0);
         player->setSpeedY(2);
     }
+    else if(keyboardState[SDL_SCANCODE_LEFT])
+    {
+        player->setSpeedX(-2);
+        player->setSpeedY(0);
+    }
+    else if(keyboardState[SDL_SCANCODE_RIGHT])
+    {
+        player->setSpeedX(2);
+        player->setSpeedY(0);
+    }
+    
     if(!keyboardState[SDL_SCANCODE_UP] && !keyboardState[SDL_SCANCODE_DOWN])
     {
         player->stopY();
-    }
-    
-    if(keyboardState[SDL_SCANCODE_LEFT])
-    {
-        player->setSpeedX(-2);
-    }
-    if(keyboardState[SDL_SCANCODE_RIGHT])
-    {
-        player->setSpeedX(2);
     }
     if(!keyboardState[SDL_SCANCODE_LEFT] && !keyboardState[SDL_SCANCODE_RIGHT])
     {

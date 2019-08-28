@@ -29,13 +29,14 @@ public:
     void doAction(Map *map);
 
 protected:
-    void onUpdate(Map *currentMap) override;
+    void onUpdate(Map *map) override;
     void onChangeDirectionX(MoveDirectionX oldState, MoveDirectionX newState) override;
     void onChangeDirectionY(MoveDirectionY oldState, MoveDirectionY newState) override;
 
 private:
     void animate();
     void onCollide(const MapSprite *otherSprite);
+    void openGates(Map *map) const;
 
     Timer animationTimer;
     CostumeType currentCostumeType;
