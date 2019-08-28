@@ -4,4 +4,4 @@ CMakeFiles/
 Makefile
 OpenTrickOrTreat
 *.cmake
-data/textures/*.png
+data/textures/

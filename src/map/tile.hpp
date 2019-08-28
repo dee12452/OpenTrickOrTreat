@@ -8,7 +8,9 @@ class Tile
 public:
     enum Type {GROUND, WATER, OBSTACLE, GATE, SMASHABLE, IMPASSABLE};
     
+    Tile(const SDL_Rect &srcRect, Type type);
     Tile(const SDL_Rect &srcRect, Type type, bool givesCoins, bool givesCandy);
+    Tile(const Tile &tile);
 
     const SDL_Rect & getSourceRect() const;
     void setSourceRect(const SDL_Rect &srcRect);

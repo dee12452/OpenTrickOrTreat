@@ -1,7 +1,15 @@
 #include "tile.hpp"
 
+Tile::Tile(const SDL_Rect &srcRect, Type type) 
+    : Tile(srcRect, type, false, false)
+{}
+
 Tile::Tile(const SDL_Rect &srcRect, Type type, bool givesCoins, bool givesCandy)
     : srcRect(srcRect), type(type), givesCoins(givesCoins), givesCandy(givesCandy)
+{}
+
+Tile::Tile(const Tile &tile)
+    : Tile(tile.srcRect, tile.type, tile.doesGiveCoins(), tile.doesGiveCandy())
 {}
 
 const SDL_Rect & Tile::getSourceRect() const

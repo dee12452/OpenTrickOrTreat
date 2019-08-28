@@ -237,7 +237,7 @@ bool MapSprite::canMove(Map *map) const
     {
         return false;
     }
-    for(unsigned layerNumber = 0; layerNumber < map->getNumberOfLayers(); layerNumber++)
+    for(unsigned layerNumber = getLocationZ(); layerNumber < map->getNumberOfLayers(); layerNumber++)
     {
         const Tile *mapTile = map->getTile(layerNumber, nextTileX, nextTileY);
         if(!mapTile) //Blank tiles are acceptable on higher layers
