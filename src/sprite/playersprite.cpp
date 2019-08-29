@@ -13,7 +13,11 @@ PlayerSprite::PlayerSprite(SDL_Texture *texture)
 {
     setCurrentDirectionX(MoveDirectionX::NONE_X);
     setCurrentDirectionY(MoveDirectionY::DOWN);
-    changeCostume(CostumeType::SKELETON);
+
+    // Initialize as a skeleton to start
+    const SDL_Rect nextAnimRect = changeCostume(CostumeType::SKELETON);
+    setSourceRect(nextAnimRect);
+    setDestinationRect(nextAnimRect);
 }
 
 PlayerSprite::~PlayerSprite()
@@ -121,11 +125,11 @@ void PlayerSprite::onCollide(const MapSprite * /*otherSprite*/)
 {
 }
 
-void PlayerSprite::changeCostume(CostumeType costumeType)
+const SDL_Rect PlayerSprite::changeCostume(CostumeType costumeType)
 {
     if(currentCostumeType == costumeType)
     {
-        return;
+        return Const::EMPTY_RECT;
     }
 
     currentCostumeType = costumeType;
@@ -175,6 +179,7 @@ void PlayerSprite::changeCostume(CostumeType costumeType)
     setHeight(nextAnim.h);
     newAnimationDirection->reset();
     newAnimationDirection = nullptr;
+    return nextAnim;
 }
 
 void PlayerSprite::openGates(Map *map) const

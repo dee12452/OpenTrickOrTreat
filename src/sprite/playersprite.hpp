@@ -30,7 +30,7 @@ protected:
 private:
     void animate();
     void onCollide(const MapSprite *otherSprite);
-    void changeCostume(CostumeType costumeType);
+    const SDL_Rect changeCostume(CostumeType costumeType);
     void openGates(Map *map) const;
     void clearAnimations();
 
