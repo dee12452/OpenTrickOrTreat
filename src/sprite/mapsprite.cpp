@@ -256,9 +256,21 @@ MoveDirectionX MapSprite::getCurrentDirectionX() const
     return newDirectionX;
 }
 
+void MapSprite::setCurrentDirectionX(MoveDirectionX newDirX)
+{
+    oldDirectionX = newDirectionX;
+    newDirectionX = newDirX;
+}
+
 MoveDirectionY MapSprite::getCurrentDirectionY() const
 {
     return newDirectionY;
+}
+
+void MapSprite::setCurrentDirectionY(MoveDirectionY newDirY)
+{
+    oldDirectionY = newDirectionY;
+    newDirectionY = newDirY;
 }
 
 void MapSprite::checkDirectionChanges()

@@ -56,7 +56,10 @@ protected:
     virtual bool canMove(Map *map) const;
     
     MoveDirectionX getCurrentDirectionX() const;
+    void setCurrentDirectionX(MoveDirectionX newDirX);
+
     MoveDirectionY getCurrentDirectionY() const;
+    void setCurrentDirectionY(MoveDirectionY newDirY);
 
 private:
     void checkDirectionChanges();

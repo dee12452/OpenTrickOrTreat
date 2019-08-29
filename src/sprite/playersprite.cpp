@@ -11,11 +11,9 @@ PlayerSprite::PlayerSprite(SDL_Texture *texture)
     , rightAnimation(nullptr)
     , currentCostumeType(CostumeType::NO_COSTUME)
 {
+    setCurrentDirectionX(MoveDirectionX::NONE_X);
+    setCurrentDirectionY(MoveDirectionY::DOWN);
     changeCostume(CostumeType::SKELETON);
-    setDestinationRect(downAnimation->getNext());
-    downAnimation->reset();
-    setSourceRect(downAnimation->getNext());
-    downAnimation->reset();
 }
 
 PlayerSprite::~PlayerSprite()
@@ -154,6 +152,29 @@ void PlayerSprite::changeCostume(CostumeType costumeType)
             rightAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_RIGHT);
             break;
     }
+
+    Animation *newAnimationDirection;
+    if(getCurrentDirectionX() == MoveDirectionX::LEFT)
+    {
+        newAnimationDirection = leftAnimation;
+    }
+    else if(getCurrentDirectionX() == MoveDirectionX::RIGHT)
+    {
+        newAnimationDirection = rightAnimation;
+    }
+    else if(getCurrentDirectionY() == MoveDirectionY::UP)
+    {
+        newAnimationDirection = upAnimation;
+    }
+    else if(getCurrentDirectionY() == MoveDirectionY::DOWN)
+    {
+        newAnimationDirection = downAnimation;
+    }
+    const SDL_Rect nextAnim = newAnimationDirection->getNext();
+    setWidth(nextAnim.w);
+    setHeight(nextAnim.h);
+    newAnimationDirection->reset();
+    newAnimationDirection = nullptr;
 }
 
 void PlayerSprite::openGates(Map *map) const
