@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.0)
 project(OpenTrickOrTreat)
 set(CMAKE_CXX_STANDARD 11)
 
-file(GLOB SOURCE_FILES ./src/*.cpp ./src/map/*.cpp ./src/util/*.cpp ./src/screen/*.cpp ./src/sprite/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
 include(FindPkgConfig)
 

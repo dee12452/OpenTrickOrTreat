@@ -1,8 +1,8 @@
 #ifndef _OPEN_TOT_GAME_HPP_
 #define _OPEN_TOT_GAME_HPP_
 
-#include "animationmanager.hpp"
-#include "screenmanager.hpp"
+#include "animation/animationmanager.hpp"
+#include "screen/screenmanager.hpp"
 
 class Game
 {

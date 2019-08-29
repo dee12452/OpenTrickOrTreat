@@ -2,7 +2,7 @@
 #define _OPEN_TOT_ANIMATED_MAP_SPRITE_HPP_
 
 #include "mapsprite.hpp"
-#include "animationmanager.hpp"
+#include "animation/animationmanager.hpp"
 
 class AnimatedMapSprite : public MapSprite
 {
@@ -14,7 +14,7 @@ protected:
     void onUpdate(Map *currentMap) override;
 
 private:
-    Animation animation;
+    Animation *animation;
 };
 
 #endif

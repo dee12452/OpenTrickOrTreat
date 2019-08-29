@@ -3,7 +3,7 @@
 
 #include "screen.hpp"
 #include "textsprite.hpp"
-#include "animationmanager.hpp"
+#include "animation/animationmanager.hpp"
 
 class LaunchScreen : public Screen
 {
