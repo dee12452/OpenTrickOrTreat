@@ -1,6 +1,6 @@
 #include "playersprite.hpp"
 
-const unsigned int PlayerSprite::ANIMATION_TIMER_DELAY = 85;
+const unsigned int PlayerSprite::ANIMATION_TIMER_DELAY = 75;
 
 PlayerSprite::PlayerSprite(SDL_Texture *texture)
     : MapSprite(texture)
@@ -148,6 +148,12 @@ const SDL_Rect PlayerSprite::changeCostume(CostumeType costumeType)
             downAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_DOWN);
             leftAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_LEFT);
             rightAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_RIGHT);
+            break;
+        case CostumeType::MONSTER:
+            upAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_MONSTER_MV_UP);
+            downAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_MONSTER_MV_DOWN);
+            leftAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_MONSTER_MV_LEFT);
+            rightAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_MONSTER_MV_RIGHT);
             break;
         default:
             upAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_UP);

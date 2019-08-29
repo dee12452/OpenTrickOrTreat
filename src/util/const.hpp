@@ -37,6 +37,10 @@ namespace Const
     extern const char * const ANIMATION_WITCH_MV_DOWN;
     extern const char * const ANIMATION_WITCH_MV_LEFT;
     extern const char * const ANIMATION_WITCH_MV_RIGHT;
+    extern const char * const ANIMATION_MONSTER_MV_UP;
+    extern const char * const ANIMATION_MONSTER_MV_DOWN;
+    extern const char * const ANIMATION_MONSTER_MV_LEFT;
+    extern const char * const ANIMATION_MONSTER_MV_RIGHT;
 
     extern const char * const IMAGE_TOT_1;
     extern const char * const IMAGE_TOT_2;
