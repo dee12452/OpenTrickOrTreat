@@ -9,6 +9,7 @@ public:
     virtual ~Animation() {}
     virtual Animation * copy() = 0;
     virtual const SDL_Rect & getNext() = 0;
+    virtual void reset() = 0;
 };
 
 #endif

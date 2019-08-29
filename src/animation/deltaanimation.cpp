@@ -53,3 +53,9 @@ const SDL_Rect & DeltaAnimation::getNext()
     }
     return src;
 }
+
+void DeltaAnimation::reset()
+{
+    currentIteration = 0;
+    src = initialSrc;
+}

@@ -14,6 +14,11 @@ LaunchScreen::LaunchScreen()
     animationsToLoad.push_back(Const::ANIMATION_CANDY);
     animationsToLoad.push_back(Const::ANIMATION_COIN);
 
+    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_UP);
+    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_DOWN);
+    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_LEFT);
+    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_RIGHT);
+
     texturesToLoad.push_back(Const::IMAGE_TOT_1);
     texturesToLoad.push_back(Const::IMAGE_TOT_2);
     texturesToLoad.push_back(Const::IMAGE_TOT_3);

@@ -26,6 +26,10 @@ void AnimationManager::loadAnimation(const std::string &pathToResourceFolder, co
     {
         animationMap.insert(std::pair<std::string, Animation *> (animationFile, createDeltaAnimation(animationJson)));
     }
+    else if(animationType == "movement")
+    {
+        animationMap.insert(std::pair<std::string, Animation *> (animationFile, createMovementAnimation(animationJson)));
+    }
     else
     {
         Util::criticalError("Unrecognized animation type %s", animationType.c_str());
@@ -68,4 +72,22 @@ Animation * AnimationManager::createDeltaAnimation(json *deltaAnimationJson)
                 , Util::getJsonPair("d_h", deltaAnimationJson->pairs, deltaAnimationJson->num_of_pairs)->int_val->val
                 , Util::getJsonPair("iterations", deltaAnimationJson->pairs, deltaAnimationJson->num_of_pairs)->int_val->val
                 , Util::getJsonPair("delay_ms", deltaAnimationJson->pairs, deltaAnimationJson->num_of_pairs)->int_val->val);
+}
+
+Animation * AnimationManager::createMovementAnimation(json *mvmtAnimationJson)
+{
+    json_list *rects = Util::getJsonList("rects", mvmtAnimationJson->json_lists, mvmtAnimationJson->num_of_lists);
+    SDL_Rect srcRects[rects->num_of_elements];
+    for(int i = 0; i < rects->num_of_elements; i++)
+    {
+        json_list_element *rect = rects->elements[i];
+        srcRects[i] = {
+            Util::getJsonPair("x", rect->json_pairs, rect->num_of_pairs)->int_val->val
+            , Util::getJsonPair("y", rect->json_pairs, rect->num_of_pairs)->int_val->val
+            , Util::getJsonPair("w", rect->json_pairs, rect->num_of_pairs)->int_val->val
+            , Util::getJsonPair("h", rect->json_pairs, rect->num_of_pairs)->int_val->val
+        };
+    }
+
+    return new MovementAnimation(srcRects, rects->num_of_elements);
 }

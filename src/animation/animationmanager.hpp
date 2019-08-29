@@ -2,6 +2,7 @@
 #define _OPEN_TOT_ANIMATION_MANAGER_HPP_
 
 #include "deltaanimation.hpp"
+#include "movementanimation.hpp"
 
 class AnimationManager
 {
@@ -17,6 +18,7 @@ private:
     ~AnimationManager();
 
     Animation * createDeltaAnimation(json *deltaAnimationJson);
+    Animation * createMovementAnimation(json *mvmtAnimationJson);
 
     static AnimationManager * instance;
 

@@ -1,46 +1,33 @@
 #include "playersprite.hpp"
 
-const SDL_Rect PlayerSprite::STARTING_SRC = {2, 1, 40, 52};
 const unsigned int PlayerSprite::ANIMATION_TIMER_DELAY = 85;
 
-static const SDL_Rect MOTION_DOWN_ANIMATION_SRC_RECTS_DATA[] = 
-{
-    {2, 1, 40, 52},
-    {42, 1, 40, 52},
-    {82, 1, 40, 52},
-    {128, 1, 40, 52},
-    {170, 1, 40, 52},
-    {210, 1, 40, 52},
-    {250, 1, 40, 52},
-    {290, 1, 40, 52},
-};
-const SDL_Rect * const PlayerSprite::MOTION_DOWN_ANIMATION_SRC_RECTS = MOTION_DOWN_ANIMATION_SRC_RECTS_DATA;
-const unsigned int PlayerSprite::MOTION_DOWN_ANIMATION_SRC_RECTS_SIZE = 8;
-
-static const SDL_Rect MOTION_UP_ANIMATION_SRC_RECTS_DATA[] = 
-{
-    {2, 104, 40, 52},
-    {42, 104, 40, 52},
-    {84, 104, 40, 52},
-    {130, 104, 40, 52},
-    {174, 104, 40, 52},
-    {214, 104, 40, 52},
-    {254, 104, 40, 52},
-    {302, 104, 40, 52},
-};
-const SDL_Rect * const PlayerSprite::MOTION_UP_ANIMATION_SRC_RECTS = MOTION_UP_ANIMATION_SRC_RECTS_DATA;
-const unsigned int PlayerSprite::MOTION_UP_ANIMATION_SRC_RECTS_SIZE = 8;
-
 PlayerSprite::PlayerSprite(SDL_Texture *texture)
-    : MapSprite(texture, STARTING_SRC, STARTING_SRC)
+    : MapSprite(texture)
     , animationTimer(ANIMATION_TIMER_DELAY)
+    , upAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_UP))
+    , downAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_DOWN))
+    , leftAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_LEFT))
+    , rightAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_RIGHT))
     , currentCostumeType(CostumeType::SKELETON)
-    , currentDownAnimIndex(0)
-    , currentUpAnimIndex(0)
-{}
+{
+    setDestinationRect(downAnimation->getNext());
+    downAnimation->reset();
+    setSourceRect(downAnimation->getNext());
+    downAnimation->reset();
+}
 
 PlayerSprite::~PlayerSprite()
-{}
+{
+    if(upAnimation)
+        delete upAnimation;
+    if(downAnimation)
+        delete downAnimation;
+    if(leftAnimation)
+        delete leftAnimation;
+    if(rightAnimation)
+        delete rightAnimation;
+}
 
 bool PlayerSprite::isPlayer() const
 {
@@ -80,31 +67,24 @@ void PlayerSprite::onChangeDirectionX(MoveDirectionX /*oldState*/, MoveDirection
 {
     if(newState == LEFT)
     {
-        setSourceY(STARTING_SRC.h);
+        leftAnimation->reset();
     }
     else if(newState == RIGHT)
     {
-        setSourceY(STARTING_SRC.h * 3);
+        rightAnimation->reset();
     }
-
-    setSourceX(STARTING_SRC.x);
 }
 
 void PlayerSprite::onChangeDirectionY(MoveDirectionY /*oldState*/, MoveDirectionY newState)
 {
     if(newState == UP)
     {
-        setSourceY(STARTING_SRC.y + (STARTING_SRC.h * 2));
+        upAnimation->reset();
     }
     else if(newState == DOWN)
     {
-        setSourceY(STARTING_SRC.y);
+        downAnimation->reset();
     }
-
-    setSourceX(STARTING_SRC.x);
-
-    currentUpAnimIndex = 0;
-    currentDownAnimIndex = 0;
 }
 
 void PlayerSprite::animate()
@@ -117,10 +97,10 @@ void PlayerSprite::animate()
     switch(getCurrentDirectionX())
     {
         case LEFT:
-            setSourceX(getSourceX() + STARTING_SRC.w + 1);
+            setSourceRect(leftAnimation->getNext());
             break;
         case RIGHT:
-            setSourceX(getSourceX() + STARTING_SRC.w + 1);
+            setSourceRect(rightAnimation->getNext());
             break;
         default:
             break;
@@ -129,22 +109,13 @@ void PlayerSprite::animate()
     switch(getCurrentDirectionY())
     {
         case UP:
-            setSourceX(MOTION_UP_ANIMATION_SRC_RECTS[currentUpAnimIndex].x);
-            currentUpAnimIndex++;
-            if(currentUpAnimIndex >= MOTION_UP_ANIMATION_SRC_RECTS_SIZE) currentUpAnimIndex = 0;
+            setSourceRect(upAnimation->getNext());
             break;
         case DOWN:
-            setSourceX(MOTION_DOWN_ANIMATION_SRC_RECTS[currentDownAnimIndex].x);
-            currentDownAnimIndex++;
-            if(currentDownAnimIndex >= MOTION_DOWN_ANIMATION_SRC_RECTS_SIZE) currentDownAnimIndex = 0;
+            setSourceRect(downAnimation->getNext());
             break;
         default:
             break;
-    }
-
-    if(getSourceX() > STARTING_SRC.w * 8)
-    {
-        setSourceX(STARTING_SRC.x);
     }
 
     animationTimer.reset();

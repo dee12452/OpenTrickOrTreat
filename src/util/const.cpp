@@ -17,6 +17,11 @@ const char * const Const::ANIMATION_CS_FISH = "cs_fish.json";
 const char * const Const::ANIMATION_CANDY = "candy.json";
 const char * const Const::ANIMATION_COIN = "coin.json";
 
+const char * const Const::ANIMATION_SKELETON_MV_UP = "skeleton_mv_up.json";
+const char * const Const::ANIMATION_SKELETON_MV_DOWN = "skeleton_mv_down.json";
+const char * const Const::ANIMATION_SKELETON_MV_LEFT = "skeleton_mv_left.json";
+const char * const Const::ANIMATION_SKELETON_MV_RIGHT = "skeleton_mv_right.json";
+
 const char * const Const::IMAGE_TOT_1 = "tot1.png";
 const char * const Const::IMAGE_TOT_2 = "tot2.png";
 const char * const Const::IMAGE_TOT_3 = "tot3.png";

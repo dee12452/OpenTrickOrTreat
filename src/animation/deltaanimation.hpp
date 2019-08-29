@@ -18,6 +18,7 @@ public:
 
     Animation * copy() override;
     const SDL_Rect & getNext() override;
+    void reset() override;
 
 private:
     SDL_Rect initialSrc, src;

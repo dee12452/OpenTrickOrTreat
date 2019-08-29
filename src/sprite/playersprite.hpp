@@ -2,19 +2,13 @@
 #define _OPEN_TOT_CHARACTER_HPP_
 
 #include "mapsprite.hpp"
-#include "timer.hpp"
+#include "util/timer.hpp"
+#include "animation/animationmanager.hpp"
 
 class PlayerSprite : public MapSprite
 {
 private:
-    static const SDL_Rect STARTING_SRC;
     static const unsigned int ANIMATION_TIMER_DELAY;
-
-    //TODO: Get rid of this by fixing the sprite sheet!
-    static const SDL_Rect * const MOTION_DOWN_ANIMATION_SRC_RECTS;
-    static const unsigned int MOTION_DOWN_ANIMATION_SRC_RECTS_SIZE;
-    static const SDL_Rect * const MOTION_UP_ANIMATION_SRC_RECTS;
-    static const unsigned int MOTION_UP_ANIMATION_SRC_RECTS_SIZE;
 
 public:
     PlayerSprite(SDL_Texture *texture);
@@ -39,9 +33,11 @@ private:
     void openGates(Map *map) const;
 
     Timer animationTimer;
+    Animation *upAnimation;
+    Animation *downAnimation;
+    Animation *leftAnimation;
+    Animation *rightAnimation;
     CostumeType currentCostumeType;
-    unsigned short int currentDownAnimIndex;
-    unsigned short int currentUpAnimIndex;
 };
 
 #endif

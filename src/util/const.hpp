@@ -28,6 +28,11 @@ namespace Const
     extern const char * const ANIMATION_CS_FISH;
     extern const char * const ANIMATION_CANDY;
     extern const char * const ANIMATION_COIN;
+    
+    extern const char * const ANIMATION_SKELETON_MV_UP;
+    extern const char * const ANIMATION_SKELETON_MV_DOWN;
+    extern const char * const ANIMATION_SKELETON_MV_LEFT;
+    extern const char * const ANIMATION_SKELETON_MV_RIGHT;
 
     extern const char * const IMAGE_TOT_1;
     extern const char * const IMAGE_TOT_2;
