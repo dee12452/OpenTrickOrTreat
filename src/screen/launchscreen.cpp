@@ -1,6 +1,7 @@
 #include "launchscreen.hpp"
 
 const char * const LaunchScreen::LOADING_TEXT = "Loading...";
+const SDL_Rect LaunchScreen::LOADING_TEXT_DESTINATION_RECT = {0, 0, 400, 100};
 
 LaunchScreen::LaunchScreen()
 {
@@ -18,6 +19,10 @@ LaunchScreen::LaunchScreen()
     animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_DOWN);
     animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_LEFT);
     animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_RIGHT);
+    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_UP);
+    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_DOWN);
+    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_LEFT);
+    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_RIGHT);
 
     texturesToLoad.push_back(Const::IMAGE_TOT_1);
     texturesToLoad.push_back(Const::IMAGE_TOT_2);
@@ -38,7 +43,7 @@ void LaunchScreen::onStart(const GameState &gameState, const Window & window)
             , Const::FONT_TYPEWRITER
             , Color::WHITE
             , Const::EMPTY_RECT
-            , {0, 0, 400, 100});
+            , LaunchScreen::LOADING_TEXT_DESTINATION_RECT);
     loadingText.center();
 }
 

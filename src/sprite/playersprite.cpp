@@ -5,12 +5,13 @@ const unsigned int PlayerSprite::ANIMATION_TIMER_DELAY = 85;
 PlayerSprite::PlayerSprite(SDL_Texture *texture)
     : MapSprite(texture)
     , animationTimer(ANIMATION_TIMER_DELAY)
-    , upAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_UP))
-    , downAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_DOWN))
-    , leftAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_LEFT))
-    , rightAnimation(AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_RIGHT))
-    , currentCostumeType(CostumeType::SKELETON)
+    , upAnimation(nullptr)
+    , downAnimation(nullptr)
+    , leftAnimation(nullptr)
+    , rightAnimation(nullptr)
+    , currentCostumeType(CostumeType::NO_COSTUME)
 {
+    changeCostume(CostumeType::SKELETON);
     setDestinationRect(downAnimation->getNext());
     downAnimation->reset();
     setSourceRect(downAnimation->getNext());
@@ -19,14 +20,7 @@ PlayerSprite::PlayerSprite(SDL_Texture *texture)
 
 PlayerSprite::~PlayerSprite()
 {
-    if(upAnimation)
-        delete upAnimation;
-    if(downAnimation)
-        delete downAnimation;
-    if(leftAnimation)
-        delete leftAnimation;
-    if(rightAnimation)
-        delete rightAnimation;
+    clearAnimations();
 }
 
 bool PlayerSprite::isPlayer() const
@@ -41,7 +35,7 @@ CostumeType PlayerSprite::getCostumeType() const
 
 void PlayerSprite::setCostumeType(CostumeType type) 
 {
-    currentCostumeType = type;
+    changeCostume(type);
 }
 
 void PlayerSprite::doAction(Map *map)
@@ -93,6 +87,10 @@ void PlayerSprite::animate()
     {
         return;
     }
+    if(!leftAnimation || !rightAnimation || !upAnimation || !downAnimation)
+    {
+        Util::criticalError("Player animations not loaded properly for costume %d", static_cast<int> (currentCostumeType));
+    }
 
     switch(getCurrentDirectionX())
     {
@@ -125,6 +123,39 @@ void PlayerSprite::onCollide(const MapSprite * /*otherSprite*/)
 {
 }
 
+void PlayerSprite::changeCostume(CostumeType costumeType)
+{
+    if(currentCostumeType == costumeType)
+    {
+        return;
+    }
+
+    currentCostumeType = costumeType;
+    clearAnimations();
+    
+    switch(currentCostumeType)
+    {
+        case CostumeType::SKELETON:
+            upAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_UP);
+            downAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_DOWN);
+            leftAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_LEFT);
+            rightAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_RIGHT);
+            break;
+        case CostumeType::WITCH:
+            upAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_UP);
+            downAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_DOWN);
+            leftAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_LEFT);
+            rightAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_WITCH_MV_RIGHT);
+            break;
+        default:
+            upAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_UP);
+            downAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_DOWN);
+            leftAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_LEFT);
+            rightAnimation = AnimationManager::getInstance()->getNewAnimation(Const::ANIMATION_SKELETON_MV_RIGHT);
+            break;
+    }
+}
+
 void PlayerSprite::openGates(Map *map) const
 {
     int tileX = static_cast<int> (getMapTileX(map));
@@ -149,4 +180,20 @@ void PlayerSprite::openGates(Map *map) const
             }
         }
     }
+}
+
+void PlayerSprite::clearAnimations()
+{
+    if(upAnimation)
+        delete upAnimation;
+    if(downAnimation)
+        delete downAnimation;
+    if(leftAnimation)
+        delete leftAnimation;
+    if(rightAnimation)
+        delete rightAnimation;
+    upAnimation = nullptr;
+    downAnimation = nullptr;
+    leftAnimation = nullptr;
+    rightAnimation = nullptr;
 }

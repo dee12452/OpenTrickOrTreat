@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL_rect.h>
 
-enum CostumeType {SKELETON = 0, WITCH = 1, MONSTER = 2, VAMPIRE = 3, FISH = 4};
+enum CostumeType {SKELETON = 0, WITCH = 1, MONSTER = 2, VAMPIRE = 3, FISH = 4, NO_COSTUME=5};
 enum MoveDirectionY {UP, DOWN, NONE_Y};
 enum MoveDirectionX {LEFT, RIGHT, NONE_X};
 
@@ -33,6 +33,10 @@ namespace Const
     extern const char * const ANIMATION_SKELETON_MV_DOWN;
     extern const char * const ANIMATION_SKELETON_MV_LEFT;
     extern const char * const ANIMATION_SKELETON_MV_RIGHT;
+    extern const char * const ANIMATION_WITCH_MV_UP;
+    extern const char * const ANIMATION_WITCH_MV_DOWN;
+    extern const char * const ANIMATION_WITCH_MV_LEFT;
+    extern const char * const ANIMATION_WITCH_MV_RIGHT;
 
     extern const char * const IMAGE_TOT_1;
     extern const char * const IMAGE_TOT_2;

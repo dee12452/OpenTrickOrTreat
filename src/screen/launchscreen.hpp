@@ -9,6 +9,7 @@ class LaunchScreen : public Screen
 {
 private:
     static const char * const LOADING_TEXT;
+    static const SDL_Rect LOADING_TEXT_DESTINATION_RECT;
 
 public:
     LaunchScreen();
