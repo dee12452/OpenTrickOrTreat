@@ -7,15 +7,39 @@
          "objects":[
                 {
                  "height":0,
-                 "id":7,
-                 "name":"costume_select_1",
+                 "id":19,
+                 "name":"costume_select_5",
                  "point":true,
                  "rotation":0,
-                 "type":"skeleton",
+                 "type":"fish",
                  "visible":true,
                  "width":0,
-                 "x":73,
-                 "y":120
+                 "x":1013,
+                 "y":449.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":18,
+                 "name":"costume_select_4",
+                 "point":true,
+                 "rotation":0,
+                 "type":"vampire",
+                 "visible":true,
+                 "width":0,
+                 "x":1010.33333333333,
+                 "y":197.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":15,
+                 "name":"costume_select_3",
+                 "point":true,
+                 "rotation":0,
+                 "type":"monster",
+                 "visible":true,
+                 "width":0,
+                 "x":82.6666666666663,
+                 "y":544
                 }, 
                 {
                  "height":0,
@@ -31,15 +55,15 @@
                 }, 
                 {
                  "height":0,
-                 "id":15,
-                 "name":"costume_select_3",
+                 "id":7,
+                 "name":"costume_select_1",
                  "point":true,
                  "rotation":0,
-                 "type":"monster",
+                 "type":"skeleton",
                  "visible":true,
                  "width":0,
-                 "x":82.6666666666663,
-                 "y":544
+                 "x":73,
+                 "y":120
                 }, 
                 {
                  "height":0,
@@ -93,7 +117,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":18,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "properties":
     {

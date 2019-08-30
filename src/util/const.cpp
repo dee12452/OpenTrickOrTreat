@@ -29,6 +29,14 @@ const char * const Const::ANIMATION_MONSTER_MV_UP = "monster_mv_up.json";
 const char * const Const::ANIMATION_MONSTER_MV_DOWN = "monster_mv_down.json";
 const char * const Const::ANIMATION_MONSTER_MV_LEFT = "monster_mv_left.json";
 const char * const Const::ANIMATION_MONSTER_MV_RIGHT = "monster_mv_right.json";
+const char * const Const::ANIMATION_VAMPIRE_MV_UP = "vampire_mv_up.json";
+const char * const Const::ANIMATION_VAMPIRE_MV_DOWN = "vampire_mv_down.json";
+const char * const Const::ANIMATION_VAMPIRE_MV_LEFT = "vampire_mv_left.json";
+const char * const Const::ANIMATION_VAMPIRE_MV_RIGHT = "vampire_mv_right.json";
+const char * const Const::ANIMATION_FISH_MV_UP = "fish_mv_up.json";
+const char * const Const::ANIMATION_FISH_MV_DOWN = "fish_mv_down.json";
+const char * const Const::ANIMATION_FISH_MV_LEFT = "fish_mv_left.json";
+const char * const Const::ANIMATION_FISH_MV_RIGHT = "fish_mv_right.json";
 
 const char * const Const::IMAGE_TOT_1 = "tot1.png";
 const char * const Const::IMAGE_TOT_2 = "tot2.png";

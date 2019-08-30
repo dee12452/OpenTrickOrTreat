@@ -27,6 +27,14 @@ LaunchScreen::LaunchScreen()
     animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_DOWN);
     animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_LEFT);
     animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_RIGHT);
+    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_UP);
+    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_DOWN);
+    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_LEFT);
+    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_RIGHT);
+    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_UP);
+    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_DOWN);
+    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_LEFT);
+    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_RIGHT);
 
     texturesToLoad.push_back(Const::IMAGE_TOT_1);
     texturesToLoad.push_back(Const::IMAGE_TOT_2);
