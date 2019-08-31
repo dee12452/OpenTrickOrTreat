@@ -3,7 +3,7 @@
  "layers":[
         {
          "draworder":"topdown",
-         "name":"Object Layer 1",
+         "name":"consumables",
          "objects":[
                 {
                  "height":0,
@@ -90,6 +90,64 @@
                  "y":121.333333333333
                 }],
          "opacity":1,
+         "properties":
+            {
+             "layer":1
+            },
+         "propertytypes":
+            {
+             "layer":"int"
+            },
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "name":"props",
+         "objects":[
+                {
+                 "height":30.6666666666666,
+                 "id":21,
+                 "name":"stairs_2",
+                 "properties":
+                    {
+                     "layer":0
+                    },
+                 "propertytypes":
+                    {
+                     "layer":"int"
+                    },
+                 "rotation":0,
+                 "type":"stairs",
+                 "visible":true,
+                 "width":37.3333333333333,
+                 "x":344,
+                 "y":732.33
+                }, 
+                {
+                 "height":30.6666666666666,
+                 "id":22,
+                 "name":"stairs_1",
+                 "properties":
+                    {
+                     "layer":0
+                    },
+                 "propertytypes":
+                    {
+                     "layer":"int"
+                    },
+                 "rotation":0,
+                 "type":"stairs",
+                 "visible":true,
+                 "width":37.3333333333333,
+                 "x":344,
+                 "y":649.333333333333
+                }],
+         "offsetx":-2.66666666666663,
+         "offsety":-9.33333333333326,
+         "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
@@ -117,7 +175,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":20,
+ "nextobjectid":23,
  "orientation":"orthogonal",
  "properties":
     {
