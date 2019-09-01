@@ -16,6 +16,8 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
     {
         const json_list_element *layerElement = layersList->elements[layer];
         const std::string layerIdentifier = Util::getJsonPair("type", layerElement->json_pairs, layerElement->num_of_pairs)->str_val->val;
+        const std::string layerName = Util::getJsonPair("name", layerElement->json_pairs, layerElement->num_of_pairs)->str_val->val;
+        
         if(layerIdentifier == TILE_LAYER_IDENTIFIER)
         {
             json_list *data = Util::getJsonList("data", layerElement->json_lists, layerElement->num_of_lists);
@@ -45,9 +47,10 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
             }
             tileLayers.push_back(tileGrid);
         }
-        else if(layerIdentifier == OBJECT_LAYER_IDENTIFIER)
+        else if(layerIdentifier == OBJECT_LAYER_IDENTIFIER && layerName == "consumables")
         {
             json_list *objects = Util::getJsonList("objects", layerElement->json_lists, layerElement->num_of_lists);
+            const std::string objectLayerName = objects->key->val;
             for(int objectIndex = 0; objectIndex < objects->num_of_elements; objectIndex++)
             {
                 json_list_element *mapObjectElement = objects->elements[objectIndex];
