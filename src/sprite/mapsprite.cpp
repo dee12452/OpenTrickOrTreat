@@ -179,24 +179,24 @@ void MapSprite::toggleNoClip()
 // TODO: Should I use getX() or getLocationX()? 
 void MapSprite::checkCollision(MapSprite *otherSprite)
 {
-    if(getX() <= otherSprite->getX() && getX() + getWidth() >= otherSprite->getX())
+    if(getLocationX() <= otherSprite->getLocationX() && getLocationX() + getWidth() >= otherSprite->getLocationX())
     {
-        if(getY() <= otherSprite->getY() && getY() + getHeight() >= otherSprite->getY())
+        if(getLocationY() <= otherSprite->getLocationY() && getLocationY() + getHeight() >= otherSprite->getLocationY())
         {
             onCollide(otherSprite);
         }
-        else if(getY() >= otherSprite->getY() && getY() <= otherSprite->getY() + otherSprite->getHeight())
+        else if(getLocationY() >= otherSprite->getLocationY() && getLocationY() <= otherSprite->getLocationY() + otherSprite->getHeight())
         {
             onCollide(otherSprite);
         }
     }
-    else if(getX() >= otherSprite->getX() && getX() <= otherSprite->getX() + otherSprite->getWidth())
+    else if(getLocationX() >= otherSprite->getLocationX() && getLocationX() <= otherSprite->getLocationX() + otherSprite->getWidth())
     {
-        if(getY() <= otherSprite->getY() && getY() + getHeight() >= otherSprite->getY())
+        if(getLocationY() <= otherSprite->getLocationY() && getLocationY() + getHeight() >= otherSprite->getLocationY())
         {
             onCollide(otherSprite);
         }
-        else if(getY() >= otherSprite->getY() && getY() <= otherSprite->getY() + otherSprite->getHeight())
+        else if(getLocationY() >= otherSprite->getLocationY() && getLocationY() <= otherSprite->getLocationY() + otherSprite->getHeight())
         {
             onCollide(otherSprite);
         }
@@ -237,7 +237,7 @@ bool MapSprite::canMove(Map *map) const
     {
         return false;
     }
-    for(unsigned layerNumber = getLocationZ(); layerNumber < map->getNumberOfLayers(); layerNumber++)
+    for(unsigned layerNumber = 0; layerNumber < map->getNumberOfLayers(); layerNumber++)
     {
         const Tile *mapTile = map->getTile(layerNumber, nextTileX, nextTileY);
         if(!mapTile) //Blank tiles are acceptable on higher layers
@@ -271,6 +271,16 @@ void MapSprite::setCurrentDirectionY(MoveDirectionY newDirY)
 {
     oldDirectionY = newDirectionY;
     newDirectionY = newDirY;
+}
+
+void MapSprite::setUnsafeLocationX(int x)
+{
+    locationX = x;
+}
+
+void MapSprite::setUnsafeLocationY(int y)
+{
+    locationY = y;
 }
 
 void MapSprite::checkDirectionChanges()

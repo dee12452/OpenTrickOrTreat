@@ -18,7 +18,8 @@ protected:
     void onDraw(const Window &window) override;
 
 private:
-    void generateMapSprites();
+    void generateConsumables();
+    void generateInteractions();
     void drawCamera(const Window &window);
 
     Map *currentMap;

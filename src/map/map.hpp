@@ -3,13 +3,8 @@
 
 #include "tileset.hpp"
 #include "window.hpp"
-
-struct MapObject
-{
-    std::string objectType;
-    int locationX;
-    int locationY;
-};
+#include "consumable.hpp"
+#include "interaction.hpp"
 
 class Map
 {
@@ -38,8 +33,8 @@ public:
     unsigned int getCameraWidth() const;
     unsigned int getCameraHeight() const;
     unsigned int getNumberOfLayers() const;
-    unsigned int getNumberOfMapObjects() const;
-    MapObject * getMapObject(unsigned int mapObjectIndex) const;
+    const std::vector<Consumable *> & getConsumables() const;
+    const std::vector<Interaction *> & getInteractions() const;
 
     void drawLayer(const Window &window
             , unsigned int layerNumber
@@ -48,7 +43,8 @@ public:
 
 private:
     std::vector<Tile ***> tileLayers;
-    std::vector<MapObject *> mapObjects;
+    std::vector<Consumable *> consumables;
+    std::vector<Interaction *> interactions;
     int startLocationX, startLocationY;
     std::string levelName;
     unsigned int timeToComplete;

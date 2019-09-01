@@ -35,7 +35,9 @@ void PlayScreen::onStart(const GameState &gameState, const Window & window)
     player = new PlayerSprite(TextureManager::getInstance()->getTexture(Const::IMAGE_TOT_2));
     player->setLocationX(currentMap, currentMap->getStartLocationX() * currentMap->getTilePixelWidth());
     player->setLocationY(currentMap, currentMap->getStartLocationY() * currentMap->getTilePixelHeight());
-    generateMapSprites();
+    generateConsumables();
+    generateInteractions();
+    mapSprites.push_back(player);
 }
 
 void PlayScreen::onUpdate(GameState & /*gameState*/, unsigned int /*deltaTime*/)
@@ -119,17 +121,24 @@ void PlayScreen::onDraw(const Window & window)
     drawCamera(window);
 }
 
-void PlayScreen::generateMapSprites()
+void PlayScreen::generateConsumables()
 {
-    for(unsigned int mapObjectIndex = 0; mapObjectIndex < currentMap->getNumberOfMapObjects(); mapObjectIndex++)
+    for(auto consumable : currentMap->getConsumables())
     {
-        const MapObject *mapObject = currentMap->getMapObject(mapObjectIndex);
-        MapSprite *nextMapSprite = SpriteFactory::generateSprite(mapObject);
-        nextMapSprite->setLocationX(currentMap, mapObject->locationX);
-        nextMapSprite->setLocationY(currentMap, mapObject->locationY);
+        MapSprite *nextMapSprite = SpriteFactory::generateSprite(consumable);
+        nextMapSprite->setLocationX(currentMap, consumable->locationX);
+        nextMapSprite->setLocationY(currentMap, consumable->locationY);
         mapSprites.push_back(nextMapSprite);
     }
-    mapSprites.push_back(player);
+}
+
+void PlayScreen::generateInteractions()
+{
+    for(auto interaction : currentMap->getInteractions())
+    {
+        MapSprite *nextMapSprite = SpriteFactory::generateSprite(interaction);
+        mapSprites.push_back(nextMapSprite);
+    }
 }
 
 void PlayScreen::drawCamera(const Window &window)

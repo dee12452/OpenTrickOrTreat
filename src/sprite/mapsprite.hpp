@@ -61,6 +61,9 @@ protected:
     MoveDirectionY getCurrentDirectionY() const;
     void setCurrentDirectionY(MoveDirectionY newDirY);
 
+    void setUnsafeLocationX(int x);
+    void setUnsafeLocationY(int y);
+
 private:
     void checkDirectionChanges();
     void clampLocation(Map *map);

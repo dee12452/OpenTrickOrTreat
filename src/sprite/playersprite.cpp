@@ -175,7 +175,8 @@ const SDL_Rect PlayerSprite::changeCostume(CostumeType costumeType)
             break;
     }
 
-    Animation *newAnimationDirection;
+    Animation *newAnimationDirection = nullptr;
+    SDL_Rect nextAnim = Const::EMPTY_RECT;
     if(getCurrentDirectionX() == MoveDirectionX::LEFT)
     {
         newAnimationDirection = leftAnimation;
@@ -192,9 +193,14 @@ const SDL_Rect PlayerSprite::changeCostume(CostumeType costumeType)
     {
         newAnimationDirection = downAnimation;
     }
-    const SDL_Rect nextAnim = newAnimationDirection->getNext();
-    newAnimationDirection->reset();
-    newAnimationDirection = nullptr;
+
+    // TODO: In the event this is false, costume change animation won't work properly
+    // Maybe the cause is setting NO_SPEED when releasing the movement key (stop() in MapSprite)
+    if(newAnimationDirection)
+    {
+        nextAnim = newAnimationDirection->getNext();
+        newAnimationDirection->reset();
+    }
     return nextAnim;
 }
 

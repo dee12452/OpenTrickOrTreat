@@ -17,7 +17,8 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
         const json_list_element *layerElement = layersList->elements[layer];
         const std::string layerIdentifier = Util::getJsonPair("type", layerElement->json_pairs, layerElement->num_of_pairs)->str_val->val;
         const std::string layerName = Util::getJsonPair("name", layerElement->json_pairs, layerElement->num_of_pairs)->str_val->val;
-        
+
+        // Create Tile Layer
         if(layerIdentifier == TILE_LAYER_IDENTIFIER)
         {
             json_list *data = Util::getJsonList("data", layerElement->json_lists, layerElement->num_of_lists);
@@ -47,20 +48,50 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
             }
             tileLayers.push_back(tileGrid);
         }
+
+        // Create Map Consumables
         else if(layerIdentifier == OBJECT_LAYER_IDENTIFIER && layerName == "consumables")
         {
             json_list *objects = Util::getJsonList("objects", layerElement->json_lists, layerElement->num_of_lists);
-            const std::string objectLayerName = objects->key->val;
             for(int objectIndex = 0; objectIndex < objects->num_of_elements; objectIndex++)
             {
-                json_list_element *mapObjectElement = objects->elements[objectIndex];
-                MapObject *mapObject = new MapObject;
-                mapObject->objectType = Util::getJsonPair("type", mapObjectElement->json_pairs, mapObjectElement->num_of_pairs)->str_val->val;
-                mapObject->locationX = Util::getJsonPair("x", mapObjectElement->json_pairs, mapObjectElement->num_of_pairs)->int_val->val;
-                mapObject->locationY = Util::getJsonPair("y", mapObjectElement->json_pairs, mapObjectElement->num_of_pairs)->int_val->val;
-                mapObjects.push_back(mapObject);
+                json_list_element *consumableElement = objects->elements[objectIndex];
+                Consumable *consumable = new Consumable;
+                consumable->objectType = Util::getJsonPair("type", consumableElement->json_pairs, consumableElement->num_of_pairs)->str_val->val;
+                consumable->locationX = Util::getJsonPair("x", consumableElement->json_pairs, consumableElement->num_of_pairs)->int_val->val;
+                consumable->locationY = Util::getJsonPair("y", consumableElement->json_pairs, consumableElement->num_of_pairs)->int_val->val;
+                consumables.push_back(consumable);
             }
         }
+
+        // TODO: Create Map Interactions
+        else if(layerIdentifier == OBJECT_LAYER_IDENTIFIER && layerName == "interactions")
+        {
+            json_list *objects = Util::getJsonList("objects", layerElement->json_lists, layerElement->num_of_lists);
+            for(int objectIndex = 0; objectIndex < objects->num_of_elements; objectIndex++)
+            {
+                json_list_element *interactionElement = objects->elements[objectIndex];
+                Interaction *interaction = new Interaction;
+                interaction->type = Util::getJsonPair("type", interactionElement->json_pairs, interactionElement->num_of_pairs)->str_val->val;
+                interaction->x = Util::getJsonPair("x", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
+                interaction->y = Util::getJsonPair("y", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
+                interaction->w = Util::getJsonPair("width", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
+                interaction->h = Util::getJsonPair("height", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
+                json_object *properties = Util::getJsonObject("properties", interactionElement->json_objects, interactionElement->num_of_objects);
+                if(properties && properties->num_of_pairs > 0 && properties->pairs[0]->int_val)
+                {
+                    interaction->property = properties->pairs[0]->int_val->val;
+                }
+                else
+                {
+                    interaction->property = 0;
+                }
+                interactions.push_back(interaction);
+            }
+
+        }
+
+        // Unidefined layer type, ignore these
         else
         {
             Util::log("Unidentified layer %s found, skipping", layerIdentifier.c_str());
@@ -96,9 +127,13 @@ Map::~Map()
         }
         delete [] tileGrid;
     }
-    for(auto object : mapObjects)
+    for(auto consumable : consumables)
     {
-        delete object;
+        delete consumable;
+    }
+    for(auto interaction : interactions)
+    {
+        delete interaction;
     }
 }
 
@@ -178,14 +213,14 @@ unsigned int Map::getNumberOfLayers() const
     return tileLayers.size();
 }
 
-unsigned int Map::getNumberOfMapObjects() const
+const std::vector<Consumable *> & Map::getConsumables() const
 {
-    return mapObjects.size();
+    return consumables;
 }
 
-MapObject * Map::getMapObject(unsigned int mapObjectIndex) const
+const std::vector<Interaction *> & Map::getInteractions() const
 {
-    return mapObjects[mapObjectIndex];
+    return interactions;
 }
 
 void Map::drawLayer(const Window &window

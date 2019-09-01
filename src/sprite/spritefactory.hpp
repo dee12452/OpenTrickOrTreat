@@ -7,7 +7,8 @@
 class SpriteFactory
 {
 public:
-    static MapSprite * generateSprite(const MapObject *object);
+    static MapSprite * generateSprite(const Consumable *consumable);
+    static MapSprite * generateSprite(const Interaction *interaction);
 
 private:
     SpriteFactory();

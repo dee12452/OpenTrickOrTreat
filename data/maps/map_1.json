@@ -105,7 +105,7 @@
         }, 
         {
          "draworder":"topdown",
-         "name":"props",
+         "name":"interactions",
          "objects":[
                 {
                  "height":30.6666666666666,
@@ -113,7 +113,7 @@
                  "name":"stairs_2",
                  "properties":
                     {
-                     "layer":0
+                     "layer":1
                     },
                  "propertytypes":
                     {
@@ -123,8 +123,8 @@
                  "type":"stairs",
                  "visible":true,
                  "width":37.3333333333333,
-                 "x":344,
-                 "y":732.33
+                 "x":345.333333333333,
+                 "y":730.996666666667
                 }, 
                 {
                  "height":30.6666666666666,
@@ -142,8 +142,8 @@
                  "type":"stairs",
                  "visible":true,
                  "width":37.3333333333333,
-                 "x":344,
-                 "y":649.333333333333
+                 "x":346,
+                 "y":650
                 }],
          "offsetx":-2.66666666666663,
          "offsety":-9.33333333333326,
