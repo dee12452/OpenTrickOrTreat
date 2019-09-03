@@ -69,7 +69,7 @@ void PlayScreen::onEvent(GameState & gameState, const SDL_Event & event)
                 player->toggleNoClip();
                 break;
             case SDL_SCANCODE_SPACE:
-                player->doAction(currentMap);
+                player->usePower(currentMap);
                 break;
             default:
                 break;
@@ -81,38 +81,35 @@ void PlayScreen::onKeyboardUpdate(GameState & /*gameState*/, const unsigned char
 {
     if(keyboardState[SDL_SCANCODE_UP])
     {
-        player->setSpeedX(0);
-        player->setSpeedY(-2);
+        player->setSpeedY(-3);
     }
     else if(keyboardState[SDL_SCANCODE_DOWN])
     {
-        player->setSpeedX(0);
-        player->setSpeedY(2);
+        player->setSpeedY(3);
     }
     else if(keyboardState[SDL_SCANCODE_LEFT])
     {
-        player->setSpeedX(-2);
-        player->setSpeedY(0);
+        player->setSpeedX(-3);
     }
     else if(keyboardState[SDL_SCANCODE_RIGHT])
     {
-        player->setSpeedX(2);
-        player->setSpeedY(0);
+        player->setSpeedX(3);
     }
-    
-    if(!keyboardState[SDL_SCANCODE_UP] && !keyboardState[SDL_SCANCODE_DOWN])
+    else
     {
-        player->stopY();
-    }
-    if(!keyboardState[SDL_SCANCODE_LEFT] && !keyboardState[SDL_SCANCODE_RIGHT])
-    {
-        player->stopX();
+        player->stop();
     }
 
     if(keyboardState[SDL_SCANCODE_LSHIFT])
     {
-        player->setSpeedX(player->getSpeedX() * 5);
-        player->setSpeedY(player->getSpeedY() * 5);
+        if(player->getSpeedX() != 0)
+        {
+            player->setSpeedX(player->getSpeedX() * 5);
+        }
+        else
+        {
+            player->setSpeedY(player->getSpeedY() * 5);
+        }
     }
 }
 

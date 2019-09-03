@@ -11,10 +11,8 @@ MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL
       , locationZ(0)
       , speedX(0)
       , speedY(0)
-      , oldDirectionX(NONE_X)
-      , newDirectionX(NONE_X)
-      , oldDirectionY(NONE_Y)
-      , newDirectionY(NONE_Y)
+      , oldDirection(MoveDirection::DOWN)
+      , newDirection(MoveDirection::DOWN)
       , disabled(false)
       , noClip(false)
 {}
@@ -107,18 +105,15 @@ int MapSprite::getSpeedX() const
 
 void MapSprite::setSpeedX(int sX)
 {
+    speedY = 0;
     speedX = sX;
     if(speedX > 0)
     {
-        newDirectionX = RIGHT;
+        newDirection = MoveDirection::RIGHT;
     }
     else if(speedX < 0)
     {
-        newDirectionX = LEFT;
-    }
-    else
-    {
-        newDirectionX = NONE_X;
+        newDirection = MoveDirection::LEFT;
     }
 }
 
@@ -129,31 +124,22 @@ int MapSprite::getSpeedY() const
 
 void MapSprite::setSpeedY(int sY)
 {
+    speedX = 0;
     speedY = sY;
     if(speedY > 0)
     {
-        newDirectionY = DOWN;
+        newDirection = MoveDirection::DOWN;
     }
     else if(speedY < 0)
     {
-        newDirectionY = UP;
-    }
-    else
-    {
-        newDirectionY = NONE_Y;
+        newDirection = MoveDirection::UP;
     }
 }
 
-void MapSprite::stopX()
+void MapSprite::stop()
 {
     speedX = 0;
-    newDirectionX = NONE_X;
-}
-
-void MapSprite::stopY()
-{
     speedY = 0;
-    newDirectionY = NONE_Y;
 }
 
 bool MapSprite::isDisabled() const
@@ -176,7 +162,6 @@ void MapSprite::toggleNoClip()
     noClip = !noClip;
 }
 
-// TODO: Should I use getX() or getLocationX()? 
 void MapSprite::checkCollision(MapSprite *otherSprite)
 {
     if(getLocationX() <= otherSprite->getLocationX() && getLocationX() + getWidth() >= otherSprite->getLocationX())
@@ -211,10 +196,7 @@ bool MapSprite::isPlayer() const
 void MapSprite::onUpdate(Map * /*currentMap*/)
 {}
 
-void MapSprite::onChangeDirectionX(MoveDirectionX /*oldState*/, MoveDirectionX /*newState*/)
-{}
-
-void MapSprite::onChangeDirectionY(MoveDirectionY /*oldState*/, MoveDirectionY /*newState*/)
+void MapSprite::onChangeDirection(MoveDirection /*oldState*/, MoveDirection /*newState*/)
 {}
 
 void MapSprite::onNewTile(const Tile &/*oldTile*/, const Tile &/*newTile*/)
@@ -251,26 +233,20 @@ bool MapSprite::canMove(Map *map) const
     return true;
 }
 
-MoveDirectionX MapSprite::getCurrentDirectionX() const
+MoveDirection MapSprite::getCurrentDirection() const
 {
-    return newDirectionX;
+    return newDirection;
 }
 
-void MapSprite::setCurrentDirectionX(MoveDirectionX newDirX)
+void MapSprite::setCurrentDirection(MoveDirection newDir)
 {
-    oldDirectionX = newDirectionX;
-    newDirectionX = newDirX;
+    oldDirection = newDirection;
+    newDirection = newDir;
 }
 
-MoveDirectionY MapSprite::getCurrentDirectionY() const
+MoveDirection MapSprite::getOldDirection() const
 {
-    return newDirectionY;
-}
-
-void MapSprite::setCurrentDirectionY(MoveDirectionY newDirY)
-{
-    oldDirectionY = newDirectionY;
-    newDirectionY = newDirY;
+    return oldDirection;
 }
 
 void MapSprite::setUnsafeLocationX(int x)
@@ -285,17 +261,13 @@ void MapSprite::setUnsafeLocationY(int y)
 
 void MapSprite::checkDirectionChanges()
 {
-    if(oldDirectionX != newDirectionX)
+    if(oldDirection == newDirection)
     {
-        onChangeDirectionX(oldDirectionX, newDirectionX);
-        oldDirectionX = newDirectionX;
+        return;
     }
-    if(oldDirectionY != newDirectionY)
-    {
-        onChangeDirectionY(oldDirectionY, newDirectionY);
-        oldDirectionY = newDirectionY;
-    }
-    oldDirectionX = newDirectionX;
+   
+    onChangeDirection(oldDirection, newDirection);
+    oldDirection = newDirection;
 }
 
 void MapSprite::clampLocation(Map *map)

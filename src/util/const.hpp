@@ -4,8 +4,7 @@
 #include <SDL2/SDL_rect.h>
 
 enum CostumeType {SKELETON = 0, WITCH = 1, MONSTER = 2, VAMPIRE = 3, FISH = 4, NO_COSTUME=5};
-enum MoveDirectionY {UP, DOWN, NONE_Y};
-enum MoveDirectionX {LEFT, RIGHT, NONE_X};
+enum MoveDirection {UP, DOWN, LEFT, RIGHT};
 
 namespace Const
 {

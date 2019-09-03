@@ -33,8 +33,7 @@ public:
     int getSpeedY() const;
     void setSpeedY(int sY);
 
-    void stopX();
-    void stopY();
+    virtual void stop();
     
     bool isDisabled() const;
     void setDisable(bool disabled);
@@ -48,18 +47,16 @@ public:
 
 protected:
     virtual void onUpdate(Map *currentMap);
-    virtual void onChangeDirectionX(MoveDirectionX oldState, MoveDirectionX newState);
-    virtual void onChangeDirectionY(MoveDirectionY oldState, MoveDirectionY newState);
+    virtual void onChangeDirection(MoveDirection oldDirection, MoveDirection newDirection);
     virtual void onNewTile(const Tile &oldTile, const Tile &newTile);
     virtual void onCollide(MapSprite *other);
 
     virtual bool canMove(Map *map) const;
     
-    MoveDirectionX getCurrentDirectionX() const;
-    void setCurrentDirectionX(MoveDirectionX newDirX);
-
-    MoveDirectionY getCurrentDirectionY() const;
-    void setCurrentDirectionY(MoveDirectionY newDirY);
+    MoveDirection getCurrentDirection() const;
+    void setCurrentDirection(MoveDirection newDir);
+    
+    MoveDirection getOldDirection() const;
 
     void setUnsafeLocationX(int x);
     void setUnsafeLocationY(int y);
@@ -70,8 +67,7 @@ private:
 
     int locationX, locationY, locationZ; // locationZ is equivalent to which layer on the map
     int speedX, speedY;
-    MoveDirectionX oldDirectionX, newDirectionX;
-    MoveDirectionY oldDirectionY, newDirectionY;
+    MoveDirection oldDirection, newDirection;
     bool disabled;
     bool noClip;
 };

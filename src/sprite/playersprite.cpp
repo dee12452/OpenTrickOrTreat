@@ -1,19 +1,19 @@
 #include "playersprite.hpp"
 
 const unsigned int PlayerSprite::ANIMATION_TIMER_DELAY = 75;
+const unsigned int PlayerSprite::POWER_TIMER_DELAY = 1000;
 
 PlayerSprite::PlayerSprite(SDL_Texture *texture)
     : MapSprite(texture)
     , animationTimer(ANIMATION_TIMER_DELAY)
+    , powerTimer(POWER_TIMER_DELAY)
     , upAnimation(nullptr)
     , downAnimation(nullptr)
     , leftAnimation(nullptr)
     , rightAnimation(nullptr)
     , currentCostumeType(CostumeType::NO_COSTUME)
+    , usingPower(false)
 {
-    setCurrentDirectionX(MoveDirectionX::NONE_X);
-    setCurrentDirectionY(MoveDirectionY::DOWN);
-
     // Initialize as a skeleton to start
     const SDL_Rect nextAnimRect = changeCostume(CostumeType::SKELETON);
     setSourceRect(nextAnimRect);
@@ -23,6 +23,14 @@ PlayerSprite::PlayerSprite(SDL_Texture *texture)
 PlayerSprite::~PlayerSprite()
 {
     clearAnimations();
+}
+
+void PlayerSprite::stop()
+{
+    MapSprite::stop();
+    Animation * directionAnimation = getDirectionAnimation();
+    directionAnimation->reset();
+    setSourceRect(directionAnimation->getNext());
 }
 
 bool PlayerSprite::isPlayer() const
@@ -40,8 +48,11 @@ void PlayerSprite::setCostumeType(CostumeType type)
     changeCostume(type);
 }
 
-void PlayerSprite::doAction(Map *map)
+void PlayerSprite::usePower(Map *map)
 {
+    stop();
+    usingPower = true;
+    powerTimer.reset();
     switch(currentCostumeType)
     {
         case SKELETON:
@@ -50,6 +61,7 @@ void PlayerSprite::doAction(Map *map)
             break;
         }
         default:
+            usingPower = false;
             break;
     }
 }
@@ -59,28 +71,29 @@ void PlayerSprite::onUpdate(Map * /*map*/)
     animate();
 }
 
-void PlayerSprite::onChangeDirectionX(MoveDirectionX /*oldState*/, MoveDirectionX newState)
+void PlayerSprite::onChangeDirection(MoveDirection /*oldState*/, MoveDirection newState)
 {
-    if(newState == LEFT)
+    if(newState == MoveDirection::UP)
+    {
+        upAnimation->reset();
+    }
+    else if(newState == MoveDirection::DOWN)
+    {
+        downAnimation->reset();
+    }
+    else if(newState == MoveDirection::LEFT)
     {
         leftAnimation->reset();
     }
-    else if(newState == RIGHT)
+    else if(newState == MoveDirection::RIGHT)
     {
         rightAnimation->reset();
     }
 }
 
-void PlayerSprite::onChangeDirectionY(MoveDirectionY /*oldState*/, MoveDirectionY newState)
+bool PlayerSprite::canMove(Map *map) const
 {
-    if(newState == UP)
-    {
-        upAnimation->reset();
-    }
-    else if(newState == DOWN)
-    {
-        downAnimation->reset();
-    }
+    return MapSprite::canMove(map) && !usingPower;
 }
 
 void PlayerSprite::animate()
@@ -89,40 +102,27 @@ void PlayerSprite::animate()
     {
         return;
     }
+
+    if(usingPower)
+    {
+        // TODO: Do power animation
+        if(powerTimer.check())
+        {
+            usingPower = false;
+        }
+        else
+        {
+            return;
+        }
+    }
+
     if(!leftAnimation || !rightAnimation || !upAnimation || !downAnimation)
     {
         Util::criticalError("Player animations not loaded properly for costume %d", static_cast<int> (currentCostumeType));
     }
 
-    switch(getCurrentDirectionX())
-    {
-        case LEFT:
-            setSourceRect(leftAnimation->getNext());
-            break;
-        case RIGHT:
-            setSourceRect(rightAnimation->getNext());
-            break;
-        default:
-            break;
-    }
-    
-    switch(getCurrentDirectionY())
-    {
-        case UP:
-            setSourceRect(upAnimation->getNext());
-            break;
-        case DOWN:
-            setSourceRect(downAnimation->getNext());
-            break;
-        default:
-            break;
-    }
-
+    setSourceRect(getDirectionAnimation()->getNext());
     animationTimer.reset();
-}
-
-void PlayerSprite::onCollide(const MapSprite * /*otherSprite*/)
-{
 }
 
 const SDL_Rect PlayerSprite::changeCostume(CostumeType costumeType)
@@ -175,33 +175,25 @@ const SDL_Rect PlayerSprite::changeCostume(CostumeType costumeType)
             break;
     }
 
-    Animation *newAnimationDirection = nullptr;
-    SDL_Rect nextAnim = Const::EMPTY_RECT;
-    if(getCurrentDirectionX() == MoveDirectionX::LEFT)
-    {
-        newAnimationDirection = leftAnimation;
-    }
-    else if(getCurrentDirectionX() == MoveDirectionX::RIGHT)
-    {
-        newAnimationDirection = rightAnimation;
-    }
-    else if(getCurrentDirectionY() == MoveDirectionY::UP)
-    {
-        newAnimationDirection = upAnimation;
-    }
-    else if(getCurrentDirectionY() == MoveDirectionY::DOWN)
-    {
-        newAnimationDirection = downAnimation;
-    }
-
-    // TODO: In the event this is false, costume change animation won't work properly
-    // Maybe the cause is setting NO_SPEED when releasing the movement key (stop() in MapSprite)
-    if(newAnimationDirection)
-    {
-        nextAnim = newAnimationDirection->getNext();
-        newAnimationDirection->reset();
-    }
+    Animation *newAnimationDirection = getDirectionAnimation();
+    const SDL_Rect nextAnim = newAnimationDirection->getNext();
+    newAnimationDirection->reset();
     return nextAnim;
+}
+
+Animation * PlayerSprite::getDirectionAnimation() const
+{
+    switch(getCurrentDirection())
+    {
+        case MoveDirection::UP:
+            return upAnimation;
+        case MoveDirection::DOWN:
+            return downAnimation;
+        case MoveDirection::LEFT:
+            return leftAnimation;
+        case MoveDirection::RIGHT:
+            return rightAnimation;
+    }
 }
 
 void PlayerSprite::openGates(Map *map) const
