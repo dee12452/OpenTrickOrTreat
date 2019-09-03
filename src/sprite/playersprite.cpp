@@ -50,9 +50,6 @@ void PlayerSprite::setCostumeType(CostumeType type)
 
 void PlayerSprite::usePower(Map *map)
 {
-    stop();
-    usingPower = true;
-    powerTimer.reset();
     switch(currentCostumeType)
     {
         case SKELETON:
@@ -62,8 +59,11 @@ void PlayerSprite::usePower(Map *map)
         }
         default:
             usingPower = false;
-            break;
+            return;
     }
+    stop();
+    usingPower = true;
+    powerTimer.reset();
 }
 
 void PlayerSprite::onUpdate(Map * /*map*/)
