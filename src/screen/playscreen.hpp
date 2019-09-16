@@ -19,13 +19,10 @@ protected:
 
 private:
     void generateConsumables();
-    void generateInteractions();
     void drawCamera(const Window &window);
 
     Map *currentMap;
     Tileset *tileset;
-    SDL_Texture *tilesetTexture;
-    SDL_Texture *cameraTexture;
     PlayerSprite *player;
     std::vector<MapSprite *> mapSprites;
     bool hasDrawn;

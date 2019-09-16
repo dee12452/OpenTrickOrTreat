@@ -1,5 +1,6 @@
 #include "tileset.hpp"
 #include <math.h>
+#include "texturemanager.hpp"
 
 static Tile * createTile(json_object *tileObj, int tileId, int columns, int spacing, int tileW, int tileH);
 static int tileIdAsInt(char *tileId, int tileIdLength) 
@@ -18,9 +19,11 @@ static int tileIdAsInt(char *tileId, int tileIdLength)
     return id;
 }
 
+// TODO: Support multiple tilesets
 // Currently only supports one tileset
 Tileset::Tileset(const std::string &pathToResourceFolder)
 {
+    imageName = Const::IMAGE_TOT_1;
     const std::string tilesetFile = pathToResourceFolder + Const::TILESETS_FOLDER_PATH + Const::TILESET_1;
     json *tilesetJson = gahoodson_create_from_file(tilesetFile.c_str());
     json_object *tileObjects = Util::getJsonObject("tiles", tilesetJson->objects, tilesetJson->num_of_objects);
@@ -61,6 +64,11 @@ const std::vector<Tile *> & Tileset::getTiles() const
     return tiles;
 }
 
+SDL_Texture * Tileset::getTilesetTexture() const
+{
+    return TextureManager::getInstance()->getTexture(imageName);
+}
+
 Tile * createTile(json_object *tileObj, int tileId, int columns, int spacing, int tileW, int tileH)
 {
     int tileX = (tileId % columns);
@@ -71,26 +79,26 @@ Tile * createTile(json_object *tileObj, int tileId, int columns, int spacing, in
     const std::string type = Util::getJsonPair("type", tileObj->pairs, tileObj->num_of_pairs)->str_val->val;
     if(type == "GATE")
     {
-        return new Tile({tileX, tileY, tileW, tileH}, Tile::Type::GATE);
+        return new Tile(tileId, {tileX, tileY, tileW, tileH}, Tile::Type::GATE);
     }
     else if(type == "OBSTACLE")
     {
-        return new Tile({tileX, tileY, tileW, tileH}, Tile::Type::OBSTACLE);
+        return new Tile(tileId, {tileX, tileY, tileW, tileH}, Tile::Type::OBSTACLE);
     }
     else if(type == "GROUND")
     {
-        return new Tile({tileX, tileY, tileW, tileH}, Tile::Type::GROUND);
+        return new Tile(tileId, {tileX, tileY, tileW, tileH}, Tile::Type::GROUND);
     }
     else if(type == "WATER")
     {
-        return new Tile({tileX, tileY, tileW, tileH}, Tile::Type::WATER);
+        return new Tile(tileId, {tileX, tileY, tileW, tileH}, Tile::Type::WATER);
     }
     else if(type == "SMASHABLE")
     {
-        return new Tile({tileX, tileY, tileW, tileH}, Tile::Type::SMASHABLE);
+        return new Tile(tileId, {tileX, tileY, tileW, tileH}, Tile::Type::SMASHABLE);
     }
     else
     {
-        return new Tile({tileX, tileY, tileW, tileH}, Tile::Type::IMPASSABLE);
+        return new Tile(tileId, {tileX, tileY, tileW, tileH}, Tile::Type::IMPASSABLE);
     }
 }

@@ -13,7 +13,7 @@ public:
     virtual ~MapSprite() override;
 
     void update(Map *currentMap);
-    virtual void draw(const Window &window, Map *currentMap, const SDL_Rect &camera, unsigned int z);
+    virtual void draw(const Window &window, Map *currentMap, const SDL_Rect &camera);
 
     int getLocationX() const;
     void setLocationX(Map *map, int x);

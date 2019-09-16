@@ -11,6 +11,7 @@ public:
 
     const std::string & getImageName() const;
     const std::vector<Tile *> & getTiles() const;
+    SDL_Texture * getTilesetTexture() const;
 
 private:
     std::string imageName;

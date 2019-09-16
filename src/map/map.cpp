@@ -1,9 +1,16 @@
 #include "map.hpp"
+#include "properties.hpp"
+#include <math.h>
 
 const char * const Map::TILE_LAYER_IDENTIFIER = "tilelayer";
 const char * const Map::OBJECT_LAYER_IDENTIFIER = "objectgroup";
 
-Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *tileset)
+static unsigned int getNextNumber(const std::string &str, unsigned int &currIndex);
+
+Map::Map(const Window &window
+        , const std::string &pathToResourceFolder
+        , const std::string &mapFile
+        , const Tileset *tileset)
 {
     const std::string mapFilePath = pathToResourceFolder + Const::MAPS_FOLDER_PATH + mapFile;
     json *mapJson = gahoodson_create_from_file(mapFilePath.c_str());
@@ -46,7 +53,44 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
                     row++;
                 }   
             }
+
+            json_object *layerProperties = Util::getJsonObject("properties", layerElement->json_objects, layerElement->num_of_objects);
+            if(layerProperties)
+            {
+                for(int i = 0; i < layerProperties->num_of_pairs; i++)
+                {
+                    const std::string property = layerProperties->pairs[i]->str_val->val;
+                    unsigned int index = 0;
+                    unsigned int row = 0, col = 0;
+                    col = getNextNumber(property, index);
+                    row = getNextNumber(property, index);
+                    const unsigned int propertyType = getNextNumber(property, index);
+                    switch(propertyType)
+                    {
+                        case 0:
+                        {
+                            const unsigned int stairsLayerNumber = getNextNumber(property, index);
+                            if(tileGrid[row][col])
+                            {
+                                tileGrid[row][col]->setProperty(new StairsProperty(stairsLayerNumber));
+                            }
+                            break;
+                        }
+                        default:
+                            Util::criticalError("Unrecognized propery in map layer %d", propertyType);
+                    }
+                }
+            }
+
             tileLayers.push_back(tileGrid);
+            if(layerTextures.size() == 0)
+            {
+                createLayer(window, tileset, const_cast<const Tile ***> (tileGrid), Color::BLACK);
+            }
+            else
+            {
+                createLayer(window, tileset, const_cast<const Tile ***> (tileGrid));
+            }
         }
 
         // Create Map Consumables
@@ -64,38 +108,10 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
             }
         }
 
-        // TODO: Create Map Interactions
-        else if(layerIdentifier == OBJECT_LAYER_IDENTIFIER && layerName == "interactions")
-        {
-            json_list *objects = Util::getJsonList("objects", layerElement->json_lists, layerElement->num_of_lists);
-            for(int objectIndex = 0; objectIndex < objects->num_of_elements; objectIndex++)
-            {
-                json_list_element *interactionElement = objects->elements[objectIndex];
-                Interaction *interaction = new Interaction;
-                interaction->type = Util::getJsonPair("type", interactionElement->json_pairs, interactionElement->num_of_pairs)->str_val->val;
-                interaction->x = Util::getJsonPair("x", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
-                interaction->y = Util::getJsonPair("y", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
-                interaction->w = Util::getJsonPair("width", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
-                interaction->h = Util::getJsonPair("height", interactionElement->json_pairs, interactionElement->num_of_pairs)->int_val->val;
-                json_object *properties = Util::getJsonObject("properties", interactionElement->json_objects, interactionElement->num_of_objects);
-                if(properties && properties->num_of_pairs > 0 && properties->pairs[0]->int_val)
-                {
-                    interaction->property = properties->pairs[0]->int_val->val;
-                }
-                else
-                {
-                    interaction->property = 0;
-                }
-                interactions.push_back(interaction);
-            }
-
-        }
-
-        // Unidefined layer type, ignore these
+        // Unidefined layer type, invalid map
         else
         {
-            Util::log("Unidentified layer %s found, skipping", layerIdentifier.c_str());
-            continue;
+            Util::criticalError("Unidentified layer %s found, skipping", layerIdentifier.c_str());
         }
     }
 
@@ -110,6 +126,10 @@ Map::Map(const std::string &pathToResourceFolder, const std::string &mapFile, Ti
 
 Map::~Map()
 {
+    for(auto texture : layerTextures)
+    {
+        SDL_DestroyTexture(texture);
+    }
     for(auto tileGrid : tileLayers)
     {
         for(unsigned int row = 0; row < tileRows; row++)
@@ -131,10 +151,6 @@ Map::~Map()
     {
         delete consumable;
     }
-    for(auto interaction : interactions)
-    {
-        delete interaction;
-    }
 }
 
 Tile * Map::getTile(unsigned int layerNumber, int x, int y) const
@@ -146,6 +162,10 @@ void Map::removeTile(unsigned int layerNumber, int x, int y)
 {
     delete tileLayers[layerNumber][y][x];
     tileLayers[layerNumber][y][x] = nullptr;
+    if(std::find(layersNeedingRefresh.begin(), layersNeedingRefresh.end(), layerNumber) == layersNeedingRefresh.end())
+    {
+        layersNeedingRefresh.push_back(layerNumber);
+    }
 }
 
 const std::string & Map::getLevelName() const
@@ -218,36 +238,106 @@ const std::vector<Consumable *> & Map::getConsumables() const
     return consumables;
 }
 
-const std::vector<Interaction *> & Map::getInteractions() const
+void Map::drawLayer(
+        const Window &window
+        , const Tileset *tileset
+        , unsigned int layerNumber
+        , const SDL_Rect &camera)
 {
-    return interactions;
+    if(std::find(layersNeedingRefresh.begin(), layersNeedingRefresh.end(), layerNumber) != layersNeedingRefresh.end())
+    {
+        refreshLayer(window, tileset, layerNumber);
+    }
+    window.draw(layerTextures[layerNumber], camera);
+    if(layerNumber == getNumberOfLayers() - 1 && !layersNeedingRefresh.empty())
+    {
+        layersNeedingRefresh.clear();
+    }
 }
 
-void Map::drawLayer(const Window &window
-        , unsigned int layerNumber
-        , const SDL_Rect &camera
-        , SDL_Texture *tilesetTexture)
+static SDL_Texture * createLayerTexture(
+        const Window &window
+        , unsigned int tileRows
+        , unsigned int tileColumns
+        , int tileW
+        , int tileH
+        , const Tileset *tileset
+        , const Tile ***tileGrid
+        , const SDL_Color &baseColor)
 {
-    const int tileW = getTilePixelWidth(), tileH = getTilePixelHeight();
-    for(int tileX = camera.x, dstX = 0; tileX <= camera.x + camera.w; tileX++, dstX++)
+    SDL_Texture *newLayer = window.createTexture(
+            tileColumns * tileW
+            , tileRows * tileH
+            , baseColor);
+    window.setTargetTexture(newLayer);
+    for(int x = 0; x < static_cast<int> (tileColumns); x++)
     {
-        if(tileX < 0 || tileX >= static_cast<int> (getTileColumns()))
+        for(int y = 0; y < static_cast<int> (tileRows); y++)
         {
-            continue;
-        }
-
-        for(int tileY = camera.y, dstY = 0; tileY <= camera.y + camera.h; tileY++, dstY++)
-        {
-            if(tileY < 0 || tileY >= static_cast<int> (getTileRows()))
+            const Tile *tile = tileGrid[y][x];
+            if(tile)
             {
-                continue;
-            }
-            
-            const Tile *tile = getTile(layerNumber, tileX, tileY);
-            if(tile) // tile == nullptr when none exists on this layer
-            {
-                window.draw(tilesetTexture, tile->getSourceRect(), {dstX * tileW, dstY * tileH, tileW, tileH});
+                window.draw(
+                        tileset->getTilesetTexture()
+                        , tile->getSourceRect()
+                        , {x * tileW, y * tileH, tileW, tileH});
             }
         }
     }
+    window.resetTargetTexture();
+    return newLayer;
+}
+
+void Map::createLayer(const Window &window, const Tileset *tileset, const Tile ***tileGrid)
+{
+    createLayer(window, tileset, tileGrid, Color::TRANSPARENT);
+}
+
+void Map::createLayer(
+        const Window &window
+        , const Tileset *tileset
+        , const Tile ***tileGrid
+        , const SDL_Color &baseColor)
+{
+    layerTextures.push_back(createLayerTexture(
+                window
+                , getTileRows()
+                , getTileColumns()
+                , getTilePixelWidth()
+                , getTilePixelHeight()
+                , tileset
+                , tileGrid
+                , baseColor));
+}
+
+void Map::refreshLayer(const Window &window, const Tileset *tileset, unsigned int layerNum)
+{
+    const SDL_Color baseColor = layerNum == 0 ? Color::BLACK : Color::TRANSPARENT;
+    SDL_Texture *newLayer = createLayerTexture(
+                window
+                , getTileRows()
+                , getTileColumns()
+                , getTilePixelWidth()
+                , getTilePixelHeight()
+                , tileset
+                , const_cast<const Tile ***> (tileLayers[layerNum])
+                , baseColor);
+    SDL_DestroyTexture(layerTextures[layerNum]);
+    layerTextures[layerNum] = newLayer;
+}
+
+unsigned int getNextNumber(const std::string &str, unsigned int &currIndex)
+{
+    unsigned int value = 0;
+    while(currIndex < str.length() && str[currIndex] != ' ')
+    {
+        value *= 10;
+        value += static_cast<unsigned int> (str[currIndex] - '0');
+        currIndex++;
+    }
+    while(currIndex < str.length() && str[currIndex] == ' ')
+    {
+        currIndex++;
+    }
+    return value;
 }

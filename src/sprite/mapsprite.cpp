@@ -72,29 +72,31 @@ void MapSprite::update(Map *map)
     }
     clampLocation(map);
     checkDirectionChanges();
+    for(unsigned int layer = 0; layer < map->getNumberOfLayers(); layer++)
+    {
+        Tile *tile = map->getTile(layer, getMapTileX(map), getMapTileY(map));
+        if(tile)
+        {
+            tile->step(this);
+        }
+    }
 }
 
-void MapSprite::draw(const Window &window, Map *currentMap, const SDL_Rect &camera, unsigned int z)
+void MapSprite::draw(const Window &window, Map * /*currentMap*/, const SDL_Rect &camera)
 {
-    if(getLocationZ() != z)
+    setWidth(getSourceWidth() * Const::DEFAULT_WINDOW_WIDTH / camera.w);
+    setHeight(getSourceHeight() * Const::DEFAULT_WINDOW_HEIGHT / camera.h);
+
+    if(getLocationX() + getWidth() / 2 < camera.x || getLocationX() - getWidth() / 2 > camera.x + camera.w)
         return;
     
-    const int drawCharacterTileX = getMapTileX(currentMap);
-    const int drawCharacterTileY = getMapTileY(currentMap);
-    
-    if(drawCharacterTileX < camera.x || drawCharacterTileX > camera.x + camera.w)
-        return;
-    
-    if(drawCharacterTileY < camera.y || drawCharacterTileY > camera.y + camera.h)
+    if(getLocationY() + getHeight() / 2 < camera.y || getLocationY() - getHeight() / 2 > camera.y + camera.h)
         return;
 
-    const int cameraTileX = drawCharacterTileX - camera.x;
-    const int cameraTileY = drawCharacterTileY - camera.y;
-    const int drawOffsetX = (getLocationX() % currentMap->getTileColumns()) - (getWidth() / 2);
-    const int drawOffsetY = (getLocationY() % currentMap->getTileRows()) - (getHeight() / 2);
-    
-    setX((cameraTileX * currentMap->getTilePixelWidth()) + drawOffsetX);
-    setY((cameraTileY * currentMap->getTilePixelHeight()) + drawOffsetY);
+    const int cameraDeltaX = getLocationX() - getWidth() / 2 - camera.x;
+    const int cameraDeltaY = getLocationY() - getHeight() / 2 - camera.y;
+    setX(cameraDeltaX * Const::DEFAULT_WINDOW_WIDTH / camera.w);
+    setY(cameraDeltaY * Const::DEFAULT_WINDOW_HEIGHT / camera.h);
     Sprite::draw(window);
 }
 
@@ -164,24 +166,24 @@ void MapSprite::toggleNoClip()
 
 void MapSprite::checkCollision(MapSprite *otherSprite)
 {
-    if(getLocationX() <= otherSprite->getLocationX() && getLocationX() + getWidth() >= otherSprite->getLocationX())
+    if(getLocationX() <= otherSprite->getLocationX() && getLocationX() + getSourceWidth() >= otherSprite->getLocationX())
     {
-        if(getLocationY() <= otherSprite->getLocationY() && getLocationY() + getHeight() >= otherSprite->getLocationY())
+        if(getLocationY() <= otherSprite->getLocationY() && getLocationY() + getSourceHeight() >= otherSprite->getLocationY())
         {
             onCollide(otherSprite);
         }
-        else if(getLocationY() >= otherSprite->getLocationY() && getLocationY() <= otherSprite->getLocationY() + otherSprite->getHeight())
+        else if(getLocationY() >= otherSprite->getLocationY() && getLocationY() <= otherSprite->getLocationY() + otherSprite->getSourceHeight())
         {
             onCollide(otherSprite);
         }
     }
-    else if(getLocationX() >= otherSprite->getLocationX() && getLocationX() <= otherSprite->getLocationX() + otherSprite->getWidth())
+    else if(getLocationX() >= otherSprite->getLocationX() && getLocationX() <= otherSprite->getLocationX() + otherSprite->getSourceWidth())
     {
-        if(getLocationY() <= otherSprite->getLocationY() && getLocationY() + getHeight() >= otherSprite->getLocationY())
+        if(getLocationY() <= otherSprite->getLocationY() && getLocationY() + getSourceHeight() >= otherSprite->getLocationY())
         {
             onCollide(otherSprite);
         }
-        else if(getLocationY() >= otherSprite->getLocationY() && getLocationY() <= otherSprite->getLocationY() + otherSprite->getHeight())
+        else if(getLocationY() >= otherSprite->getLocationY() && getLocationY() <= otherSprite->getLocationY() + otherSprite->getSourceHeight())
         {
             onCollide(otherSprite);
         }

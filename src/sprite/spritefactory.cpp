@@ -42,15 +42,3 @@ MapSprite * SpriteFactory::generateSprite(const Consumable *consumable)
     }
     return newSprite;
 }
-
-MapSprite * SpriteFactory::generateSprite(const Interaction *interaction)
-{
-    MapSprite *newSprite = nullptr;
-    if(interaction->type == "stairs")
-    {
-        newSprite = new StairsInteractionSprite(
-                {interaction->x, interaction->y, interaction->w, interaction->h}
-                , interaction->property);
-    }
-    return newSprite;
-}

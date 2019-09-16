@@ -1,16 +1,26 @@
 #include "tile.hpp"
 
-Tile::Tile(const SDL_Rect &srcRect, Type type) 
-    : Tile(srcRect, type, false, false)
+Tile::Tile(int id, const SDL_Rect &srcRect, Type type) 
+    : Tile(id, srcRect, type, false, false, nullptr)
 {}
 
-Tile::Tile(const SDL_Rect &srcRect, Type type, bool givesCoins, bool givesCandy)
-    : srcRect(srcRect), type(type), givesCoins(givesCoins), givesCandy(givesCandy)
+Tile::Tile(int id, const SDL_Rect &srcRect, Type type, bool givesCoins, bool givesCandy, Property *property)
+    : id(id), srcRect(srcRect), type(type), givesCoins(givesCoins), givesCandy(givesCandy), property(property)
 {}
 
 Tile::Tile(const Tile &tile)
-    : Tile(tile.srcRect, tile.type, tile.doesGiveCoins(), tile.doesGiveCandy())
+    : Tile(tile.id, tile.srcRect, tile.type, tile.doesGiveCoins(), tile.doesGiveCandy(), tile.property)
 {}
+
+Tile::~Tile()
+{
+    setProperty(nullptr);
+}
+
+int Tile::getId() const
+{
+    return id;
+}
 
 const SDL_Rect & Tile::getSourceRect() const
 {
@@ -50,4 +60,21 @@ bool Tile::doesGiveCandy() const
 void Tile::setGivesCandy(bool givesCandy)
 {
     this->givesCandy = givesCandy;
+}
+
+void Tile::setProperty(Property *property)
+{
+    if(this->property)
+    {
+        delete this->property;
+    }
+    this->property = property;
+}
+
+void Tile::step(MapSprite *sprite) const
+{
+    if(property)
+    {
+        property->onStep(sprite);
+    }
 }

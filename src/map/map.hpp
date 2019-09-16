@@ -4,7 +4,6 @@
 #include "tileset.hpp"
 #include "window.hpp"
 #include "consumable.hpp"
-#include "interaction.hpp"
 
 class Map
 {
@@ -13,9 +12,10 @@ private:
     static const char * const OBJECT_LAYER_IDENTIFIER;
 
 public:
-    Map(const std::string &pathToResourceFolder
+    Map(const Window &window
+            , const std::string &pathToResourceFolder
             , const std::string &mapFile
-            , Tileset *tileset);
+            , const Tileset *tileset);
     ~Map();
 
     Tile * getTile(unsigned int layerNumber, int x, int y) const;
@@ -34,23 +34,28 @@ public:
     unsigned int getCameraHeight() const;
     unsigned int getNumberOfLayers() const;
     const std::vector<Consumable *> & getConsumables() const;
-    const std::vector<Interaction *> & getInteractions() const;
 
-    void drawLayer(const Window &window
+    void drawLayer(
+            const Window &window
+            , const Tileset *tileset
             , unsigned int layerNumber
-            , const SDL_Rect &camera
-            , SDL_Texture *tilesetTexture);
+            , const SDL_Rect &camera);
 
 private:
+    std::vector<SDL_Texture *> layerTextures;
     std::vector<Tile ***> tileLayers;
     std::vector<Consumable *> consumables;
-    std::vector<Interaction *> interactions;
     int startLocationX, startLocationY;
     std::string levelName;
     unsigned int timeToComplete;
     unsigned int tileRows, tileColumns;
     unsigned int tileW, tileH;
     unsigned int cameraWidth, cameraHeight;
+    std::vector<unsigned int> layersNeedingRefresh;
+
+    void createLayer(const Window &window, const Tileset *tileset, const Tile ***tileGrid);
+    void createLayer(const Window &window, const Tileset *tileset, const Tile ***tileGrid, const SDL_Color &baseColor);
+    void refreshLayer(const Window &window, const Tileset *tileset, unsigned int layerNum);
 };
 
 #endif

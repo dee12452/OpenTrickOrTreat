@@ -9,7 +9,7 @@ public:
     InteractionSprite(const SDL_Rect dstRect, int property);
     virtual ~InteractionSprite() override;
 
-    void draw(const Window &, Map *, const SDL_Rect &, unsigned int) override;
+    void draw(const Window &, Map *, const SDL_Rect &) override;
 
 protected:
     int getProperty() const;

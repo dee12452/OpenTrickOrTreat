@@ -1,7 +1,7 @@
 #include "interactionsprite.hpp"
 
 InteractionSprite::InteractionSprite(const SDL_Rect dstRect, int property)
-    : MapSprite(nullptr, Const::EMPTY_RECT, dstRect)
+    : MapSprite(nullptr, dstRect, dstRect)
     , property(property)
 {
     setUnsafeLocationX(dstRect.x);
@@ -11,7 +11,7 @@ InteractionSprite::InteractionSprite(const SDL_Rect dstRect, int property)
 InteractionSprite::~InteractionSprite()
 {}
 
-void InteractionSprite::draw(const Window &, Map *, const SDL_Rect &, unsigned int)
+void InteractionSprite::draw(const Window &, Map *, const SDL_Rect &)
 {}
 
 int InteractionSprite::getProperty() const
