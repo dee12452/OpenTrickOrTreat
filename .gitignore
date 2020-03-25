@@ -3,5 +3,4 @@ CMakeCache.txt
 CMakeFiles/
 Makefile
 OpenTrickOrTreat
-*.cmake
-data/textures/
+cmake_install.cmake
