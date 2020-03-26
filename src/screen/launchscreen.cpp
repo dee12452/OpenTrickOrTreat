@@ -1,4 +1,5 @@
 #include "launchscreen.hpp"
+#include "util/const.hpp"
 
 const char * const LaunchScreen::LOADING_TEXT = "Loading...";
 const SDL_Rect LaunchScreen::LOADING_TEXT_DESTINATION_RECT = {0, 0, 400, 100};
@@ -7,38 +8,13 @@ LaunchScreen::LaunchScreen()
 {
     fontsToLoad.push_back(Const::FONT_TYPEWRITER);
 
-    animationsToLoad.push_back(Const::ANIMATION_CS_SKELETON);
-    animationsToLoad.push_back(Const::ANIMATION_CS_WITCH);
-    animationsToLoad.push_back(Const::ANIMATION_CS_MONSTER);
-    animationsToLoad.push_back(Const::ANIMATION_CS_VAMPIRE);
-    animationsToLoad.push_back(Const::ANIMATION_CS_FISH);
-    animationsToLoad.push_back(Const::ANIMATION_CANDY);
-    animationsToLoad.push_back(Const::ANIMATION_COIN);
-
-    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_UP);
-    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_DOWN);
-    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_LEFT);
-    animationsToLoad.push_back(Const::ANIMATION_SKELETON_MV_RIGHT);
-    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_UP);
-    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_DOWN);
-    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_LEFT);
-    animationsToLoad.push_back(Const::ANIMATION_WITCH_MV_RIGHT);
-    animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_UP);
-    animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_DOWN);
-    animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_LEFT);
-    animationsToLoad.push_back(Const::ANIMATION_MONSTER_MV_RIGHT);
-    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_UP);
-    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_DOWN);
-    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_LEFT);
-    animationsToLoad.push_back(Const::ANIMATION_VAMPIRE_MV_RIGHT);
-    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_UP);
-    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_DOWN);
-    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_LEFT);
-    animationsToLoad.push_back(Const::ANIMATION_FISH_MV_RIGHT);
-
-    texturesToLoad.push_back(Const::IMAGE_TOT_1);
-    texturesToLoad.push_back(Const::IMAGE_TOT_2);
-    texturesToLoad.push_back(Const::IMAGE_TOT_3);
+    texturesToLoad.push_back(Const::IMAGE_CHARACTERS_SKELETON);
+    texturesToLoad.push_back(Const::IMAGE_CHARACTERS_WITCH);
+    texturesToLoad.push_back(Const::IMAGE_CHARACTERS_MONSTER);
+    texturesToLoad.push_back(Const::IMAGE_CHARACTERS_VAMPIRE);
+    texturesToLoad.push_back(Const::IMAGE_CHARACTERS_CREATURE);
+    texturesToLoad.push_back(Const::IMAGE_TILESET);
+    texturesToLoad.push_back(Const::IMAGE_MISC);
 }
 
 LaunchScreen::~LaunchScreen()
@@ -48,7 +24,6 @@ void LaunchScreen::onStart(const GameState &gameState, const Window & window)
 {
     pathToResourceFolder = gameState.getResourceFolderPath();
     loadFonts();
-    loadAnimations();
     loadingText = TextSprite(
             window
             , LOADING_TEXT
@@ -63,7 +38,7 @@ void LaunchScreen::onUpdate(GameState & gameState, unsigned int /*deltaTime*/)
 {
     if(texturesToLoad.empty())
     {
-        gameState.setState(State::PLAY);
+        gameState.setState(State::LEVEL);
         return;
     }
     if(gameState.getResourceFolderPath() != pathToResourceFolder)
@@ -89,14 +64,6 @@ void LaunchScreen::loadFonts()
     for(auto fontToLoad : fontsToLoad)
     {
         FontManager::getInstance()->loadFont(pathToResourceFolder, fontToLoad);
-    }
-}
-
-void LaunchScreen::loadAnimations()
-{
-    for(auto animationToLoad : animationsToLoad)
-    {
-        AnimationManager::getInstance()->loadAnimation(pathToResourceFolder, animationToLoad);
     }
 }
 

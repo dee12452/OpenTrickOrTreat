@@ -1,7 +1,7 @@
 #ifndef _OPEN_TOT_WINDOW_HPP_
 #define _OPEN_TOT_WINDOW_HPP_
 
-#include "util.hpp"
+#include "util/util.hpp"
 
 class Window
 {

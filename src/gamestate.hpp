@@ -1,9 +1,9 @@
 #ifndef _OPEN_TOT_GAME_STATE_HPP_
 #define _OPEN_TOT_GAME_STATE_HPP_
 
-#include "util.hpp"
+#include "util/util.hpp"
 
-enum State {LAUNCH, PLAY, STOP};
+enum State {LAUNCH, LEVEL, STOP};
 
 class GameState
 {

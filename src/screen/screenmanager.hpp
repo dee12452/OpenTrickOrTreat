@@ -1,8 +1,7 @@
 #ifndef _OPEN_TOT_SCREEN_MANAGER_HPP_
 #define _OPEN_TOT_SCREEN_MANAGER_HPP_
 
-#include "launchscreen.hpp"
-#include "playscreen.hpp"
+#include "screen.hpp"
 
 class ScreenManager
 {

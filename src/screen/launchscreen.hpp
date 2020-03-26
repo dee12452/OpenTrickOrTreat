@@ -2,8 +2,7 @@
 #define _OPEN_TOT_LAUNCH_SCREEN_HPP_
 
 #include "screen.hpp"
-#include "textsprite.hpp"
-#include "animation/animationmanager.hpp"
+#include "sprite/textsprite.hpp"
 
 class LaunchScreen : public Screen
 {
@@ -24,13 +23,11 @@ protected:
 
 private:
     void loadFonts();
-    void loadAnimations();
     void loadNextTexture(const Window &window);
 
     std::string pathToResourceFolder;
     std::vector<std::string> texturesToLoad;
     std::vector<std::string> fontsToLoad;
-    std::vector<std::string> animationsToLoad;
     TextSprite loadingText;
 };
 

@@ -1,7 +1,7 @@
 #ifndef _OPEN_TOT_CONST_HPP_
 #define _OPEN_TOT_CONST_HPP_
 
-#include <SDL2/SDL_rect.h>
+#include <SDL_rect.h>
 
 enum CostumeType {SKELETON = 0, WITCH = 1, MONSTER = 2, VAMPIRE = 3, FISH = 4, NO_COSTUME=5};
 enum MoveDirection {UP, DOWN, LEFT, RIGHT};
@@ -20,38 +20,13 @@ namespace Const
     extern const int DEFAULT_WINDOW_WIDTH;
     extern const int DEFAULT_WINDOW_HEIGHT;
 
-    extern const char * const ANIMATION_CS_SKELETON;
-    extern const char * const ANIMATION_CS_WITCH;
-    extern const char * const ANIMATION_CS_MONSTER;
-    extern const char * const ANIMATION_CS_VAMPIRE;
-    extern const char * const ANIMATION_CS_FISH;
-    extern const char * const ANIMATION_CANDY;
-    extern const char * const ANIMATION_COIN;
-    
-    extern const char * const ANIMATION_SKELETON_MV_UP;
-    extern const char * const ANIMATION_SKELETON_MV_DOWN;
-    extern const char * const ANIMATION_SKELETON_MV_LEFT;
-    extern const char * const ANIMATION_SKELETON_MV_RIGHT;
-    extern const char * const ANIMATION_WITCH_MV_UP;
-    extern const char * const ANIMATION_WITCH_MV_DOWN;
-    extern const char * const ANIMATION_WITCH_MV_LEFT;
-    extern const char * const ANIMATION_WITCH_MV_RIGHT;
-    extern const char * const ANIMATION_MONSTER_MV_UP;
-    extern const char * const ANIMATION_MONSTER_MV_DOWN;
-    extern const char * const ANIMATION_MONSTER_MV_LEFT;
-    extern const char * const ANIMATION_MONSTER_MV_RIGHT;
-    extern const char * const ANIMATION_VAMPIRE_MV_UP;
-    extern const char * const ANIMATION_VAMPIRE_MV_DOWN;
-    extern const char * const ANIMATION_VAMPIRE_MV_LEFT;
-    extern const char * const ANIMATION_VAMPIRE_MV_RIGHT;
-    extern const char * const ANIMATION_FISH_MV_UP;
-    extern const char * const ANIMATION_FISH_MV_DOWN;
-    extern const char * const ANIMATION_FISH_MV_LEFT;
-    extern const char * const ANIMATION_FISH_MV_RIGHT;
-
-    extern const char * const IMAGE_TOT_1;
-    extern const char * const IMAGE_TOT_2;
-    extern const char * const IMAGE_TOT_3;
+    extern const char * const IMAGE_CHARACTERS_SKELETON;
+    extern const char * const IMAGE_CHARACTERS_VAMPIRE;
+    extern const char * const IMAGE_CHARACTERS_MONSTER;
+    extern const char * const IMAGE_CHARACTERS_WITCH;
+    extern const char * const IMAGE_CHARACTERS_CREATURE;
+    extern const char * const IMAGE_TILESET;
+    extern const char * const IMAGE_MISC;
 
     extern const char * const FONT_TYPEWRITER;
 

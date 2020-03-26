@@ -1,14 +1,12 @@
-#ifndef _OPEN_TOT_PLAY_SCREEN_HPP_
-#define _OPEN_TOT_PLAY_SCREEN_HPP_
+#ifndef _OPEN_TOT_LEVEL_SCREEN_HPP_
+#define _OPEN_TOT_LEVEL_SCREEN_HPP_
 
 #include "screen.hpp"
-#include "playersprite.hpp"
 
-class PlayScreen : public Screen
+class LevelScreen : public Screen
 {
 public:
-    PlayScreen();
-    ~PlayScreen() override;
+    ~LevelScreen() override;
 
 protected:
     void onStart(const GameState &gameState, const Window &window) override;
@@ -16,16 +14,6 @@ protected:
     void onEvent(GameState &gameState, const SDL_Event &event) override;
     void onKeyboardUpdate(GameState &gameState, const unsigned char *keyboardState) override;
     void onDraw(const Window &window) override;
-
-private:
-    void generateConsumables();
-    void drawCamera(const Window &window);
-
-    Map *currentMap;
-    Tileset *tileset;
-    PlayerSprite *player;
-    std::vector<MapSprite *> mapSprites;
-    bool hasDrawn;
 };
 
 #endif

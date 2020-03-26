@@ -4,7 +4,7 @@
 #include "gamestate.hpp"
 #include "texturemanager.hpp"
 #include "fontmanager.hpp"
-#include "timer.hpp"
+#include "util/timer.hpp"
 
 class Screen
 {

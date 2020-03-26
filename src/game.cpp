@@ -34,7 +34,6 @@ void Game::init()
 
 void Game::deinit()
 {
-    AnimationManager::destroyInstance();
     FontManager::destroyInstance();
     TextureManager::destroyInstance();
     delete window;

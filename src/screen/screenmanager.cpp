@@ -1,5 +1,6 @@
 #include "screenmanager.hpp"
-
+#include "launchscreen.hpp"
+#include "levelscreen.hpp"
 
 ScreenManager::ScreenManager(State initialState)
     : currentScreen(nullptr), currentState(initialState), screenChangeFlag(false)
@@ -43,8 +44,8 @@ void ScreenManager::changeScreen()
         case State::LAUNCH:
             currentScreen = new LaunchScreen();
             break;
-        case State::PLAY:
-            currentScreen = new PlayScreen();
+        case State::LEVEL:
+            currentScreen = new LevelScreen();
             break;
         default:
             currentScreen = nullptr;

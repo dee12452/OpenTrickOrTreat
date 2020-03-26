@@ -6,41 +6,15 @@ const char * const Const::TEXTURES_FOLDER_PATH = "textures/";
 const char * const Const::FONTS_FOLDER_PATH = "fonts/";
 const char * const Const::TILESETS_FOLDER_PATH = "tilesets/";
 const char * const Const::MAPS_FOLDER_PATH = "maps/";
-const char * const Const::ANIMATIONS_FOLDER_PATH = "animations/";
 const int Const::DEFAULT_FONT_PT_SIZE = 20;
 
-const char * const Const::ANIMATION_CS_SKELETON = "cs_skeleton.json";
-const char * const Const::ANIMATION_CS_WITCH = "cs_witch.json";
-const char * const Const::ANIMATION_CS_MONSTER = "cs_monster.json";
-const char * const Const::ANIMATION_CS_VAMPIRE = "cs_vampire.json";
-const char * const Const::ANIMATION_CS_FISH = "cs_fish.json";
-const char * const Const::ANIMATION_CANDY = "candy.json";
-const char * const Const::ANIMATION_COIN = "coin.json";
-
-const char * const Const::ANIMATION_SKELETON_MV_UP = "skeleton_mv_up.json";
-const char * const Const::ANIMATION_SKELETON_MV_DOWN = "skeleton_mv_down.json";
-const char * const Const::ANIMATION_SKELETON_MV_LEFT = "skeleton_mv_left.json";
-const char * const Const::ANIMATION_SKELETON_MV_RIGHT = "skeleton_mv_right.json";
-const char * const Const::ANIMATION_WITCH_MV_UP = "witch_mv_up.json";
-const char * const Const::ANIMATION_WITCH_MV_DOWN = "witch_mv_down.json";
-const char * const Const::ANIMATION_WITCH_MV_LEFT = "witch_mv_left.json";
-const char * const Const::ANIMATION_WITCH_MV_RIGHT = "witch_mv_right.json";
-const char * const Const::ANIMATION_MONSTER_MV_UP = "monster_mv_up.json";
-const char * const Const::ANIMATION_MONSTER_MV_DOWN = "monster_mv_down.json";
-const char * const Const::ANIMATION_MONSTER_MV_LEFT = "monster_mv_left.json";
-const char * const Const::ANIMATION_MONSTER_MV_RIGHT = "monster_mv_right.json";
-const char * const Const::ANIMATION_VAMPIRE_MV_UP = "vampire_mv_up.json";
-const char * const Const::ANIMATION_VAMPIRE_MV_DOWN = "vampire_mv_down.json";
-const char * const Const::ANIMATION_VAMPIRE_MV_LEFT = "vampire_mv_left.json";
-const char * const Const::ANIMATION_VAMPIRE_MV_RIGHT = "vampire_mv_right.json";
-const char * const Const::ANIMATION_FISH_MV_UP = "fish_mv_up.json";
-const char * const Const::ANIMATION_FISH_MV_DOWN = "fish_mv_down.json";
-const char * const Const::ANIMATION_FISH_MV_LEFT = "fish_mv_left.json";
-const char * const Const::ANIMATION_FISH_MV_RIGHT = "fish_mv_right.json";
-
-const char * const Const::IMAGE_TOT_1 = "tot1.png";
-const char * const Const::IMAGE_TOT_2 = "tot2.png";
-const char * const Const::IMAGE_TOT_3 = "tot3.png";
+const char * const Const::IMAGE_CHARACTERS_SKELETON = "characters_skeleton.png";
+const char * const Const::IMAGE_CHARACTERS_VAMPIRE = "character_vampire.png";
+const char * const Const::IMAGE_CHARACTERS_MONSTER = "characters_monster.png";
+const char * const Const::IMAGE_CHARACTERS_WITCH = "characters_witch.png";
+const char * const Const::IMAGE_CHARACTERS_CREATURE = "characters_creature.png";
+const char * const Const::IMAGE_TILESET = "tileset.png";
+const char * const Const::IMAGE_MISC = "misc.png";
 
 const char * const Const::FONT_TYPEWRITER = "veteran_typewriter.ttf";
 
