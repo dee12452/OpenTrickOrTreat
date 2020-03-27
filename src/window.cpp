@@ -52,7 +52,7 @@ void Window::clear(SDL_Texture *texture, const SDL_Color &color) const
     Util::sdlFuncCheck(SDL_SetRenderTarget(sdlRenderer, texture), "SDL_SetRenderTarget");
     Util::sdlFuncCheck(SDL_SetRenderDrawColor(sdlRenderer, color.r, color.g, color.b, color.a), "SDL_SetRenderDrawColor");
     Util::sdlFuncCheck(SDL_RenderClear(sdlRenderer), "SDL_RenderClear");
-    Util::sdlFuncCheck(SDL_SetRenderTarget(sdlRenderer, NULL), "SDL_SetRenderTarget");
+    Util::sdlFuncCheck(SDL_SetRenderTarget(sdlRenderer, nullptr), "SDL_SetRenderTarget");
 }
 
 void Window::draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect, const SDL_Rect &dstRect) const
