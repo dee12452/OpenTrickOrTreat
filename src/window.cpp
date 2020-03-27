@@ -75,6 +75,11 @@ void Window::draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect) const
     Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, sourceRect, nullptr), "SDL_RenderCopy");
 }
 
+void Window::draw(SDL_Texture *sdlTexture) const
+{
+    Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, nullptr, nullptr), "SDL_RenderCopy");
+}
+
 void Window::render() const
 {
     SDL_RenderPresent(sdlRenderer);

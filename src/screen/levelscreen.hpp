@@ -3,9 +3,13 @@
 
 #include "screen.hpp"
 
+class Tileset;
+class Map;
+
 class LevelScreen : public Screen
 {
 public:
+    LevelScreen();
     ~LevelScreen() override;
 
 protected:
@@ -14,6 +18,10 @@ protected:
     void onEvent(GameState &gameState, const SDL_Event &event) override;
     void onKeyboardUpdate(GameState &gameState, const unsigned char *keyboardState) override;
     void onDraw(const Window &window) override;
+
+private:
+    Tileset *tileset;
+    Map *map;
 };
 
 #endif

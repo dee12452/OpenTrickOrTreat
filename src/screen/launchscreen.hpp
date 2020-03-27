@@ -3,10 +3,12 @@
 
 #include "screen.hpp"
 #include "sprite/textsprite.hpp"
+#include "util/timer.hpp"
 
 class LaunchScreen : public Screen
 {
 private:
+    static const unsigned int LOAD_TIMER_DELAY; 
     static const char * const LOADING_TEXT;
     static const SDL_Rect LOADING_TEXT_DESTINATION_RECT;
 
@@ -29,6 +31,7 @@ private:
     std::vector<std::string> texturesToLoad;
     std::vector<std::string> fontsToLoad;
     TextSprite loadingText;
+    Timer loadTimer;
 };
 
 #endif

@@ -1,10 +1,11 @@
 #include "launchscreen.hpp"
 #include "util/const.hpp"
 
+const unsigned int LaunchScreen::LOAD_TIMER_DELAY = 1500; 
 const char * const LaunchScreen::LOADING_TEXT = "Loading...";
 const SDL_Rect LaunchScreen::LOADING_TEXT_DESTINATION_RECT = {0, 0, 400, 100};
 
-LaunchScreen::LaunchScreen()
+LaunchScreen::LaunchScreen() : loadTimer(LOAD_TIMER_DELAY)
 {
     fontsToLoad.push_back(Const::FONT_TYPEWRITER);
 
@@ -22,6 +23,7 @@ LaunchScreen::~LaunchScreen()
 
 void LaunchScreen::onStart(const GameState &gameState, const Window & window)
 {
+    loadTimer.reset();
     pathToResourceFolder = gameState.getResourceFolderPath();
     loadFonts();
     loadingText = TextSprite(
@@ -36,7 +38,7 @@ void LaunchScreen::onStart(const GameState &gameState, const Window & window)
 
 void LaunchScreen::onUpdate(GameState & gameState, unsigned int /*deltaTime*/) 
 {
-    if(texturesToLoad.empty())
+    if(texturesToLoad.empty() && loadTimer.check())
     {
         gameState.setState(State::LEVEL);
         return;
