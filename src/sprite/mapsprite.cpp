@@ -3,7 +3,10 @@
 
 MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect)
     : Sprite(texture, sourceRect, destinationRect)
-{}
+{
+    stopX();
+    stopY();
+}
 
 MapSprite::~MapSprite()
 {}
