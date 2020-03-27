@@ -1,7 +1,7 @@
 #include "launchscreen.hpp"
 #include "util/const.hpp"
 
-const unsigned int LaunchScreen::LOAD_TIMER_DELAY = 1500; 
+const unsigned int LaunchScreen::LOAD_TIMER_DELAY = 250; 
 const char * const LaunchScreen::LOADING_TEXT = "Loading...";
 const SDL_Rect LaunchScreen::LOADING_TEXT_DESTINATION_RECT = {0, 0, 400, 100};
 
