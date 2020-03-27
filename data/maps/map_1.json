@@ -17,6 +17,27 @@
  "nextlayerid":2,
  "nextobjectid":1,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"cameraheight",
+         "type":"int",
+         "value":7
+        }, 
+        {
+         "name":"camerawidth",
+         "type":"int",
+         "value":7
+        }, 
+        {
+         "name":"startx",
+         "type":"int",
+         "value":10
+        }, 
+        {
+         "name":"starty",
+         "type":"int",
+         "value":10
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.3.3",
  "tileheight":48,
