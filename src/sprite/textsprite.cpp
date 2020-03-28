@@ -78,7 +78,7 @@ void TextSprite::draw(const Window &window)
                 , FontManager::getInstance()->getFont(font)
                 , color));
     }
-    Sprite::draw(window);
+    window.drawAll(getSdlTexture(), getDestinationRect());
 }
 
 const std::string & TextSprite::getText() const

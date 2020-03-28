@@ -47,6 +47,7 @@ void Map::loadMapValues(json *mapJson, int tileWidth, int tileHeight)
 {
     this->mapWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     this->mapHeight = Util::getJsonPair("height", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
+    this->camera = { 0, 0, 0, 0 };
     json_list *properties = Util::getJsonList("properties", mapJson->json_lists, mapJson->num_of_lists);
     for(int elementIndex = 0; elementIndex < properties->num_of_elements; elementIndex++)
     {
@@ -62,11 +63,11 @@ void Map::loadMapValues(json *mapJson, int tileWidth, int tileHeight)
         }
         else if(propertyName == "startx")
         {
-
+            camera.x = Util::getJsonPair("value", element->json_pairs, element->num_of_pairs)->int_val->val * tileWidth;
         }
         else if(propertyName == "starty")
         {
-
+            camera.y = Util::getJsonPair("value", element->json_pairs, element->num_of_pairs)->int_val->val * tileHeight;
         }
     }
 }

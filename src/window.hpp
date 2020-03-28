@@ -19,7 +19,8 @@ public:
     void clear(SDL_Texture *texture, const SDL_Color &color) const;
     void draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect, const SDL_Rect &dstRect) const;
     void draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect) const;
-    void draw(SDL_Texture *sdlTexture) const;
+    void drawAll(SDL_Texture *sdlTexture) const;
+    void drawAll(SDL_Texture *sdlTexture, const SDL_Rect &dstRect) const;
     void render() const;
 
     SDL_Renderer * getSdlRenderer() const;

@@ -57,27 +57,22 @@ void Window::clear(SDL_Texture *texture, const SDL_Color &color) const
 
 void Window::draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect, const SDL_Rect &dstRect) const
 {
-    const SDL_Rect *sourceRect = &srcRect;
-    if(srcRect.w == 0 && srcRect.h == 0)
-    {
-        sourceRect = nullptr;
-    }
-    Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, sourceRect, &dstRect), "SDL_RenderCopy");
+    Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, &srcRect, &dstRect), "SDL_RenderCopy");
 }
 
 void Window::draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect) const
 {
-    const SDL_Rect *sourceRect = &srcRect;
-    if(srcRect.w == 0 && srcRect.h == 0)
-    {
-        sourceRect = nullptr;
-    }
-    Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, sourceRect, nullptr), "SDL_RenderCopy");
+    Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, &srcRect, nullptr), "SDL_RenderCopy");
 }
 
-void Window::draw(SDL_Texture *sdlTexture) const
+void Window::drawAll(SDL_Texture *sdlTexture) const
 {
     Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, nullptr, nullptr), "SDL_RenderCopy");
+}
+
+void Window::drawAll(SDL_Texture *sdlTexture, const SDL_Rect &dstRect) const
+{
+    Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, nullptr, &dstRect), "SDL_RenderCopy");
 }
 
 void Window::render() const
