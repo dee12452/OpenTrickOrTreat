@@ -17,19 +17,19 @@ void MapSprite::draw(const Window &window)
     window.draw(getSdlTexture(), getSourceRect(), dstRectCentered);
 }
 
-void MapSprite::update()
+void MapSprite::update(unsigned int deltaTime)
 {
-    offsetX += speedX;
-    offsetY += speedY;
-    if(offsetX >= 1.0f)
+    offsetX += static_cast<float> (deltaTime) * speedX;
+    offsetY += static_cast<float> (deltaTime) * speedY;
+    if(offsetX >= 100.0f)
     {
         setX(getX() + 1);
-        offsetX -= 1.0f;
+        offsetX = 0;
     }
-    if(offsetY >= 1.0f)
+    if(offsetY >= 100.0f)
     {
         setY(getY() + 1);
-        offsetY -= 1.0f;
+        offsetY = 0;
     }
 }
 

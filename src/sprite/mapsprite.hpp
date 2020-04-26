@@ -10,7 +10,7 @@ public:
     virtual ~MapSprite() override;
 
     void draw(const Window &window) override;
-    virtual void update();
+    virtual void update(unsigned int deltaTime);
     
     virtual void stopX();
     virtual void stopY();
