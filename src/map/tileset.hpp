@@ -2,17 +2,7 @@
 #define _OPEN_TOT_TILESET_HPP_
 
 #include "texturemanager.hpp"
-
-enum TileType
-{
-    GROUND
-};
-
-struct Tile
-{
-    TileType type;
-    SDL_Rect location;
-};
+#include "tile.hpp"
 
 class Tileset
 {
