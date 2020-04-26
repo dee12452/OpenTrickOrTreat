@@ -5,6 +5,9 @@
 
 class MapSprite : public Sprite
 {
+private:
+    static const unsigned int MOVEMENT_DELAY_MS;
+
 public:
     MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect);
     virtual ~MapSprite() override;
@@ -23,6 +26,12 @@ public:
 
     void clampX(int minX, int maxX);
     void clampY(int minY, int maxY);
+
+protected:
+    virtual void onStopX(int previousSpeed);
+    virtual void onStopY(int previousSpeed);
+    virtual void onMoveX();
+    virtual void onMoveY();
 
 private:
     int speedX;
