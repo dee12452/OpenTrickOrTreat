@@ -7,6 +7,7 @@ const char * const Const::FONTS_FOLDER_PATH = "fonts/";
 const char * const Const::TILESETS_FOLDER_PATH = "tilesets/";
 const char * const Const::MAPS_FOLDER_PATH = "maps/";
 const int Const::DEFAULT_FONT_PT_SIZE = 20;
+const int Const::DEFAULT_PLAYER_SPEED = 3;
 
 const char * const Const::IMAGE_CHARACTERS_SKELETON = "characters_skeleton.png";
 const char * const Const::IMAGE_CHARACTERS_VAMPIRE = "character_vampire.png";

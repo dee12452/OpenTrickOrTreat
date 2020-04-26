@@ -3,6 +3,7 @@
 
 MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect)
     : Sprite(texture, sourceRect, destinationRect)
+    , deltaSpeedTimer(0)
 {
     stopX();
     stopY();
@@ -13,68 +14,59 @@ MapSprite::~MapSprite()
 
 void MapSprite::draw(const Window &window)
 {
-    const SDL_Rect dstRectCentered = { getX() - getWidth() / 2, getY() - getHeight() / 2, getWidth(), getHeight() };
+    const SDL_Rect dstRectCentered = { getX(), getY() - getHeight() / 3, getWidth(), getHeight() };
     window.draw(getSdlTexture(), getSourceRect(), dstRectCentered);
 }
 
 void MapSprite::update(unsigned int deltaTime)
 {
-    offsetX += static_cast<float> (deltaTime) * speedX;
-    offsetY += static_cast<float> (deltaTime) * speedY;
-    if(offsetX >= 100.0f)
+    deltaSpeedTimer += deltaTime;
+    if(deltaSpeedTimer >= 30)
     {
-        setX(getX() + 1);
-        offsetX = 0;
-    }
-    if(offsetY >= 100.0f)
-    {
-        setY(getY() + 1);
-        offsetY = 0;
+        deltaSpeedTimer = 0;
+        setX(getX() + speedX);
+        setY(getY() + speedY);
     }
 }
 
 void MapSprite::stopX()
 {
     speedX = 0;
-    offsetX = 0;
 }
 
 void MapSprite::stopY()
 {
     speedY = 0;
-    offsetY = 0;
 }
 
-float MapSprite::getSpeedX() const
+int MapSprite::getSpeedX() const
 {
     return speedX;
 }
 
-void MapSprite::setSpeedX(float speedX)
+void MapSprite::setSpeedX(int sX)
 {
-    this->speedX = std::max(speedX, 1.0f);
+    speedX = sX;
 }
 
-float MapSprite::getSpeedY() const
+int MapSprite::getSpeedY() const
 {
     return speedY;
 }
 
-void MapSprite::setSpeedY(float speedY)
+void MapSprite::setSpeedY(int sY)
 {
-    this->speedY = std::max(speedY, 1.0f);
+    speedY = sY;
 }
 
-void MapSprite::clampX(int mapWidth, int tileWidth)
+void MapSprite::clampX(int minX, int maxX)
 {
-    const int mapWidthPixels = mapWidth * tileWidth;
-    setX(std::max(getX() - getWidth() / 2, 0));
-    setX(std::min(getX() + getWidth() / 2, mapWidthPixels));
+    setX(std::max(getX() - getWidth() / 2, minX));
+    setX(std::min(getX() + getWidth() / 2, maxX));
 }
 
-void MapSprite::clampY(int mapHeight, int tileHeight)
+void MapSprite::clampY(int minY, int maxY)
 {
-    const int mapHeightPixels = mapHeight * tileHeight;
-    setX(std::max(getY() - getHeight() / 2, 0));
-    setX(std::min(getY() + getHeight() / 2, mapHeightPixels));
+    setX(std::max(getY() - getHeight() / 2, minY));
+    setX(std::min(getY() + getHeight() / 2, maxY));
 }

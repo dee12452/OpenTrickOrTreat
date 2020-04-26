@@ -15,18 +15,19 @@ public:
     virtual void stopX();
     virtual void stopY();
 
-    float getSpeedX() const;
-    void setSpeedX(float speedX);
+    int getSpeedX() const;
+    void setSpeedX(int speedX);
     
-    float getSpeedY() const;
-    void setSpeedY(float speedY);
+    int getSpeedY() const;
+    void setSpeedY(int speedY);
 
-    void clampX(int mapWidth, int tileWidth);
-    void clampY(int mapHeight, int tileHeight);
+    void clampX(int minX, int maxX);
+    void clampY(int minY, int maxY);
 
 private:
-    float speedX, offsetX;
-    float speedY, offsetY;
+    int speedX;
+    int speedY;
+    unsigned int deltaSpeedTimer;
 };
 
 #endif

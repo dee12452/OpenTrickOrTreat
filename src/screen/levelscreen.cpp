@@ -1,5 +1,6 @@
 #include "levelscreen.hpp"
 #include "map/map.hpp"
+#include "sprite/mapsprite.hpp"
 
 LevelScreen::LevelScreen() : tileset(nullptr), map(nullptr)
 {}
@@ -21,19 +22,53 @@ LevelScreen::~LevelScreen()
 void LevelScreen::onStart(const GameState &gameState, const Window &window)
 {
     tileset = new Tileset(gameState.getResourceFolderPath());
-    map = new Map(window, gameState.getResourceFolderPath(), Const::MAP_1, *tileset);
+    map = new Map(window, gameState.getResourceFolderPath(), Const::MAP_1, tileset);
 }
 
 void LevelScreen::onUpdate(GameState &gameState, unsigned int deltaTime)
-{}
+{
+    map->update(deltaTime);
+}
 
 void LevelScreen::onEvent(GameState &gameState, const SDL_Event &event)
-{}
+{
+    if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+    {
+        gameState.setState(State::STOP);
+    }
+}
 
 void LevelScreen::onKeyboardUpdate(GameState &gameState, const unsigned char *keyboardState)
-{}
+{
+    MapSprite *player = map->getPlayer();
+    if(keyboardState[SDL_SCANCODE_UP])
+    {
+        player->stopX();
+        player->setSpeedY(-Const::DEFAULT_PLAYER_SPEED);
+    } 
+    else if(keyboardState[SDL_SCANCODE_DOWN])
+    {
+        player->stopX();
+        map->getPlayer()->setSpeedY(Const::DEFAULT_PLAYER_SPEED);
+    }
+    else if(keyboardState[SDL_SCANCODE_LEFT])
+    {
+        player->stopY();
+        map->getPlayer()->setSpeedX(-Const::DEFAULT_PLAYER_SPEED);
+    }
+    else if(keyboardState[SDL_SCANCODE_RIGHT])
+    {
+        player->stopY();
+        map->getPlayer()->setSpeedX(Const::DEFAULT_PLAYER_SPEED);
+    }
+    else
+    {
+        map->getPlayer()->stopX();
+        map->getPlayer()->stopY();
+    }
+}
 
 void LevelScreen::onDraw(const Window &window)
 {
-    map->draw(window, *tileset);
+    map->draw(window);
 }

@@ -3,23 +3,31 @@
 
 #include "tileset.hpp"
 
+class MapSprite;
+
 class Map
 {
 public:
-    Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, const Tileset &tileset);
+    Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *tileset);
     ~Map();
 
-    void draw(const Window &window, const Tileset &tileset) const;
+    void update(unsigned int deltaTime);
+    void draw(const Window &window);
+
+    MapSprite * getPlayer() const;
 
 private:
-    void loadMapValues(json *mapJson, int tileWidth, int tileHeight);
+    void loadMapValues(json *mapJson);
     void loadTileGrid(json *mapJson);
 
+    Tileset *tileset;
     SDL_Texture *mapTexture;
     std::vector<std::vector<unsigned int>> tileGrid;
-    int mapWidth;
-    int mapHeight;
-    SDL_Rect camera;
+    int mapTileWidth;
+    int mapTileHeight;
+    int cameraWidth;
+    int cameraHeight;
+    MapSprite *player;
 };
 
 #endif
