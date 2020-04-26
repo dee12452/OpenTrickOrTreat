@@ -8,7 +8,9 @@ Map::Map(const Window &window, const std::string &pathToResourceFolder, const st
     loadMapValues(mapJson, tileset.getTileWidth(), tileset.getTileHeight());
     loadTileGrid(mapJson);
     gahoodson_delete(mapJson);
-    mapTexture = window.createTexture(this->mapWidth * tileset.getTileWidth(), this->mapHeight * tileset.getTileHeight());
+    const int mapTextureWidth = (mapWidth + camera.w / tileset.getTileWidth()) * tileset.getTileWidth();
+    const int mapTextureHeight = (mapHeight + camera.h / tileset.getTileHeight()) * tileset.getTileHeight();
+    mapTexture = window.createTexture(mapTextureWidth, mapTextureHeight);
 }
 
 Map::~Map()
@@ -35,7 +37,12 @@ void Map::draw(const Window &window, const Tileset &tileset) const
                 continue;
             }
 
-            const SDL_Rect dstRect = { x * tileset.getTileWidth(), y * tileset.getTileHeight(), tileset.getTileWidth(), tileset.getTileHeight() };
+            const SDL_Rect dstRect = { 
+                camera.w / 2 + x * tileset.getTileWidth(), 
+                camera.h / 2 + y * tileset.getTileHeight(), 
+                tileset.getTileWidth(), 
+                tileset.getTileHeight() 
+            };
             window.draw(tileset.getTilesetTexture(), tile->location, dstRect);
         }
     }
