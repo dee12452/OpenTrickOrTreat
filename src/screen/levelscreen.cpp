@@ -1,6 +1,6 @@
 #include "levelscreen.hpp"
 #include "map/map.hpp"
-#include "sprite/mapsprite.hpp"
+#include "sprite/playersprite.hpp"
 
 LevelScreen::LevelScreen() : tileset(nullptr), map(nullptr)
 {}
@@ -32,9 +32,19 @@ void LevelScreen::onUpdate(GameState &gameState, unsigned int deltaTime)
 
 void LevelScreen::onEvent(GameState &gameState, const SDL_Event &event)
 {
-    if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+    if(event.type == SDL_KEYDOWN)
     {
-        gameState.setState(State::STOP);
+        switch(event.key.keysym.sym)
+        {
+            case SDLK_ESCAPE:
+                gameState.setState(State::STOP);
+                return;
+        
+            case SDLK_SPACE:
+                map->getPlayer()->doAction();
+                break;
+        }
+        
     }
 }
 

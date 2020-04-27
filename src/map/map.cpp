@@ -72,7 +72,7 @@ void Map::draw(const Window &window)
     window.draw(mapTexture, mapSrc);
 }
 
-MapSprite * Map::getPlayer() const
+PlayerSprite * Map::getPlayer() const
 {
     return player;
 }

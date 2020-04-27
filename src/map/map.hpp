@@ -3,7 +3,7 @@
 
 #include "tileset.hpp"
 
-class MapSprite;
+class PlayerSprite;
 
 class Map
 {
@@ -14,7 +14,7 @@ public:
     void update(unsigned int deltaTime);
     void draw(const Window &window);
 
-    MapSprite * getPlayer() const;
+    PlayerSprite * getPlayer() const;
 
 private:
     void loadMapValues(json *mapJson);
@@ -27,7 +27,7 @@ private:
     int mapTileHeight;
     int cameraWidth;
     int cameraHeight;
-    MapSprite *player;
+    PlayerSprite *player;
 };
 
 #endif

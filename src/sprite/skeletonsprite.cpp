@@ -6,14 +6,54 @@ const SDL_Rect SkeletonSprite::SKELETON_INITIAL_SRC = {0, 0, 48, 48};
 const int SkeletonSprite::ANIMATION_SKIP = 48;
 const unsigned int SkeletonSprite::ANIMATION_DELAY = 45;
 const unsigned int SkeletonSprite::SKELETON_ANIMATIONS = 8;
+const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1500;
+const SDL_Rect SkeletonSprite::KEYS_INITIAL_SRC = { 440, 3, 28, 15 };
 
 SkeletonSprite::SkeletonSprite()
-    : MapSprite(TextureManager::getInstance()->getTexture(
+    : PlayerSprite(TextureManager::getInstance()->getTexture(
         Const::IMAGE_CHARACTERS_SKELETON), 
         SKELETON_INITIAL_SRC, 
         SKELETON_INITIAL_SRC)
     , animationTimer(ANIMATION_DELAY)
+    , keyTimer(KEYS_ANIMATION_DURATION)
+    , keysActive(false)
 {}
+
+void SkeletonSprite::draw(const Window &window)
+{
+    if(keysActive)
+    {
+        SDL_Rect keysRect = KEYS_INITIAL_SRC;
+        keysRect.y = getY() + getHeight() / 2 - keysRect.h;
+        keysRect.x = getX() + getWidth() + keysRect.w / 5;
+        window.draw(getSdlTexture(), KEYS_INITIAL_SRC, keysRect);
+        keysRect.x = getX() - keysRect.w - keysRect.w / 5;
+        window.draw(getSdlTexture(), KEYS_INITIAL_SRC, keysRect);
+    }
+
+    PlayerSprite::draw(window);
+}
+
+void SkeletonSprite::update(
+    unsigned int deltaTime,
+    const std::vector<std::vector<unsigned int>> &tileGrid, 
+    Tileset *tileset)
+{
+    PlayerSprite::update(deltaTime, tileGrid, tileset);
+
+    if(keysActive && keyTimer.check())
+    {
+        keysActive = false;
+    }
+}
+
+void SkeletonSprite::doAction()
+{
+    if(keysActive) return;
+
+    keysActive = true;
+    keyTimer.reset();
+}
 
 void SkeletonSprite::onStopX(int previousSpeed)
 {
@@ -146,7 +186,7 @@ bool SkeletonSprite::canMove(
     {
         const int topY = getY() + buffer;
         const int bottomY = getY() + getHeight() - buffer;
-        const int nextX = getX() + getWidth() + getSpeedX() - buffer;
+        const int nextX = getX() + getWidth() + getSpeedX();
         const Tile *topTile = getTile(tileGrid, tileset, nextX, topY);
         const Tile *bottomTile = getTile(tileGrid, tileset, nextX, bottomY);
         if(!topTile || !bottomTile) return false;
@@ -175,5 +215,5 @@ bool SkeletonSprite::canMove(
     default:
         break;
     }
-    return MapSprite::canMove(tileGrid, tileset);
+    return PlayerSprite::canMove(tileGrid, tileset);
 }
