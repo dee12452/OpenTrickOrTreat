@@ -32,11 +32,10 @@ SkeletonSprite::~SkeletonSprite()
     }
 }
 
-void SkeletonSprite::draw(const Window &window)
+void SkeletonSprite::draw(const Window &window) const
 {
     if(keysActive)
     {
-        setSourceX(0);
         for(auto key : keys) key->draw(window);
     }
 
@@ -50,9 +49,13 @@ void SkeletonSprite::update(
 {
     PlayerSprite::update(deltaTime, tileGrid, tileset);
 
-    if(keysActive && keyTimer.check())
+    if(keysActive)
     {
-        keysActive = false;
+        setSourceX(0);
+        if(keyTimer.check())
+        {
+            keysActive = false;
+        }
     }
 }
 
@@ -243,7 +246,7 @@ void SkeletonSprite::resetKeys() const
         key->setDestinationRect(KEY_INITIAL_SRC);
     }
     const SDL_Rect playerDst = getDestinationRect();
-    
+
     // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     keys[0]->setX(getX() + getWidth() / 2 - keys[0]->getWidth() / 2);
     keys[0]->setY(getY() - keys[0]->getHeight());

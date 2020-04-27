@@ -33,7 +33,7 @@ public:
 
     void center();
 
-    virtual void draw(const Window &window);
+    virtual void draw(const Window &window) const;
 
     SDL_Rect getSourceRect() const;
     void setSourceRect(const SDL_Rect &rect);

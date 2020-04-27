@@ -3,6 +3,14 @@
 TextureManager * TextureManager::instance = nullptr;
 
 TextureManager::TextureManager()
+    : texturesToLoad({
+        Const::IMAGE_CHARACTERS_SKELETON,
+        Const::IMAGE_CHARACTERS_WITCH,
+        Const::IMAGE_CHARACTERS_MONSTER,
+        Const::IMAGE_CHARACTERS_VAMPIRE,
+        Const::IMAGE_CHARACTERS_CREATURE,
+        Const::IMAGE_TILESET,
+        Const::IMAGE_MISC})
 {}
 
 TextureManager::~TextureManager()
@@ -32,8 +40,16 @@ void TextureManager::destroyInstance()
     TextureManager::instance = nullptr;
 }
 
-void TextureManager::loadTexture(const Window &window, const std::string pathToResourceFolder, const std::string imageFileName)
+bool TextureManager::hasLoadedAll() const
 {
+    return texturesToLoad.empty();
+}
+
+void TextureManager::loadNextTexture(const Window &window, const std::string pathToResourceFolder)
+{
+    if(texturesToLoad.size() == 0) return;
+
+    const std::string imageFileName = texturesToLoad.back();
     const std::string imageFilePath = pathToResourceFolder + Const::TEXTURES_FOLDER_PATH + imageFileName;
     SDL_Texture *loadedTexture = IMG_LoadTexture(window.getSdlRenderer(), imageFilePath.c_str());
     if(!loadedTexture)
@@ -41,6 +57,7 @@ void TextureManager::loadTexture(const Window &window, const std::string pathToR
         Util::criticalSdlError("Failed to load texture %s", imageFileName.c_str());
     }
     textureMap.insert(std::pair<std::string, SDL_Texture *> (imageFileName, loadedTexture));
+    texturesToLoad.pop_back();
 }
 
 SDL_Texture * TextureManager::getTexture(const std::string imageFileName) const

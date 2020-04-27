@@ -17,7 +17,7 @@ protected:
     void onUpdate(GameState &gameState, unsigned int deltaTime) override;
     void onEvent(GameState &gameState, const SDL_Event &event) override;
     void onKeyboardUpdate(GameState &gameState, const unsigned char *keyboardState) override;
-    void onDraw(const Window &window) override;
+    void onDraw(const Window &window) const override;
 
 private:
     Tileset *tileset;

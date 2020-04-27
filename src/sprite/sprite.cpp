@@ -101,7 +101,7 @@ void Sprite::center()
     setY(Const::DEFAULT_WINDOW_HEIGHT / 2 - getHeight() / 2);
 }
 
-void Sprite::draw(const Window &window)
+void Sprite::draw(const Window &window) const
 {
     window.draw(sdlTexture, srcRect, dstRect);
 }

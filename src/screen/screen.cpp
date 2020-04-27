@@ -25,7 +25,7 @@ void Screen::update(GameState &gameState)
     deltaTimer.reset();
 }
 
-void Screen::draw(const Window &window)
+void Screen::draw(const Window &window) const
 {
     onDraw(window);
 }

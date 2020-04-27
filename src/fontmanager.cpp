@@ -3,6 +3,7 @@
 FontManager * FontManager::instance = nullptr;
 
 FontManager::FontManager()
+    : fontsToLoad({Const::FONT_TYPEWRITER})
 {}
 
 FontManager::~FontManager()
@@ -32,15 +33,24 @@ void FontManager::destroyInstance()
     FontManager::instance = nullptr;
 }
 
-void FontManager::loadFont(const std::string pathToResourceFolder, const std::string fontFileName)
+bool FontManager::hasLoadedAll() const
 {
-    const std::string fontFilePath = pathToResourceFolder + Const::FONTS_FOLDER_PATH + fontFileName;
-    TTF_Font *loadedFont = TTF_OpenFont(fontFilePath.c_str(), Const::DEFAULT_FONT_PT_SIZE);
-    if(!loadedFont)
+    return fontsToLoad.empty();
+}
+
+void FontManager::loadAllFonts(const std::string pathToResourceFolder)
+{
+    for(auto fontFileName : fontsToLoad)
     {
-        Util::criticalSdlError("Failed to load font %s", fontFileName.c_str());
+        const std::string fontFilePath = pathToResourceFolder + Const::FONTS_FOLDER_PATH + fontFileName;
+        TTF_Font *loadedFont = TTF_OpenFont(fontFilePath.c_str(), Const::DEFAULT_FONT_PT_SIZE);
+        if(!loadedFont)
+        {
+            Util::criticalSdlError("Failed to load font %s", fontFileName.c_str());
+        }
+        fontMap.insert(std::pair<std::string, TTF_Font *> (fontFileName, loadedFont));
     }
-    fontMap.insert(std::pair<std::string, TTF_Font *> (fontFileName, loadedFont));
+    fontsToLoad.clear();
 }
 
 TTF_Font * FontManager::getFont(const std::string fontFileName) const

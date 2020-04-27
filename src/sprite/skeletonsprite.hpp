@@ -18,7 +18,7 @@ public:
     SkeletonSprite();
     ~SkeletonSprite() override;
 
-    void draw(const Window &window) override;
+    void draw(const Window &window) const override;
     void update(
         unsigned int deltaTime,
         const std::vector<std::vector<unsigned int>> &tileGrid, 

@@ -1,10 +1,6 @@
 #include "textsprite.hpp"
 #include "fontmanager.hpp"
 
-TextSprite::TextSprite() :
-    text(), font(), color({0,0,0,0})
-{}
-
 TextSprite::TextSprite(
         const Window &window
         , const std::string &text
@@ -32,33 +28,6 @@ TextSprite::TextSprite(
                 , color));
 }
 
-TextSprite::TextSprite(const TextSprite &textSprite) :
-    text(textSprite.text), font(textSprite.font), color(textSprite.color)
-{
-    setX(textSprite.getX());
-    setY(textSprite.getY());
-    setWidth(textSprite.getWidth());
-    setHeight(textSprite.getHeight());
-    setSdlTexture(nullptr);
-}
-
-TextSprite& TextSprite::operator=(const TextSprite &textSprite)
-{
-    setX(textSprite.getX());
-    setY(textSprite.getY());
-    setWidth(textSprite.getWidth());
-    setHeight(textSprite.getHeight());
-    text = textSprite.text;
-    font = textSprite.font;
-    color = textSprite.color;
-    if(getSdlTexture())
-    {
-        SDL_DestroyTexture(getSdlTexture());
-    }
-    setSdlTexture(nullptr);
-    return *this;
-}
-
 TextSprite::~TextSprite()
 {
     if(getSdlTexture())
@@ -68,16 +37,8 @@ TextSprite::~TextSprite()
     setSdlTexture(nullptr);
 }
 
-void TextSprite::draw(const Window &window)
+void TextSprite::draw(const Window &window) const
 {
-    if(!getSdlTexture())
-    {
-        setSdlTexture(createTextTexture(
-                window.getSdlRenderer()
-                , text
-                , FontManager::getInstance()->getFont(font)
-                , color));
-    }
     window.drawAll(getSdlTexture(), getDestinationRect());
 }
 

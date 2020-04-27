@@ -21,16 +21,11 @@ protected:
     void onUpdate(GameState &gameState, unsigned int deltaTime) override;
     void onEvent(GameState &gameState, const SDL_Event &event) override;
     void onKeyboardUpdate(GameState &gameState, const unsigned char *keyboardState) override;
-    void onDraw(const Window &window) override;
+    void onDraw(const Window &window) const override;
 
 private:
-    void loadFonts();
-    void loadNextTexture(const Window &window);
-
     std::string pathToResourceFolder;
-    std::vector<std::string> texturesToLoad;
-    std::vector<std::string> fontsToLoad;
-    TextSprite loadingText;
+    TextSprite *loadingText;
     Timer loadTimer;
 };
 

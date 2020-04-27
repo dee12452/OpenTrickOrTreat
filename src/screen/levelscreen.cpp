@@ -78,7 +78,7 @@ void LevelScreen::onKeyboardUpdate(GameState &gameState, const unsigned char *ke
     }
 }
 
-void LevelScreen::onDraw(const Window &window)
+void LevelScreen::onDraw(const Window &window) const
 {
     map->draw(window);
 }

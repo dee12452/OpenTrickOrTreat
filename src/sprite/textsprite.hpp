@@ -6,7 +6,6 @@
 class TextSprite : public Sprite
 {
 public:
-    TextSprite();
     TextSprite(
             const Window &window
             , const std::string &text
@@ -19,11 +18,9 @@ public:
             , const SDL_Color &color
             , const SDL_Rect &sourceRect
             , const SDL_Rect &destinationRect);
-    TextSprite(const TextSprite &textSprite);
-    TextSprite& operator=(const TextSprite &textSprite);
     ~TextSprite() override;
 
-    virtual void draw(const Window &window) override;
+    virtual void draw(const Window &window) const override;
 
     const std::string & getText() const;
     void setText(const Window &window, const std::string &newText);
