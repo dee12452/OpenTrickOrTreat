@@ -6,8 +6,8 @@ const SDL_Rect SkeletonSprite::SKELETON_INITIAL_SRC = {0, 0, 48, 48};
 const int SkeletonSprite::ANIMATION_SKIP = 48;
 const unsigned int SkeletonSprite::ANIMATION_DELAY = 45;
 const unsigned int SkeletonSprite::SKELETON_ANIMATIONS = 8;
-const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1500;
-const SDL_Rect SkeletonSprite::KEYS_INITIAL_SRC = { 440, 3, 28, 15 };
+const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1250;
+const SDL_Rect SkeletonSprite::KEY_INITIAL_SRC = { 440, 3, 28, 16 };
 
 SkeletonSprite::SkeletonSprite()
     : PlayerSprite(TextureManager::getInstance()->getTexture(
@@ -17,18 +17,27 @@ SkeletonSprite::SkeletonSprite()
     , animationTimer(ANIMATION_DELAY)
     , keyTimer(KEYS_ANIMATION_DURATION)
     , keysActive(false)
+    , keys({
+        new MapSprite(getSdlTexture(), KEY_INITIAL_SRC, KEY_INITIAL_SRC), 
+        new MapSprite(getSdlTexture(), KEY_INITIAL_SRC, KEY_INITIAL_SRC), 
+        new MapSprite(getSdlTexture(), KEY_INITIAL_SRC, KEY_INITIAL_SRC), 
+        new MapSprite(getSdlTexture(), KEY_INITIAL_SRC, KEY_INITIAL_SRC)})
 {}
+
+SkeletonSprite::~SkeletonSprite()
+{
+    for(auto &key : keys)
+    {
+        delete key;
+    }
+}
 
 void SkeletonSprite::draw(const Window &window)
 {
     if(keysActive)
     {
-        SDL_Rect keysRect = KEYS_INITIAL_SRC;
-        keysRect.y = getY() + getHeight() / 2 - keysRect.h;
-        keysRect.x = getX() + getWidth() + keysRect.w / 5;
-        window.draw(getSdlTexture(), KEYS_INITIAL_SRC, keysRect);
-        keysRect.x = getX() - keysRect.w - keysRect.w / 5;
-        window.draw(getSdlTexture(), KEYS_INITIAL_SRC, keysRect);
+        setSourceX(0);
+        for(auto key : keys) key->draw(window);
     }
 
     PlayerSprite::draw(window);
@@ -53,6 +62,7 @@ void SkeletonSprite::doAction()
 
     keysActive = true;
     keyTimer.reset();
+    resetKeys();
 }
 
 void SkeletonSprite::onStopX(int previousSpeed)
@@ -88,7 +98,7 @@ void SkeletonSprite::onStopY(int previousSpeed)
 
 void SkeletonSprite::onMoveX()
 {
-    if(!animationTimer.check())
+    if(!animationTimer.check() || keysActive)
     {
         return;
     }
@@ -128,7 +138,7 @@ void SkeletonSprite::onMoveX()
 
 void SkeletonSprite::onMoveY()
 {
-    if(!animationTimer.check())
+    if(!animationTimer.check() || keysActive)
     {
         return;
     }
@@ -169,6 +179,11 @@ bool SkeletonSprite::canMove(
     const std::vector<std::vector<unsigned int>> &tileGrid, 
     Tileset *tileset)
 {
+    if(keysActive)
+    {
+        return false;
+    }
+
     const int buffer = Const::DEFAULT_PLAYER_SPEED * 4;
     switch (getCurrentMoveDirection())
     {
@@ -216,4 +231,26 @@ bool SkeletonSprite::canMove(
         break;
     }
     return PlayerSprite::canMove(tileGrid, tileset);
+}
+
+void SkeletonSprite::resetKeys() const
+{
+    for(int keyIndex = 0; keyIndex < keys.size(); keyIndex++)
+    {
+        Sprite *key = keys[keyIndex];
+        key->setSourceRect(KEY_INITIAL_SRC);
+        key->setSourceY(key->getSourceHeight() * keyIndex);
+        key->setDestinationRect(KEY_INITIAL_SRC);
+    }
+    const SDL_Rect playerDst = getDestinationRect();
+    
+    // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+    keys[0]->setX(getX() + getWidth() / 2 - keys[0]->getWidth() / 2);
+    keys[0]->setY(getY() - keys[0]->getHeight());
+    keys[1]->setX(getX() + getWidth());
+    keys[1]->setY(getY() + getHeight() / 2 - keys[1]->getHeight() / 2);
+    keys[2]->setX(getX() + getWidth() / 2 - keys[2]->getWidth() / 2);
+    keys[2]->setY(getY() + getHeight());
+    keys[3]->setX(getX() - keys[3]->getWidth());
+    keys[3]->setY(getY() + getHeight() / 2 - keys[3]->getHeight() / 2);
 }

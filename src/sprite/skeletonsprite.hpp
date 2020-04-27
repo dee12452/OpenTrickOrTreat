@@ -12,10 +12,11 @@ private:
     static const unsigned int ANIMATION_DELAY;
     static const unsigned int SKELETON_ANIMATIONS;
     static const unsigned int KEYS_ANIMATION_DURATION;
-    static const SDL_Rect KEYS_INITIAL_SRC;
+    static const SDL_Rect KEY_INITIAL_SRC;
 
 public:
     SkeletonSprite();
+    ~SkeletonSprite() override;
 
     void draw(const Window &window) override;
     void update(
@@ -37,6 +38,9 @@ private:
     Timer animationTimer;
     Timer keyTimer;
     bool keysActive;
+    std::vector<Sprite *> keys;
+
+    void resetKeys() const;
 };
 
 #endif

@@ -35,14 +35,14 @@ public:
 
     virtual void draw(const Window &window);
 
-protected:
-    SDL_Texture * getSdlTexture() const;
-    void setSdlTexture(SDL_Texture *newTexture);
-
     SDL_Rect getSourceRect() const;
     void setSourceRect(const SDL_Rect &rect);
     SDL_Rect getDestinationRect() const;
     void setDestinationRect(const SDL_Rect &rect);
+
+protected:
+    SDL_Texture * getSdlTexture() const;
+    void setSdlTexture(SDL_Texture *newTexture);
 
 private:
     SDL_Texture *sdlTexture;
