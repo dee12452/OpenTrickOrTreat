@@ -13,6 +13,9 @@ private:
     static const unsigned int SKELETON_ANIMATIONS;
     static const unsigned int KEYS_ANIMATION_DURATION;
     static const SDL_Rect KEY_INITIAL_SRC;
+    static const unsigned int KEYS_ANIMATION_DELAY;
+    static const int DEFAULT_KEY_SPEED;
+    static const int KEY_BUFFER;
 
 public:
     SkeletonSprite();
@@ -37,10 +40,12 @@ protected:
 private:
     Timer animationTimer;
     Timer keyTimer;
+    Timer keyAnimationTimer;
     bool keysActive;
-    std::vector<Sprite *> keys;
+    std::vector<MapSprite *> keys;
 
     void resetKeys() const;
+    void animateKey(MapSprite *key) const;
 };
 
 #endif

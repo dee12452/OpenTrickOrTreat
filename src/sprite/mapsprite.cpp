@@ -2,7 +2,7 @@
 #include <algorithm>
 #include "map/tileset.hpp"
 
-const unsigned int MapSprite::MOVEMENT_DELAY_MS = 30;
+const unsigned int MapSprite::MOVEMENT_DELAY_MS = 35;
 
 MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect)
     : Sprite(texture, sourceRect, destinationRect)

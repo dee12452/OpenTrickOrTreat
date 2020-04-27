@@ -1,13 +1,17 @@
 #include "skeletonsprite.hpp"
 #include "texturemanager.hpp"
 #include "map/tile.hpp"
+#include <cmath>
 
 const SDL_Rect SkeletonSprite::SKELETON_INITIAL_SRC = {0, 0, 48, 48};
 const int SkeletonSprite::ANIMATION_SKIP = 48;
 const unsigned int SkeletonSprite::ANIMATION_DELAY = 45;
 const unsigned int SkeletonSprite::SKELETON_ANIMATIONS = 8;
-const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1250;
+const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1200;
 const SDL_Rect SkeletonSprite::KEY_INITIAL_SRC = { 440, 3, 28, 16 };
+const unsigned int SkeletonSprite::KEYS_ANIMATION_DELAY = 35;
+const int SkeletonSprite::DEFAULT_KEY_SPEED = 3;
+const int SkeletonSprite::KEY_BUFFER = 7;
 
 SkeletonSprite::SkeletonSprite()
     : PlayerSprite(TextureManager::getInstance()->getTexture(
@@ -16,6 +20,7 @@ SkeletonSprite::SkeletonSprite()
         SKELETON_INITIAL_SRC)
     , animationTimer(ANIMATION_DELAY)
     , keyTimer(KEYS_ANIMATION_DURATION)
+    , keyAnimationTimer(KEYS_ANIMATION_DELAY)
     , keysActive(false)
     , keys({
         new MapSprite(getSdlTexture(), KEY_INITIAL_SRC, KEY_INITIAL_SRC), 
@@ -56,6 +61,12 @@ void SkeletonSprite::update(
         {
             keysActive = false;
         }
+        else if(keyAnimationTimer.check())
+        {
+            for(auto key : keys) animateKey(key);
+            keyAnimationTimer.reset();
+        }
+        
     }
 }
 
@@ -65,11 +76,14 @@ void SkeletonSprite::doAction()
 
     keysActive = true;
     keyTimer.reset();
+    keyAnimationTimer.reset();
     resetKeys();
 }
 
 void SkeletonSprite::onStopX(int previousSpeed)
 {
+    if(keysActive) return;
+
     if(previousSpeed > 0)
     {
         setSourceRect(SKELETON_INITIAL_SRC);
@@ -86,6 +100,8 @@ void SkeletonSprite::onStopX(int previousSpeed)
 
 void SkeletonSprite::onStopY(int previousSpeed)
 {
+    if(keysActive) return;
+
     if(previousSpeed > 0)
     {
         setSourceRect(SKELETON_INITIAL_SRC);
@@ -101,10 +117,7 @@ void SkeletonSprite::onStopY(int previousSpeed)
 
 void SkeletonSprite::onMoveX()
 {
-    if(!animationTimer.check() || keysActive)
-    {
-        return;
-    }
+    if(!animationTimer.check() || keysActive) return;
 
     if(getSpeedX() > 0)
     {
@@ -245,15 +258,60 @@ void SkeletonSprite::resetKeys() const
         key->setSourceY(key->getSourceHeight() * keyIndex);
         key->setDestinationRect(KEY_INITIAL_SRC);
     }
-    const SDL_Rect playerDst = getDestinationRect();
 
-    // 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
-    keys[0]->setX(getX() + getWidth() / 2 - keys[0]->getWidth() / 2);
-    keys[0]->setY(getY() - keys[0]->getHeight());
-    keys[1]->setX(getX() + getWidth());
-    keys[1]->setY(getY() + getHeight() / 2 - keys[1]->getHeight() / 2);
-    keys[2]->setX(getX() + getWidth() / 2 - keys[2]->getWidth() / 2);
-    keys[2]->setY(getY() + getHeight());
-    keys[3]->setX(getX() - keys[3]->getWidth());
-    keys[3]->setY(getY() + getHeight() / 2 - keys[3]->getHeight() / 2);
+    const unsigned short int UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3;
+    const int circleCenterX = getX() + getWidth() / 2 - keys[UP]->getWidth() / 2;
+    const int circleCenterY = getY() + getHeight() / 2 - keys[UP]->getHeight() / 2;
+    const int keyRadius = getWidth() - keys[UP]->getWidth() + KEY_BUFFER;
+
+    keys[UP]->setX(circleCenterX);
+    keys[UP]->setY(circleCenterY - keyRadius);
+    keys[UP]->setSpeedX(DEFAULT_KEY_SPEED);
+
+    keys[RIGHT]->setX(circleCenterX + keyRadius);
+    keys[RIGHT]->setY(circleCenterY);
+    keys[RIGHT]->setSpeedX(-DEFAULT_KEY_SPEED);
+
+    keys[DOWN]->setX(circleCenterX);
+    keys[DOWN]->setY(circleCenterY + keyRadius);
+    keys[DOWN]->setSpeedX(-DEFAULT_KEY_SPEED);
+
+    keys[LEFT]->setX(circleCenterX - keyRadius);
+    keys[LEFT]->setY(circleCenterY);
+    keys[LEFT]->setSpeedX(DEFAULT_KEY_SPEED);
+}
+
+void SkeletonSprite::animateKey(MapSprite *key) const
+{
+    // (x - h)^2 + (y - k)^2 = r^2
+    // (h, k) is the center of the circle
+    // (y - k)^2 = r^2 - (x - h)^2
+    const int circleCenterX = getX() + getWidth() / 2 - key->getWidth() / 2;
+    const int circleCenterY = getY() + getHeight() / 2 - key->getHeight() / 2;
+    const int keyRadius = getWidth() - key->getWidth() + KEY_BUFFER;
+    
+    int nextX = key->getX() + key->getSpeedX();
+    if(nextX >= circleCenterX + keyRadius)
+    {
+        nextX = circleCenterX + keyRadius;
+        key->setSpeedX(-key->getSpeedX());
+    }
+    else if(nextX <= circleCenterX - keyRadius)
+    {
+        nextX = circleCenterX - keyRadius;
+        key->setSpeedX(-key->getSpeedX());
+    }
+    
+    const int nextYFactor = static_cast<int> (std::sqrt(std::pow(keyRadius, 2) - std::pow(nextX - circleCenterX, 2)));
+    
+    if(key->getSpeedX() > 0)
+    {
+        key->setX(nextX);
+        key->setY(circleCenterY + nextYFactor);
+    }
+    else
+    {
+        key->setX(nextX);
+        key->setY(circleCenterY - nextYFactor);
+    }
 }
