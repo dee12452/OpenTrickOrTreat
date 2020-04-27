@@ -283,9 +283,6 @@ void SkeletonSprite::resetKeys() const
 
 void SkeletonSprite::animateKey(MapSprite *key) const
 {
-    // (x - h)^2 + (y - k)^2 = r^2
-    // (h, k) is the center of the circle
-    // (y - k)^2 = r^2 - (x - h)^2
     const int circleCenterX = getX() + getWidth() / 2 - key->getWidth() / 2;
     const int circleCenterY = getY() + getHeight() / 2 - key->getHeight() / 2;
     const int keyRadius = getWidth() - key->getWidth() + KEY_BUFFER;
