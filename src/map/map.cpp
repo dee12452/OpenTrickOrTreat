@@ -31,7 +31,7 @@ Map::~Map()
 
 void Map::update(unsigned int deltaTime)
 {
-    player->update(deltaTime);
+    player->update(deltaTime, tileGrid, tileset);
 }
 
 void Map::draw(const Window &window)

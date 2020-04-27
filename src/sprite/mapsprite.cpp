@@ -1,5 +1,6 @@
 #include "mapsprite.hpp"
 #include <algorithm>
+#include "map/tileset.hpp"
 
 const unsigned int MapSprite::MOVEMENT_DELAY_MS = 30;
 
@@ -20,14 +21,19 @@ void MapSprite::draw(const Window &window)
     window.draw(getSdlTexture(), getSourceRect(), dstRectCentered);
 }
 
-void MapSprite::update(unsigned int deltaTime)
+void MapSprite::update(
+    unsigned int deltaTime,
+    const std::vector<std::vector<unsigned int>> &tileGrid, 
+    Tileset *tileset)
 {
     deltaSpeedTimer += deltaTime;
     if(deltaSpeedTimer >= MOVEMENT_DELAY_MS)
     {
-        deltaSpeedTimer = 0;
-        setX(getX() + speedX);
-        setY(getY() + speedY);
+        if(canMove(tileGrid, tileset))
+        {
+            setX(getX() + speedX);
+            setY(getY() + speedY);
+        }
         if(speedX != 0)
         {
             onMoveX();
@@ -36,6 +42,7 @@ void MapSprite::update(unsigned int deltaTime)
         {
             onMoveY();
         }
+        deltaSpeedTimer = 0;
     }
 }
 
@@ -89,6 +96,13 @@ void MapSprite::clampY(int minY, int maxY)
     setX(std::min(getY() + getHeight() / 2, maxY));
 }
 
+bool MapSprite::canMove(
+    const std::vector<std::vector<unsigned int>> &tileGrid, 
+    Tileset *tileset)
+{
+    return true;
+}
+
 void MapSprite::onStopX(int)
 {}
 
@@ -100,3 +114,31 @@ void MapSprite::onMoveX()
 
 void MapSprite::onMoveY()
 {}
+
+MoveDirection MapSprite::getCurrentMoveDirection() const
+{
+    if(speedX < 0) return MoveDirection::LEFT;
+    else if(speedX > 0) return MoveDirection::RIGHT;
+    else if(speedY < 0) return MoveDirection::UP;
+    else if(speedY > 0) return MoveDirection::DOWN;
+    else return MoveDirection::NONE;
+}
+
+Tile * MapSprite::getTile(
+    const std::vector<std::vector<unsigned int>> &tileGrid, 
+    Tileset *tileset,
+    unsigned int x,
+    unsigned int y) const
+{
+    const int tileX = x / tileset->getTileWidth();
+    const int tileY = y / tileset->getTileHeight();
+    if(tileY < 0 || tileY >= tileGrid.size())
+    {
+        return NULL;
+    }
+    if(tileX < 0 || tileX >= tileGrid[tileY].size())
+    {
+        return NULL;
+    }
+    return tileset->getTile(tileGrid[tileY][tileX]);
+}

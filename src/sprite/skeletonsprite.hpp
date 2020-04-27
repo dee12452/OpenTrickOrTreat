@@ -16,10 +16,13 @@ public:
     SkeletonSprite();
 
 protected:
-    void onStopX(int previousSpeed);
-    void onStopY(int previousSpeed);
-    void onMoveX();
-    void onMoveY();
+    void onStopX(int previousSpeed) override;
+    void onStopY(int previousSpeed) override;
+    void onMoveX() override;
+    void onMoveY() override;
+    bool canMove(
+        const std::vector<std::vector<unsigned int>> &tileGrid, 
+        Tileset *tileset) override;
 
 private:
     Timer animationTimer;

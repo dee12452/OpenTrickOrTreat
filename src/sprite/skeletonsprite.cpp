@@ -1,5 +1,6 @@
 #include "skeletonsprite.hpp"
 #include "texturemanager.hpp"
+#include "map/tile.hpp"
 
 const SDL_Rect SkeletonSprite::SKELETON_INITIAL_SRC = {0, 0, 48, 48};
 const int SkeletonSprite::ANIMATION_SKIP = 48;
@@ -122,4 +123,57 @@ void SkeletonSprite::onMoveY()
     }
 
     animationTimer.reset();
+}
+
+bool SkeletonSprite::canMove(
+    const std::vector<std::vector<unsigned int>> &tileGrid, 
+    Tileset *tileset)
+{
+    const int buffer = Const::DEFAULT_PLAYER_SPEED * 4;
+    switch (getCurrentMoveDirection())
+    {
+    case MoveDirection::UP:
+    {
+        const int leftX = getX() + buffer;
+        const int rightX = getX() + getWidth() - buffer;
+        const int nextY = getY() + getSpeedY();
+        const Tile *leftTile = getTile(tileGrid, tileset, leftX, nextY);
+        const Tile *rightTile = getTile(tileGrid, tileset, rightX, nextY);
+        if(!leftTile || !rightTile) return false;
+        return leftTile->type == TileType::GROUND && rightTile->type == TileType::GROUND;
+    }
+    case MoveDirection::RIGHT:
+    {
+        const int topY = getY() + buffer;
+        const int bottomY = getY() + getHeight() - buffer;
+        const int nextX = getX() + getWidth() + getSpeedX() - buffer;
+        const Tile *topTile = getTile(tileGrid, tileset, nextX, topY);
+        const Tile *bottomTile = getTile(tileGrid, tileset, nextX, bottomY);
+        if(!topTile || !bottomTile) return false;
+        return topTile->type == TileType::GROUND && bottomTile->type == TileType::GROUND;
+    }
+    case MoveDirection::DOWN:
+    {
+        const int leftX = getX() + buffer;
+        const int rightX = getX() + getWidth() - buffer;
+        const int nextY = getY() + getHeight() + getSpeedY() - buffer;
+        const Tile *leftTile = getTile(tileGrid, tileset, leftX, nextY);
+        const Tile *rightTile = getTile(tileGrid, tileset, rightX, nextY);
+        if(!leftTile || !rightTile) return false;
+        return leftTile->type == TileType::GROUND && rightTile->type == TileType::GROUND;
+    }
+    case MoveDirection::LEFT:
+    {
+        const int topY = getY() + buffer;
+        const int bottomY = getY() + getHeight() - buffer;
+        const int nextX = getX() + getSpeedX();
+        const Tile *topTile = getTile(tileGrid, tileset, nextX, topY);
+        const Tile *bottomTile = getTile(tileGrid, tileset, nextX, bottomY);
+        if(!topTile || !bottomTile) return false;
+        return topTile->type == TileType::GROUND && bottomTile->type == TileType::GROUND;
+    }
+    default:
+        break;
+    }
+    return MapSprite::canMove(tileGrid, tileset);
 }

@@ -3,6 +3,14 @@
 
 #include "sprite.hpp"
 
+class Tileset;
+struct Tile;
+
+enum MoveDirection 
+{ 
+    NONE, UP, DOWN, LEFT, RIGHT 
+};
+
 class MapSprite : public Sprite
 {
 private:
@@ -13,7 +21,10 @@ public:
     virtual ~MapSprite() override;
 
     void draw(const Window &window) override;
-    virtual void update(unsigned int deltaTime);
+    virtual void update(
+        unsigned int deltaTime,
+        const std::vector<std::vector<unsigned int>> &tileGrid, 
+        Tileset *tileset);
     
     virtual void stopX();
     virtual void stopY();
@@ -27,7 +38,17 @@ public:
     void clampX(int minX, int maxX);
     void clampY(int minY, int maxY);
 
+    MoveDirection getCurrentMoveDirection() const;
+    Tile * getTile(
+        const std::vector<std::vector<unsigned int>> &tileGrid, 
+        Tileset *tileset,
+        unsigned int x,
+        unsigned int y) const;
+
 protected:
+    virtual bool canMove(
+        const std::vector<std::vector<unsigned int>> &tileGrid, 
+        Tileset *tileset);
     virtual void onStopX(int previousSpeed);
     virtual void onStopY(int previousSpeed);
     virtual void onMoveX();

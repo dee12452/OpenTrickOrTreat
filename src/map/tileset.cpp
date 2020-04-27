@@ -18,12 +18,24 @@ Tileset::Tileset(const std::string &pathToResourceFolder)
         {
             Tile *tile = new Tile();
             tile->location = { column * tileWidth, row * tileHeight, tileWidth, tileHeight };
-            tile->type = TileType::GROUND;
+            tile->type = TileType::IMPASSABLE;
             tiles.push_back(tile);
         }
     }
     this->tileWidth = tileWidth;
     this->tileHeight = tileHeight;
+    json_list *tileList = Util::getJsonList("tiles", tilesetJson->json_lists, tilesetJson->num_of_lists);
+    for(int element = 0; element < tileList->num_of_elements; element++)
+    {
+        json_list_element *tileElement = tileList->elements[element];
+        const int tileId = Util::getJsonPair("id", tileElement->json_pairs, tileElement->num_of_pairs)->int_val->val;
+        const std::string tileType = Util::getJsonPair("type", tileElement->json_pairs, tileElement->num_of_pairs)->str_val->val;
+        if(tileId < 0 || tileId >= tiles.size())
+        {
+            Util::criticalError("Failed to load tileset: tile id found outside of tile range");
+        }
+        tiles[tileId]->type = static_cast<TileType> (std::stoi(tileType));
+    }
     gahoodson_delete(tilesetJson);
 }
 
