@@ -9,6 +9,7 @@ public:
     PlayerSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect);
     virtual ~PlayerSprite() override;
 
+    virtual void draw(const Window &window) const override;
     virtual void doAction() = 0;
 };
 

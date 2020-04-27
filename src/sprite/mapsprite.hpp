@@ -19,8 +19,7 @@ private:
 public:
     MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect);
     virtual ~MapSprite() override;
-
-    void draw(const Window &window) const override;
+    
     virtual void update(
         unsigned int deltaTime,
         const std::vector<std::vector<unsigned int>> &tileGrid, 

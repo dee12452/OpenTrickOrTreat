@@ -15,12 +15,6 @@ MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL
 MapSprite::~MapSprite()
 {}
 
-void MapSprite::draw(const Window &window) const
-{
-    const SDL_Rect dstRectCentered = { getX(), getY() - getHeight() / 3, getWidth(), getHeight() };
-    window.draw(getSdlTexture(), getSourceRect(), dstRectCentered);
-}
-
 void MapSprite::update(
     unsigned int deltaTime,
     const std::vector<std::vector<unsigned int>> &tileGrid, 
