@@ -46,9 +46,9 @@ void Game::update()
 {
     if(fpsTimer.check())
     {
+        fpsTimer.reset();
         screenManager.updateScreen(gameState, *window);
         screenManager.drawScreen(gameState, *window);
-        fpsTimer.reset();
     }
     else
     {
