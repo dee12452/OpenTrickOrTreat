@@ -46,6 +46,7 @@ Map::~Map()
 
 void Map::update(unsigned int deltaTime)
 {
+    for(auto object : objects) object->update(deltaTime, this);
     player->update(deltaTime, this);
 }
 
@@ -88,6 +89,11 @@ PlayerSprite * Map::getPlayer() const
 std::vector<std::vector<unsigned int>> & Map::getGrid()
 {
     return grid;
+}
+
+const std::vector<ObjectSprite *> & Map::getObjects() const
+{
+    return objects;
 }
 
 void Map::setRefresh()

@@ -10,7 +10,7 @@ public:
     virtual ~PlayerSprite() override;
 
     virtual void draw(const Window &window) const override;
-    virtual void doAction() = 0;
+    virtual void doAction(Map *map) = 0;
 };
 
 #endif

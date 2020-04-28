@@ -1,7 +1,8 @@
 #ifndef _OPEN_TOT_GATE_SPRITE_HPP_
 #define _OPEN_TOT_GATE_SPRITE_HPP_
 
-#include "mapsprite.hpp"
+#include "objectsprite.hpp"
+#include "util/timer.hpp"
 
 class Tileset;
 
@@ -11,22 +12,31 @@ enum GateType
     STEEL = 1
 };
 
-class GateSprite : public MapSprite
+class GateSprite : public ObjectSprite
 {
 private:
     static const unsigned int WOOD_GATE_TILE_ID;
     static const unsigned int STEEL_GATE_TILE_ID;
+    static const std::vector<unsigned int> WOOD_GATE_ANIMATION_TILES;
+    static const std::vector<unsigned int> STEEL_GATE_ANIMATION_TILES;
+    static const unsigned int ANIMATION_DELAY;
 
 public:
     GateSprite(Tileset *tileset, GateType type, int x, int y);
     ~GateSprite() override;
 
+    ObjectType getType() const override;
+    bool isBlocking() const override;
+
     void update(unsigned int deltaTime, Map *map) override;
     void unlock();
-    bool isOpen() const;
 
 private:
+    GateType gateType;
+    unsigned short int currentAnimation;
+    Timer animationTimer;
     bool unlocked;
+    bool open;
 };
 
 #endif

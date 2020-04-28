@@ -1,11 +1,12 @@
 #include "skeletonsprite.hpp"
+#include "gatesprite.hpp"
 #include "texturemanager.hpp"
-#include "map/tile.hpp"
+#include "map/map.hpp"
 #include <cmath>
 
 const SDL_Rect SkeletonSprite::SKELETON_INITIAL_SRC = {0, 0, 48, 48};
 const int SkeletonSprite::ANIMATION_SKIP = 48;
-const unsigned int SkeletonSprite::ANIMATION_DELAY = 45;
+const unsigned int SkeletonSprite::ANIMATION_DELAY = 50;
 const unsigned int SkeletonSprite::SKELETON_ANIMATIONS = 8;
 const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1000;
 const SDL_Rect SkeletonSprite::KEY_INITIAL_SRC = { 440, 3, 28, 16 };
@@ -67,7 +68,7 @@ void SkeletonSprite::update(unsigned int deltaTime, Map *map)
     }
 }
 
-void SkeletonSprite::doAction()
+void SkeletonSprite::doAction(Map *map)
 {
     if(keysActive) return;
 
@@ -75,6 +76,7 @@ void SkeletonSprite::doAction()
     keyTimer.reset();
     keyAnimationTimer.reset();
     resetKeys();
+    unlockDoors(map);
 }
 
 void SkeletonSprite::onStopX(int previousSpeed)
@@ -196,52 +198,72 @@ bool SkeletonSprite::canMove(Map *map)
     }
 
     const int buffer = Const::DEFAULT_PLAYER_SPEED * 4;
+    Tile *nextTile1 = nullptr;
+    Tile *nextTile2 = nullptr;
+    ObjectSprite *intersectingObject1 = nullptr;
+    ObjectSprite *intersectingObject2 = nullptr;
     switch (getCurrentMoveDirection())
     {
-    case MoveDirection::UP:
+        case MoveDirection::UP:
+        {
+            const int leftX = getX() + buffer;
+            const int rightX = getX() + getWidth() - buffer;
+            const int nextY = getY() + getSpeedY();
+            nextTile1 = getTile(map, leftX, nextY);
+            nextTile2 = getTile(map, rightX, nextY);
+            intersectingObject1 = findObject(map, leftX, nextY);
+            intersectingObject2 = findObject(map, rightX, nextY);
+            break;
+        }
+        case MoveDirection::RIGHT:
+        {
+            const int topY = getY() + buffer;
+            const int bottomY = getY() + getHeight() - buffer;
+            const int nextX = getX() + getWidth() + getSpeedX();
+            nextTile1 = getTile(map, nextX, topY);
+            nextTile2 = getTile(map, nextX, bottomY);
+            intersectingObject1 = findObject(map, nextX, topY);
+            intersectingObject2 = findObject(map, nextX, bottomY);
+            break;
+        }
+        case MoveDirection::DOWN:
+        {
+            const int leftX = getX() + buffer;
+            const int rightX = getX() + getWidth() - buffer;
+            const int nextY = getY() + getHeight() + getSpeedY() - buffer;
+            nextTile1 = getTile(map, leftX, nextY);
+            nextTile2 = getTile(map, rightX, nextY);
+            intersectingObject1 = findObject(map, leftX, nextY);
+            intersectingObject2 = findObject(map, rightX, nextY);
+            break;
+        }
+        case MoveDirection::LEFT:
+        {
+            const int topY = getY() + buffer;
+            const int bottomY = getY() + getHeight() - buffer;
+            const int nextX = getX() + getSpeedX();
+            nextTile1 = getTile(map, nextX, topY);
+            nextTile2 = getTile(map, nextX, bottomY);
+            intersectingObject1 = findObject(map, nextX, topY);
+            intersectingObject2 = findObject(map, nextX, bottomY);
+            break;
+        }
+        default:
+            return PlayerSprite::canMove(map);
+    }
+    if(!nextTile1 || !nextTile2 || nextTile1->type != TileType::GROUND || nextTile2->type != TileType::GROUND)
     {
-        const int leftX = getX() + buffer;
-        const int rightX = getX() + getWidth() - buffer;
-        const int nextY = getY() + getSpeedY();
-        const Tile *leftTile = getTile(map, leftX, nextY);
-        const Tile *rightTile = getTile(map, rightX, nextY);
-        if(!leftTile || !rightTile) return false;
-        return leftTile->type == TileType::GROUND && rightTile->type == TileType::GROUND;
+        return false;
     }
-    case MoveDirection::RIGHT:
+    if(intersectingObject1 && intersectingObject1->isBlocking())
     {
-        const int topY = getY() + buffer;
-        const int bottomY = getY() + getHeight() - buffer;
-        const int nextX = getX() + getWidth() + getSpeedX();
-        const Tile *topTile = getTile(map, nextX, topY);
-        const Tile *bottomTile = getTile(map, nextX, bottomY);
-        if(!topTile || !bottomTile) return false;
-        return topTile->type == TileType::GROUND && bottomTile->type == TileType::GROUND;
+        return false;
     }
-    case MoveDirection::DOWN:
+    if(intersectingObject2 && intersectingObject2->isBlocking())
     {
-        const int leftX = getX() + buffer;
-        const int rightX = getX() + getWidth() - buffer;
-        const int nextY = getY() + getHeight() + getSpeedY() - buffer;
-        const Tile *leftTile = getTile(map, leftX, nextY);
-        const Tile *rightTile = getTile(map, rightX, nextY);
-        if(!leftTile || !rightTile) return false;
-        return leftTile->type == TileType::GROUND && rightTile->type == TileType::GROUND;
+        return false;
     }
-    case MoveDirection::LEFT:
-    {
-        const int topY = getY() + buffer;
-        const int bottomY = getY() + getHeight() - buffer;
-        const int nextX = getX() + getSpeedX();
-        const Tile *topTile = getTile(map, nextX, topY);
-        const Tile *bottomTile = getTile(map, nextX, bottomY);
-        if(!topTile || !bottomTile) return false;
-        return topTile->type == TileType::GROUND && bottomTile->type == TileType::GROUND;
-    }
-    default:
-        break;
-    }
-    return PlayerSprite::canMove(map);
+    return true;
 }
 
 void SkeletonSprite::resetKeys() const
@@ -305,5 +327,26 @@ void SkeletonSprite::animateKey(MapSprite *key) const
     {
         key->setX(nextX);
         key->setY(circleCenterY - nextYFactor);
+    }
+}
+
+void SkeletonSprite::unlockDoors(Map *map) const
+{
+    const int centerX = getX() + getWidth() / 2;
+    const int centerY = getY() + getHeight() / 2;
+    for(int i = -1; i <= 1; i++)
+    {
+        for(int j = -1; j <= 1; j++)
+        {
+            if(i == j || -i == j) continue;
+            ObjectSprite *obj = findObject(
+                map, 
+                centerX + (i * map->getTileset()->getTileWidth()),
+                centerY + (j * map->getTileset()->getTileHeight()));
+            if(obj && (obj->getType() == ObjectType::WOODEN_GATE || obj->getType() == ObjectType::STEEL_GATE))
+            {
+                static_cast<GateSprite *> (obj)->unlock();
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@
 
 #include "sprite.hpp"
 
+class ObjectSprite;
 class Map;
 struct Tile;
 
@@ -43,6 +44,8 @@ protected:
     virtual void onStopY(int previousSpeed);
     virtual void onMoveX();
     virtual void onMoveY();
+
+    ObjectSprite * findObject(Map *map, int x, int y) const;
 
 private:
     int speedX;

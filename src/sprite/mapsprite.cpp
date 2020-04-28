@@ -1,5 +1,6 @@
 #include "mapsprite.hpp"
 #include <algorithm>
+#include "objectsprite.hpp"
 #include "map/map.hpp"
 
 const unsigned int MapSprite::MOVEMENT_DELAY_MS = 35;
@@ -119,11 +120,26 @@ Tile * MapSprite::getTile(Map *map, unsigned int x, unsigned int y) const
     const int tileY = y / map->getTileset()->getTileHeight();
     if(tileY < 0 || tileY >= map->getGrid().size())
     {
-        return NULL;
+        return nullptr;
     }
     if(tileX < 0 || tileX >= map->getGrid()[tileY].size())
     {
-        return NULL;
+        return nullptr;
     }
     return map->getTileset()->getTile(map->getGrid()[tileY][tileX]);
+}
+
+ObjectSprite * MapSprite::findObject(Map *map, int x, int y) const
+{
+    for(auto object : map->getObjects())
+    {
+        if(object->getX() <= x && object->getX() + object->getWidth() >= x)
+        {
+            if(object->getY() <= y && object->getY() + object->getHeight() >= y)
+            {
+                return object;
+            }
+        }
+    }
+    return nullptr;
 }

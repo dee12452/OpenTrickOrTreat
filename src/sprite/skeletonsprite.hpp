@@ -23,7 +23,7 @@ public:
 
     void draw(const Window &window) const override;
     void update(unsigned int deltaTime, Map *map) override;
-    void doAction() override;
+    void doAction(Map *map) override;
 
 protected:
     void onStopX(int previousSpeed) override;
@@ -41,6 +41,7 @@ private:
 
     void resetKeys() const;
     void animateKey(MapSprite *key) const;
+    void unlockDoors(Map *map) const;
 };
 
 #endif

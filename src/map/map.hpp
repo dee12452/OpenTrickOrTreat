@@ -4,7 +4,7 @@
 #include "tileset.hpp"
 
 class PlayerSprite;
-class MapSprite;
+class ObjectSprite;
 
 class Map
 {
@@ -18,6 +18,7 @@ public:
     Tileset * getTileset() const;
     PlayerSprite * getPlayer() const;
     std::vector<std::vector<unsigned int>> & getGrid();
+    const std::vector<ObjectSprite *> & getObjects() const;
 
     void setRefresh();
 
@@ -30,7 +31,7 @@ private:
     int cameraHeight;
     PlayerSprite *player;
     bool refresh;
-    std::vector<MapSprite *> objects;
+    std::vector<ObjectSprite *> objects;
 
     void loadMapValues(json *mapJson);
     void loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight);

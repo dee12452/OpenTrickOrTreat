@@ -41,7 +41,7 @@ void LevelScreen::onEvent(GameState &gameState, const SDL_Event &event)
                 return;
         
             case SDLK_SPACE:
-                map->getPlayer()->doAction();
+                map->getPlayer()->doAction(map);
                 break;
         }
         
