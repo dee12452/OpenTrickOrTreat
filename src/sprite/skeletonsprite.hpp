@@ -2,14 +2,11 @@
 #define _OPEN_TOT_SKELETON_SPRITE_HPP_
 
 #include "playersprite.hpp"
-#include "util/timer.hpp"
 
 class SkeletonSprite : public PlayerSprite
 {
 private:
     static const SDL_Rect SKELETON_INITIAL_SRC;
-    static const int ANIMATION_SKIP;
-    static const unsigned int ANIMATION_DELAY;
     static const unsigned int SKELETON_ANIMATIONS;
     static const unsigned int KEYS_ANIMATION_DURATION;
     static const SDL_Rect KEY_INITIAL_SRC;
@@ -33,7 +30,6 @@ protected:
     bool canMove(Map *map) override;
 
 private:
-    Timer animationTimer;
     Timer keyTimer;
     Timer keyAnimationTimer;
     bool keysActive;

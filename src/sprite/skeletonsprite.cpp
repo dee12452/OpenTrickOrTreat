@@ -5,8 +5,6 @@
 #include <cmath>
 
 const SDL_Rect SkeletonSprite::SKELETON_INITIAL_SRC = {0, 0, 48, 48};
-const int SkeletonSprite::ANIMATION_SKIP = 48;
-const unsigned int SkeletonSprite::ANIMATION_DELAY = 50;
 const unsigned int SkeletonSprite::SKELETON_ANIMATIONS = 8;
 const unsigned int SkeletonSprite::KEYS_ANIMATION_DURATION = 1000;
 const SDL_Rect SkeletonSprite::KEY_INITIAL_SRC = { 440, 3, 28, 16 };
@@ -15,11 +13,11 @@ const int SkeletonSprite::DEFAULT_KEY_SPEED = 3;
 const int SkeletonSprite::KEY_BUFFER = 7;
 
 SkeletonSprite::SkeletonSprite()
-    : PlayerSprite(TextureManager::getInstance()->getTexture(
-        Const::IMAGE_CHARACTERS_SKELETON), 
+    : PlayerSprite(
+        TextureManager::getInstance()->getTexture(Const::IMAGE_CHARACTERS_SKELETON), 
         SKELETON_INITIAL_SRC, 
-        SKELETON_INITIAL_SRC)
-    , animationTimer(ANIMATION_DELAY)
+        SKELETON_INITIAL_SRC,
+        SKELETON_ANIMATIONS)
     , keyTimer(KEYS_ANIMATION_DURATION)
     , keyAnimationTimer(KEYS_ANIMATION_DELAY)
     , keysActive(false)
@@ -82,188 +80,31 @@ void SkeletonSprite::doAction(Map *map)
 void SkeletonSprite::onStopX(int previousSpeed)
 {
     if(keysActive) return;
-
-    if(previousSpeed > 0)
-    {
-        setSourceRect(SKELETON_INITIAL_SRC);
-        setSourceY(SKELETON_INITIAL_SRC.h * 3);
-    }
-    else
-    {
-        setSourceRect(SKELETON_INITIAL_SRC);
-        setSourceY(SKELETON_INITIAL_SRC.h);
-    }
-
-    animationTimer.reset();
+    PlayerSprite::onStopX(previousSpeed);
 }
 
 void SkeletonSprite::onStopY(int previousSpeed)
 {
     if(keysActive) return;
-
-    if(previousSpeed > 0)
-    {
-        setSourceRect(SKELETON_INITIAL_SRC);
-    }
-    else
-    {
-        setSourceRect(SKELETON_INITIAL_SRC);
-        setSourceY(SKELETON_INITIAL_SRC.h * 2);
-    }
-
-    animationTimer.reset();
+    PlayerSprite::onStopY(previousSpeed);
 }
 
 void SkeletonSprite::onMoveX()
 {
-    if(!animationTimer.check() || keysActive) return;
-
-    if(getSpeedX() > 0)
-    {
-        if(getSourceY() != SKELETON_INITIAL_SRC.h * 3)
-        {
-            setSourceRect(SKELETON_INITIAL_SRC);
-            setSourceY(SKELETON_INITIAL_SRC.h * 3);
-        }
-        else
-        {
-            setSourceX(getSourceX() + SKELETON_INITIAL_SRC.w);
-        }
-    }
-    else
-    {
-        if(getSourceY() != SKELETON_INITIAL_SRC.h)
-        {
-            setSourceRect(SKELETON_INITIAL_SRC);
-            setSourceY(SKELETON_INITIAL_SRC.h);
-        }
-        else
-        {
-            setSourceX(getSourceX() + SKELETON_INITIAL_SRC.w);
-        }
-    }
-
-    if(getSourceX() > SKELETON_INITIAL_SRC.w * SKELETON_ANIMATIONS)
-    {
-        setSourceX(SKELETON_INITIAL_SRC.w);
-    }
-
-    animationTimer.reset();
+    if(keysActive) return;
+    PlayerSprite::onMoveX();
 }
 
 void SkeletonSprite::onMoveY()
 {
-    if(!animationTimer.check() || keysActive)
-    {
-        return;
-    }
-
-    if(getSpeedY() > 0)
-    {
-        if(getSourceY() != 0)
-        {
-            setSourceRect(SKELETON_INITIAL_SRC);
-        }
-        else
-        {
-            setSourceX(getSourceX() + SKELETON_INITIAL_SRC.w);
-        }
-    }
-    else
-    {
-        if(getSourceY() != SKELETON_INITIAL_SRC.h * 2)
-        {
-            setSourceRect(SKELETON_INITIAL_SRC);
-            setSourceY(SKELETON_INITIAL_SRC.h * 2);
-        }
-        else
-        {
-            setSourceX(getSourceX() + SKELETON_INITIAL_SRC.w);
-        }
-    }
-
-    if(getSourceX() > SKELETON_INITIAL_SRC.w * SKELETON_ANIMATIONS)
-    {
-        setSourceX(SKELETON_INITIAL_SRC.w);
-    }
-
-    animationTimer.reset();
+    if(keysActive) return;
+    PlayerSprite::onMoveY();
 }
 
 bool SkeletonSprite::canMove(Map *map)
 {
-    if(keysActive)
-    {
-        return false;
-    }
-
-    const int buffer = Const::DEFAULT_PLAYER_SPEED * 4;
-    Tile *nextTile1 = nullptr;
-    Tile *nextTile2 = nullptr;
-    ObjectSprite *intersectingObject1 = nullptr;
-    ObjectSprite *intersectingObject2 = nullptr;
-    switch (getCurrentMoveDirection())
-    {
-        case MoveDirection::UP:
-        {
-            const int leftX = getX() + buffer;
-            const int rightX = getX() + getWidth() - buffer;
-            const int nextY = getY() + getSpeedY();
-            nextTile1 = getTile(map, leftX, nextY);
-            nextTile2 = getTile(map, rightX, nextY);
-            intersectingObject1 = findObject(map, leftX, nextY);
-            intersectingObject2 = findObject(map, rightX, nextY);
-            break;
-        }
-        case MoveDirection::RIGHT:
-        {
-            const int topY = getY() + buffer;
-            const int bottomY = getY() + getHeight() - buffer;
-            const int nextX = getX() + getWidth() + getSpeedX();
-            nextTile1 = getTile(map, nextX, topY);
-            nextTile2 = getTile(map, nextX, bottomY);
-            intersectingObject1 = findObject(map, nextX, topY);
-            intersectingObject2 = findObject(map, nextX, bottomY);
-            break;
-        }
-        case MoveDirection::DOWN:
-        {
-            const int leftX = getX() + buffer;
-            const int rightX = getX() + getWidth() - buffer;
-            const int nextY = getY() + getHeight() + getSpeedY() - buffer;
-            nextTile1 = getTile(map, leftX, nextY);
-            nextTile2 = getTile(map, rightX, nextY);
-            intersectingObject1 = findObject(map, leftX, nextY);
-            intersectingObject2 = findObject(map, rightX, nextY);
-            break;
-        }
-        case MoveDirection::LEFT:
-        {
-            const int topY = getY() + buffer;
-            const int bottomY = getY() + getHeight() - buffer;
-            const int nextX = getX() + getSpeedX();
-            nextTile1 = getTile(map, nextX, topY);
-            nextTile2 = getTile(map, nextX, bottomY);
-            intersectingObject1 = findObject(map, nextX, topY);
-            intersectingObject2 = findObject(map, nextX, bottomY);
-            break;
-        }
-        default:
-            return PlayerSprite::canMove(map);
-    }
-    if(!nextTile1 || !nextTile2 || nextTile1->type != TileType::GROUND || nextTile2->type != TileType::GROUND)
-    {
-        return false;
-    }
-    if(intersectingObject1 && intersectingObject1->isBlocking())
-    {
-        return false;
-    }
-    if(intersectingObject2 && intersectingObject2->isBlocking())
-    {
-        return false;
-    }
-    return true;
+    if(keysActive) return false;
+    return PlayerSprite::canMove(map);
 }
 
 void SkeletonSprite::resetKeys() const
