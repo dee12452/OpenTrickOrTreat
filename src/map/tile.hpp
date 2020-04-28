@@ -16,7 +16,8 @@ enum TileType
 struct Tile
 {
     TileType type;
-    SDL_Rect location;
+    int x;
+    int y;
 };
 
 #endif

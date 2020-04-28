@@ -17,7 +17,8 @@ Tileset::Tileset(const std::string &pathToResourceFolder)
         for(int column = 0; column < columns; column++)
         {
             Tile *tile = new Tile();
-            tile->location = { column * tileWidth, row * tileHeight, tileWidth, tileHeight };
+            tile->y = row * tileHeight;
+            tile->x = column * tileWidth;
             tile->type = TileType::IMPASSABLE;
             tiles.push_back(tile);
         }

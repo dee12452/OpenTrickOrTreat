@@ -22,10 +22,7 @@ public:
     ~SkeletonSprite() override;
 
     void draw(const Window &window) const override;
-    void update(
-        unsigned int deltaTime,
-        const std::vector<std::vector<unsigned int>> &tileGrid, 
-        Tileset *tileset) override;
+    void update(unsigned int deltaTime, Map *map) override;
     void doAction() override;
 
 protected:
@@ -33,9 +30,7 @@ protected:
     void onStopY(int previousSpeed) override;
     void onMoveX() override;
     void onMoveY() override;
-    bool canMove(
-        const std::vector<std::vector<unsigned int>> &tileGrid, 
-        Tileset *tileset) override;
+    bool canMove(Map *map) override;
 
 private:
     Timer animationTimer;

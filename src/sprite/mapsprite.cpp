@@ -1,6 +1,6 @@
 #include "mapsprite.hpp"
 #include <algorithm>
-#include "map/tileset.hpp"
+#include "map/map.hpp"
 
 const unsigned int MapSprite::MOVEMENT_DELAY_MS = 35;
 
@@ -15,15 +15,12 @@ MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL
 MapSprite::~MapSprite()
 {}
 
-void MapSprite::update(
-    unsigned int deltaTime,
-    const std::vector<std::vector<unsigned int>> &tileGrid, 
-    Tileset *tileset)
+void MapSprite::update(unsigned int deltaTime, Map *map)
 {
     deltaSpeedTimer += deltaTime;
     if(deltaSpeedTimer >= MOVEMENT_DELAY_MS)
     {
-        if(canMove(tileGrid, tileset))
+        if(canMove(map))
         {
             setX(getX() + speedX);
             setY(getY() + speedY);
@@ -90,9 +87,7 @@ void MapSprite::clampY(int minY, int maxY)
     setX(std::min(getY() + getHeight() / 2, maxY));
 }
 
-bool MapSprite::canMove(
-    const std::vector<std::vector<unsigned int>> &tileGrid, 
-    Tileset *tileset)
+bool MapSprite::canMove(Map *)
 {
     return true;
 }
@@ -118,21 +113,17 @@ MoveDirection MapSprite::getCurrentMoveDirection() const
     else return MoveDirection::NONE;
 }
 
-Tile * MapSprite::getTile(
-    const std::vector<std::vector<unsigned int>> &tileGrid, 
-    Tileset *tileset,
-    unsigned int x,
-    unsigned int y) const
+Tile * MapSprite::getTile(Map *map, unsigned int x, unsigned int y) const
 {
-    const int tileX = x / tileset->getTileWidth();
-    const int tileY = y / tileset->getTileHeight();
-    if(tileY < 0 || tileY >= tileGrid.size())
+    const int tileX = x / map->getTileset()->getTileWidth();
+    const int tileY = y / map->getTileset()->getTileHeight();
+    if(tileY < 0 || tileY >= map->getGrid().size())
     {
         return NULL;
     }
-    if(tileX < 0 || tileX >= tileGrid[tileY].size())
+    if(tileX < 0 || tileX >= map->getGrid()[tileY].size())
     {
         return NULL;
     }
-    return tileset->getTile(tileGrid[tileY][tileX]);
+    return map->getTileset()->getTile(map->getGrid()[tileY][tileX]);
 }

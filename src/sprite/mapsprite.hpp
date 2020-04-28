@@ -3,7 +3,7 @@
 
 #include "sprite.hpp"
 
-class Tileset;
+class Map;
 struct Tile;
 
 enum MoveDirection 
@@ -20,10 +20,7 @@ public:
     MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect);
     virtual ~MapSprite() override;
     
-    virtual void update(
-        unsigned int deltaTime,
-        const std::vector<std::vector<unsigned int>> &tileGrid, 
-        Tileset *tileset);
+    virtual void update(unsigned int deltaTime, Map *map);
     
     virtual void stopX();
     virtual void stopY();
@@ -38,16 +35,10 @@ public:
     void clampY(int minY, int maxY);
 
     MoveDirection getCurrentMoveDirection() const;
-    Tile * getTile(
-        const std::vector<std::vector<unsigned int>> &tileGrid, 
-        Tileset *tileset,
-        unsigned int x,
-        unsigned int y) const;
+    Tile * getTile(Map *map, unsigned int x, unsigned int y) const;
 
 protected:
-    virtual bool canMove(
-        const std::vector<std::vector<unsigned int>> &tileGrid, 
-        Tileset *tileset);
+    virtual bool canMove(Map *map);
     virtual void onStopX(int previousSpeed);
     virtual void onStopY(int previousSpeed);
     virtual void onMoveX();

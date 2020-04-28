@@ -47,12 +47,9 @@ void SkeletonSprite::draw(const Window &window) const
     PlayerSprite::draw(window);
 }
 
-void SkeletonSprite::update(
-    unsigned int deltaTime,
-    const std::vector<std::vector<unsigned int>> &tileGrid, 
-    Tileset *tileset)
+void SkeletonSprite::update(unsigned int deltaTime, Map *map)
 {
-    PlayerSprite::update(deltaTime, tileGrid, tileset);
+    PlayerSprite::update(deltaTime, map);
 
     if(keysActive)
     {
@@ -191,9 +188,7 @@ void SkeletonSprite::onMoveY()
     animationTimer.reset();
 }
 
-bool SkeletonSprite::canMove(
-    const std::vector<std::vector<unsigned int>> &tileGrid, 
-    Tileset *tileset)
+bool SkeletonSprite::canMove(Map *map)
 {
     if(keysActive)
     {
@@ -208,8 +203,8 @@ bool SkeletonSprite::canMove(
         const int leftX = getX() + buffer;
         const int rightX = getX() + getWidth() - buffer;
         const int nextY = getY() + getSpeedY();
-        const Tile *leftTile = getTile(tileGrid, tileset, leftX, nextY);
-        const Tile *rightTile = getTile(tileGrid, tileset, rightX, nextY);
+        const Tile *leftTile = getTile(map, leftX, nextY);
+        const Tile *rightTile = getTile(map, rightX, nextY);
         if(!leftTile || !rightTile) return false;
         return leftTile->type == TileType::GROUND && rightTile->type == TileType::GROUND;
     }
@@ -218,8 +213,8 @@ bool SkeletonSprite::canMove(
         const int topY = getY() + buffer;
         const int bottomY = getY() + getHeight() - buffer;
         const int nextX = getX() + getWidth() + getSpeedX();
-        const Tile *topTile = getTile(tileGrid, tileset, nextX, topY);
-        const Tile *bottomTile = getTile(tileGrid, tileset, nextX, bottomY);
+        const Tile *topTile = getTile(map, nextX, topY);
+        const Tile *bottomTile = getTile(map, nextX, bottomY);
         if(!topTile || !bottomTile) return false;
         return topTile->type == TileType::GROUND && bottomTile->type == TileType::GROUND;
     }
@@ -228,8 +223,8 @@ bool SkeletonSprite::canMove(
         const int leftX = getX() + buffer;
         const int rightX = getX() + getWidth() - buffer;
         const int nextY = getY() + getHeight() + getSpeedY() - buffer;
-        const Tile *leftTile = getTile(tileGrid, tileset, leftX, nextY);
-        const Tile *rightTile = getTile(tileGrid, tileset, rightX, nextY);
+        const Tile *leftTile = getTile(map, leftX, nextY);
+        const Tile *rightTile = getTile(map, rightX, nextY);
         if(!leftTile || !rightTile) return false;
         return leftTile->type == TileType::GROUND && rightTile->type == TileType::GROUND;
     }
@@ -238,15 +233,15 @@ bool SkeletonSprite::canMove(
         const int topY = getY() + buffer;
         const int bottomY = getY() + getHeight() - buffer;
         const int nextX = getX() + getSpeedX();
-        const Tile *topTile = getTile(tileGrid, tileset, nextX, topY);
-        const Tile *bottomTile = getTile(tileGrid, tileset, nextX, bottomY);
+        const Tile *topTile = getTile(map, nextX, topY);
+        const Tile *bottomTile = getTile(map, nextX, bottomY);
         if(!topTile || !bottomTile) return false;
         return topTile->type == TileType::GROUND && bottomTile->type == TileType::GROUND;
     }
     default:
         break;
     }
-    return PlayerSprite::canMove(tileGrid, tileset);
+    return PlayerSprite::canMove(map);
 }
 
 void SkeletonSprite::resetKeys() const

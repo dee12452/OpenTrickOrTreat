@@ -4,6 +4,7 @@
 #include "tileset.hpp"
 
 class PlayerSprite;
+class MapSprite;
 
 class Map
 {
@@ -14,20 +15,26 @@ public:
     void update(unsigned int deltaTime);
     void draw(const Window &window);
 
+    Tileset * getTileset() const;
     PlayerSprite * getPlayer() const;
+    std::vector<std::vector<unsigned int>> & getGrid();
+
+    void setRefresh();
 
 private:
-    void loadMapValues(json *mapJson);
-    void loadTileGrid(json *mapJson);
-
     Tileset *tileset;
+    SDL_Texture *bgTexture;
     SDL_Texture *mapTexture;
-    std::vector<std::vector<unsigned int>> tileGrid;
-    int mapTileWidth;
-    int mapTileHeight;
+    std::vector<std::vector<unsigned int>> grid;
     int cameraWidth;
     int cameraHeight;
     PlayerSprite *player;
+    bool refresh;
+    std::vector<MapSprite *> objects;
+
+    void loadMapValues(json *mapJson);
+    void loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight);
+    void refreshBackground(const Window &window) const;
 };
 
 #endif
