@@ -8,6 +8,7 @@ const unsigned int MapSprite::MOVEMENT_DELAY_MS = 35;
 MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect)
     : Sprite(texture, sourceRect, destinationRect)
     , deltaSpeedTimer(0)
+    , direction(DOWN)
 {
     stopX();
     stopY();
@@ -28,10 +29,14 @@ void MapSprite::update(unsigned int deltaTime, Map *map)
         }
         if(speedX != 0)
         {
+            if(speedX > 0) direction = RIGHT;
+            if(speedX < 0) direction = LEFT;
             onMoveX();
         }
         if(speedY != 0)
         {
+            if(speedY > 0) direction = DOWN;
+            if(speedY < 0) direction = UP;
             onMoveY();
         }
         deltaSpeedTimer = 0;
@@ -76,18 +81,6 @@ void MapSprite::setSpeedY(int sY)
     speedY = sY;
 }
 
-void MapSprite::clampX(int minX, int maxX)
-{
-    setX(std::max(getX() - getWidth() / 2, minX));
-    setX(std::min(getX() + getWidth() / 2, maxX));
-}
-
-void MapSprite::clampY(int minY, int maxY)
-{
-    setX(std::max(getY() - getHeight() / 2, minY));
-    setX(std::min(getY() + getHeight() / 2, maxY));
-}
-
 bool MapSprite::canMove(Map *)
 {
     return true;
@@ -105,13 +98,18 @@ void MapSprite::onMoveX()
 void MapSprite::onMoveY()
 {}
 
-MoveDirection MapSprite::getCurrentMoveDirection() const
+Direction MapSprite::getMoveDirection() const
 {
-    if(speedX < 0) return MoveDirection::LEFT;
-    else if(speedX > 0) return MoveDirection::RIGHT;
-    else if(speedY < 0) return MoveDirection::UP;
-    else if(speedY > 0) return MoveDirection::DOWN;
-    else return MoveDirection::NONE;
+    if(speedX < 0) return Direction::LEFT;
+    else if(speedX > 0) return Direction::RIGHT;
+    else if(speedY < 0) return Direction::UP;
+    else if(speedY > 0) return Direction::DOWN;
+    else return Direction::NONE;
+}
+
+Direction MapSprite::getFacingDirection() const
+{
+    return direction;
 }
 
 Tile * MapSprite::getTile(Map *map, unsigned int x, unsigned int y) const

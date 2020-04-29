@@ -9,10 +9,20 @@ PlayerSprite::PlayerSprite(
     const SDL_Rect &sourceRect,
     const SDL_Rect &destinationRect,
     unsigned short int walkAnimations)
+    : PlayerSprite(texture, sourceRect, destinationRect, walkAnimations, 0)
+{}
+
+PlayerSprite::PlayerSprite(
+    SDL_Texture *texture,
+    const SDL_Rect &sourceRect,
+    const SDL_Rect &destinationRect,
+    unsigned short int walkAnimations,
+    int animationHeight)
     : MapSprite(texture, sourceRect, destinationRect)
     , walkAnimationTimer(WALK_ANIMATION_DELAY)
     , initialSource(sourceRect)
     , numWalkAnimations(walkAnimations)
+    , walkAnimationHeight(animationHeight)
 {}
 
 PlayerSprite::~PlayerSprite()
@@ -29,12 +39,12 @@ void PlayerSprite::onStopX(int previousSpeed)
     if(previousSpeed > 0)
     {
         setSourceRect(initialSource);
-        setSourceY(initialSource.h * 3);
+        setSourceY((initialSource.h + walkAnimationHeight) * 3);
     }
     else
     {
         setSourceRect(initialSource);
-        setSourceY(initialSource.h);
+        setSourceY(initialSource.h + walkAnimationHeight);
     }
 
     walkAnimationTimer.reset();
@@ -49,7 +59,7 @@ void PlayerSprite::onStopY(int previousSpeed)
     else
     {
         setSourceRect(initialSource);
-        setSourceY(initialSource.h * 2);
+        setSourceY((initialSource.h  + walkAnimationHeight) * 2);
     }
 
     walkAnimationTimer.reset();
@@ -61,10 +71,10 @@ void PlayerSprite::onMoveX()
 
     if(getSpeedX() > 0)
     {
-        if(getSourceY() != initialSource.h * 3)
+        if(getSourceY() != (initialSource.h + walkAnimationHeight) * 3)
         {
             setSourceRect(initialSource);
-            setSourceY(initialSource.h * 3);
+            setSourceY((initialSource.h + walkAnimationHeight) * 3);
         }
         else
         {
@@ -73,10 +83,10 @@ void PlayerSprite::onMoveX()
     }
     else
     {
-        if(getSourceY() != initialSource.h)
+        if(getSourceY() != initialSource.h + walkAnimationHeight)
         {
             setSourceRect(initialSource);
-            setSourceY(initialSource.h);
+            setSourceY(initialSource.h + walkAnimationHeight);
         }
         else
         {
@@ -112,10 +122,10 @@ void PlayerSprite::onMoveY()
     }
     else
     {
-        if(getSourceY() != initialSource.h * 2)
+        if(getSourceY() != (initialSource.h + walkAnimationHeight) * 2)
         {
             setSourceRect(initialSource);
-            setSourceY(initialSource.h * 2);
+            setSourceY((initialSource.h + walkAnimationHeight) * 2);
         }
         else
         {
@@ -138,9 +148,9 @@ bool PlayerSprite::canMove(Map *map)
     Tile *nextTile2 = nullptr;
     ObjectSprite *intersectingObject1 = nullptr;
     ObjectSprite *intersectingObject2 = nullptr;
-    switch (getCurrentMoveDirection())
+    switch (getMoveDirection())
     {
-        case MoveDirection::UP:
+        case Direction::UP:
         {
             const int leftX = getX() + buffer;
             const int rightX = getX() + getWidth() - buffer;
@@ -151,7 +161,7 @@ bool PlayerSprite::canMove(Map *map)
             intersectingObject2 = findObject(map, rightX, nextY);
             break;
         }
-        case MoveDirection::RIGHT:
+        case Direction::RIGHT:
         {
             const int topY = getY() + buffer;
             const int bottomY = getY() + getHeight() - buffer;
@@ -162,7 +172,7 @@ bool PlayerSprite::canMove(Map *map)
             intersectingObject2 = findObject(map, nextX, bottomY);
             break;
         }
-        case MoveDirection::DOWN:
+        case Direction::DOWN:
         {
             const int leftX = getX() + buffer;
             const int rightX = getX() + getWidth() - buffer;
@@ -173,7 +183,7 @@ bool PlayerSprite::canMove(Map *map)
             intersectingObject2 = findObject(map, rightX, nextY);
             break;
         }
-        case MoveDirection::LEFT:
+        case Direction::LEFT:
         {
             const int topY = getY() + buffer;
             const int bottomY = getY() + getHeight() - buffer;

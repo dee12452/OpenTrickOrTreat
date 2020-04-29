@@ -1,12 +1,13 @@
 #include "map.hpp"
 #include "GahoodSON/parse.h"
 #include "sprite/skeletonsprite.hpp"
+#include "sprite/witchsprite.hpp"
 #include "sprite/gatesprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
 {
-    player = new SkeletonSprite();
+    player = new WitchSprite();
     const std::string mapPath = pathToResourceFolder + Const::MAPS_FOLDER_PATH + mapFile;
     
     json *mapJson = gahoodson_create_from_file(mapPath.c_str());

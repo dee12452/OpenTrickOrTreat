@@ -15,6 +15,12 @@ public:
         const SDL_Rect &sourceRect,
         const SDL_Rect &destinationRect,
         unsigned short int walkAnimations);
+    PlayerSprite(
+        SDL_Texture *texture,
+        const SDL_Rect &sourceRect,
+        const SDL_Rect &destinationRect,
+        unsigned short int walkAnimations,
+        int animationHeight);
     virtual ~PlayerSprite() override;
 
     virtual void draw(const Window &window) const override;
@@ -31,6 +37,7 @@ private:
     Timer walkAnimationTimer;
     SDL_Rect initialSource;
     unsigned short int numWalkAnimations;
+    int walkAnimationHeight;
 };
 
 #endif

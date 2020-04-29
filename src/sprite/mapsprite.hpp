@@ -7,7 +7,7 @@ class ObjectSprite;
 class Map;
 struct Tile;
 
-enum MoveDirection 
+enum Direction 
 { 
     NONE, UP, DOWN, LEFT, RIGHT 
 };
@@ -32,10 +32,9 @@ public:
     int getSpeedY() const;
     void setSpeedY(int speedY);
 
-    void clampX(int minX, int maxX);
-    void clampY(int minY, int maxY);
+    Direction getMoveDirection() const;
+    Direction getFacingDirection() const;
 
-    MoveDirection getCurrentMoveDirection() const;
     Tile * getTile(Map *map, unsigned int x, unsigned int y) const;
 
 protected:
@@ -51,6 +50,7 @@ private:
     int speedX;
     int speedY;
     unsigned int deltaSpeedTimer;
+    Direction direction;
 };
 
 #endif
