@@ -29,14 +29,10 @@ void MapSprite::update(unsigned int deltaTime, Map *map)
         }
         if(speedX != 0)
         {
-            if(speedX > 0) direction = RIGHT;
-            if(speedX < 0) direction = LEFT;
             onMoveX();
         }
         if(speedY != 0)
         {
-            if(speedY > 0) direction = DOWN;
-            if(speedY < 0) direction = UP;
             onMoveY();
         }
         deltaSpeedTimer = 0;
@@ -93,10 +89,16 @@ void MapSprite::onStopY(int)
 {}
 
 void MapSprite::onMoveX()
-{}
+{
+    if(speedX > 0) direction = RIGHT;
+    if(speedX < 0) direction = LEFT;
+}
 
 void MapSprite::onMoveY()
-{}
+{
+    if(speedY > 0) direction = DOWN;
+    if(speedY < 0) direction = UP;
+}
 
 Direction MapSprite::getMoveDirection() const
 {

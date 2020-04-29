@@ -36,6 +36,8 @@ void PlayerSprite::draw(const Window &window) const
 
 void PlayerSprite::onStopX(int previousSpeed)
 {
+    MapSprite::onStopX(previousSpeed);
+
     if(previousSpeed > 0)
     {
         setSourceRect(initialSource);
@@ -52,6 +54,8 @@ void PlayerSprite::onStopX(int previousSpeed)
 
 void PlayerSprite::onStopY(int previousSpeed)
 {
+    MapSprite::onStopY(previousSpeed);
+
     if(previousSpeed > 0)
     {
         setSourceRect(initialSource);
@@ -68,6 +72,8 @@ void PlayerSprite::onStopY(int previousSpeed)
 void PlayerSprite::onMoveX()
 {
     if(!walkAnimationTimer.check()) return;
+
+    MapSprite::onMoveX();
 
     if(getSpeedX() > 0)
     {
@@ -104,10 +110,9 @@ void PlayerSprite::onMoveX()
 
 void PlayerSprite::onMoveY()
 {
-    if(!walkAnimationTimer.check())
-    {
-        return;
-    }
+    if(!walkAnimationTimer.check()) return;
+
+    MapSprite::onMoveY();
 
     if(getSpeedY() > 0)
     {
