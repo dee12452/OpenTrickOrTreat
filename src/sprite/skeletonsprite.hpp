@@ -11,7 +11,7 @@ private:
     static const unsigned int KEYS_ANIMATION_DURATION;
     static const SDL_Rect KEY_INITIAL_SRC;
     static const unsigned int KEYS_ANIMATION_DELAY;
-    static const int DEFAULT_KEY_SPEED;
+    static const unsigned short int DEFAULT_KEY_SPEED;
     static const int KEY_BUFFER;
 
 public:
@@ -23,20 +23,18 @@ public:
     void doAction(Map *map) override;
 
 protected:
-    void onStopX(int previousSpeed) override;
-    void onStopY(int previousSpeed) override;
     void onMoveX() override;
     void onMoveY() override;
-    bool canMove(Map *map) override;
+    bool canMove(Map *map, unsigned int x, unsigned int y) override;
 
 private:
-    Timer keyTimer;
-    Timer keyAnimationTimer;
+    unsigned int keyDuration;
+    unsigned int keyAnimationDeltaTime;
     bool keysActive;
     std::vector<MapSprite *> keys;
 
     void resetKeys() const;
-    void animateKey(MapSprite *key) const;
+    void animateKey(MapSprite *key, unsigned int deltaTime);
     void unlockDoors(Map *map) const;
 };
 

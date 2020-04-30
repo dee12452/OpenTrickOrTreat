@@ -14,7 +14,7 @@ namespace Const
     extern const char * const TILESETS_FOLDER_PATH;
     extern const char * const MAPS_FOLDER_PATH;
     extern const char * const ANIMATIONS_FOLDER_PATH;
-    extern const int DEFAULT_PLAYER_SPEED;
+    extern const float DEFAULT_PLAYER_SPEED;
     
     extern const int DEFAULT_FONT_PT_SIZE;
     extern const int DEFAULT_WINDOW_WIDTH;
