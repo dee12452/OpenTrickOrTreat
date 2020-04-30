@@ -5,3 +5,5 @@ Makefile
 OpenTrickOrTreat
 cmake_install.cmake
 .vscode/
+lib/
+include/

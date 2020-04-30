@@ -27,7 +27,7 @@ GateSprite::GateSprite(Tileset *tileset, GateType type, int x, int y)
         setSourceY(tileset->getTile(WOOD_GATE_TILE_ID)->y);
         break;
 
-    case GateType::STEEL:
+    default:
         setSourceX(tileset->getTile(STEEL_GATE_TILE_ID)->x);
         setSourceY(tileset->getTile(STEEL_GATE_TILE_ID)->y);
         break;
@@ -43,7 +43,7 @@ ObjectType GateSprite::getType() const
     {
     case GateType::WOOD:
         return ObjectType::WOODEN_GATE;
-    case GateType::STEEL:
+    default:
         return ObjectType::STEEL_GATE;
     }
 }
