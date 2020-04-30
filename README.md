@@ -19,7 +19,7 @@ $ git clone git@github.com:dee12452/GahoodSON.git
 $ cd GahoodSON
 $ cmake . && make
 $ cd .. && mkdir -p lib include/GahoodSON
-$ cp GahoodSON/src/*.h include/
+$ cp GahoodSON/src/*.h include/GahoodSON
 $ cp GahoodSON/libGahoodSON.a lib/
 $ rm -rf GahoodSON
 ```
