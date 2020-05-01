@@ -3,102 +3,97 @@
 #include "objectsprite.hpp"
 #include "map/map.hpp"
 
-const unsigned int MapSprite::MOVEMENT_DELAY_MS = 35;
+MapSprite::MapSprite(
+    SDL_Texture *texture, 
+    const SDL_Rect &sourceRect, 
+    const SDL_Rect &destinationRect)
+    : MapSprite(texture, sourceRect, destinationRect, NONE)
+{}
 
-MapSprite::MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect)
+MapSprite::MapSprite(
+    SDL_Texture *texture, 
+    const SDL_Rect &sourceRect,
+    const SDL_Rect &destinationRect,
+    Direction facingDir)
     : Sprite(texture, sourceRect, destinationRect)
-    , deltaSpeedTimer(0)
-    , direction(DOWN)
-{
-    stopX();
-    stopY();
-}
+    , offsetX(0)
+    , offsetY(0)
+    , speedX(0)
+    , speedY(0)
+    , facingDirection(facingDir)
+{}
 
 MapSprite::~MapSprite()
 {}
 
 void MapSprite::update(unsigned int deltaTime, Map *map)
 {
-    deltaSpeedTimer += deltaTime;
-    if(deltaSpeedTimer >= MOVEMENT_DELAY_MS)
+    const unsigned int nextX = getX() + static_cast<int> (offsetX + speedX * deltaTime);
+    const unsigned int nextY = getY() + static_cast<int> (offsetY + speedY * deltaTime);
+    if(canMove(map, nextX, nextY))
     {
-        if(canMove(map))
-        {
-            setX(getX() + speedX);
-            setY(getY() + speedY);
-        }
-        if(speedX != 0)
-        {
-            onMoveX();
-        }
-        if(speedY != 0)
-        {
-            onMoveY();
-        }
-        deltaSpeedTimer = 0;
+        offsetX += speedX * deltaTime;
+        offsetY += speedY * deltaTime;
+        setX(nextX);
+        setY(nextY);
+        float whole;
+        offsetX = modf(offsetX, &whole);
+        offsetY = modf(offsetY, &whole);
     }
-}
-
-void MapSprite::stopX()
-{
     if(speedX != 0)
     {
-        onStopX(speedX);
+        if(speedX > 0) facingDirection = RIGHT;
+        if(speedX < 0) facingDirection = LEFT;
+        onMoveX();
     }
-    speedX = 0;
-}
-
-void MapSprite::stopY()
-{
     if(speedY != 0)
     {
-        onStopY(speedY);
+        if(speedY > 0) facingDirection = DOWN;
+        if(speedY < 0) facingDirection = UP;
+        onMoveY();
     }
-    speedY = 0;
 }
 
-int MapSprite::getSpeedX() const
+void MapSprite::stop()
+{
+    speedX = 0;
+    speedY = 0;
+    offsetX = 0;
+    offsetY = 0;
+}
+
+float MapSprite::getSpeedX() const
 {
     return speedX;
 }
 
-void MapSprite::setSpeedX(int sX)
+void MapSprite::setSpeedX(float sX)
 {
     speedX = sX;
+    if(sX == 0) offsetX = 0;
 }
 
-int MapSprite::getSpeedY() const
+float MapSprite::getSpeedY() const
 {
     return speedY;
 }
 
-void MapSprite::setSpeedY(int sY)
+void MapSprite::setSpeedY(float sY)
 {
     speedY = sY;
+    if(sY == 0) offsetY = 0;
 }
 
-bool MapSprite::canMove(Map *)
+bool MapSprite::canMove(Map *, unsigned int, unsigned int)
 {
     return true;
 }
 
-void MapSprite::onStopX(int)
-{}
-
-void MapSprite::onStopY(int)
-{}
-
 void MapSprite::onMoveX()
-{
-    if(speedX > 0) direction = RIGHT;
-    if(speedX < 0) direction = LEFT;
-}
+{}
 
 void MapSprite::onMoveY()
-{
-    if(speedY > 0) direction = DOWN;
-    if(speedY < 0) direction = UP;
-}
+{}
 
 Direction MapSprite::getMoveDirection() const
 {
@@ -111,10 +106,10 @@ Direction MapSprite::getMoveDirection() const
 
 Direction MapSprite::getFacingDirection() const
 {
-    return direction;
+    return facingDirection;
 }
 
-Tile * MapSprite::getTile(Map *map, unsigned int x, unsigned int y) const
+Tile * MapSprite::getTile(Map *map, int x, int y) const
 {
     const int tileX = x / map->getTileset()->getTileWidth();
     const int tileY = y / map->getTileset()->getTileHeight();
@@ -142,4 +137,14 @@ ObjectSprite * MapSprite::findObject(Map *map, int x, int y) const
         }
     }
     return nullptr;
+}
+
+float MapSprite::getOffsetX() const
+{
+    return offsetX;
+}
+
+float MapSprite::getOffsetY() const
+{
+    return offsetY;
 }

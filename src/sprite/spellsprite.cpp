@@ -34,12 +34,9 @@ void SpellSprite::resetAnimation()
     currentAnimation = 0;
 }
 
-void SpellSprite::nextAnimationFrame()
+void SpellSprite::setAnimationFrame(unsigned short int currentSpellAnimation)
 {
-    if(currentAnimation < SPELL_ANIMATION_SOURCES.size() - 1)
-    {
-        currentAnimation++;
-    }
+    currentAnimation = currentSpellAnimation;
 }
 
 double SpellSprite::getAngle() const

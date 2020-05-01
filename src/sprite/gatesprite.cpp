@@ -5,7 +5,7 @@ const unsigned int GateSprite::WOOD_GATE_TILE_ID = 48;
 const unsigned int GateSprite::STEEL_GATE_TILE_ID = 5;
 const std::vector<unsigned int> GateSprite::WOOD_GATE_ANIMATION_TILES = {70, 48, 70, 71, 72, 73, 25};
 const std::vector<unsigned int> GateSprite::STEEL_GATE_ANIMATION_TILES = {27, 5, 27, 28, 50, 51, 25};
-const unsigned int GateSprite::ANIMATION_DELAY = 100;
+const unsigned int GateSprite::GATE_ANIMATION_DURATION = 900;
 
 GateSprite::GateSprite(Tileset *tileset, GateType type, int x, int y)
     : ObjectSprite(
@@ -13,8 +13,7 @@ GateSprite::GateSprite(Tileset *tileset, GateType type, int x, int y)
         {0, 0, tileset->getTileWidth(), tileset->getTileHeight()},
         {0, 0, tileset->getTileWidth(), tileset->getTileHeight()})
     , gateType(type)
-    , currentAnimation(0)
-    , animationTimer(ANIMATION_DELAY)
+    , currentAnimationDelta(0)
     , unlocked(false)
     , open(false)
 {
@@ -22,15 +21,16 @@ GateSprite::GateSprite(Tileset *tileset, GateType type, int x, int y)
     setY(y - y % tileset->getTileHeight());
     switch (gateType)
     {
-    case GateType::WOOD:
-        setSourceX(tileset->getTile(WOOD_GATE_TILE_ID)->x);
-        setSourceY(tileset->getTile(WOOD_GATE_TILE_ID)->y);
-        break;
-
-    default:
-        setSourceX(tileset->getTile(STEEL_GATE_TILE_ID)->x);
-        setSourceY(tileset->getTile(STEEL_GATE_TILE_ID)->y);
-        break;
+        case GateType::WOOD:
+            setSourceX(tileset->getTile(WOOD_GATE_TILE_ID)->x);
+            setSourceY(tileset->getTile(WOOD_GATE_TILE_ID)->y);
+            gateAnimationTiles = WOOD_GATE_ANIMATION_TILES;
+            break;
+        default:
+            setSourceX(tileset->getTile(STEEL_GATE_TILE_ID)->x);
+            setSourceY(tileset->getTile(STEEL_GATE_TILE_ID)->y);
+            gateAnimationTiles = STEEL_GATE_ANIMATION_TILES;
+            break;
     }
 }
 
@@ -41,10 +41,10 @@ ObjectType GateSprite::getType() const
 {
     switch (gateType)
     {
-    case GateType::WOOD:
-        return ObjectType::WOODEN_GATE;
-    default:
-        return ObjectType::STEEL_GATE;
+        case GateType::WOOD:
+            return ObjectType::WOODEN_GATE;
+        default:
+            return ObjectType::STEEL_GATE;
     }
 }
 
@@ -55,35 +55,23 @@ bool GateSprite::isBlocking() const
 
 void GateSprite::update(unsigned int deltaTime, Map *map)
 {
-    if(!open && unlocked && animationTimer.check())
+    if(!open && unlocked)
     {
-        unsigned int nextAnimationTile;
-        switch(gateType)
+        currentAnimationDelta += deltaTime;
+        const unsigned int animationLength = GATE_ANIMATION_DURATION / gateAnimationTiles.size();
+        unsigned int animationIndex = currentAnimationDelta / animationLength;
+        if(animationIndex >= gateAnimationTiles.size()) animationIndex = gateAnimationTiles.size() - 1;
+        setSourceX(map->getTileset()->getTile(gateAnimationTiles[animationIndex])->x);
+        setSourceY(map->getTileset()->getTile(gateAnimationTiles[animationIndex])->y);
+        if(animationIndex == gateAnimationTiles.size() - 1)
         {
-            case GateType::WOOD:
-                nextAnimationTile = WOOD_GATE_ANIMATION_TILES[currentAnimation];
-                break;
-            case GateType::STEEL:
-                nextAnimationTile = STEEL_GATE_ANIMATION_TILES[currentAnimation];
-                break;
+            open = true;
         }
-        setSourceX(map->getTileset()->getTile(nextAnimationTile)->x);
-        setSourceY(map->getTileset()->getTile(nextAnimationTile)->y);
-        currentAnimation++;
-        switch(gateType)
-        {
-            case GateType::WOOD:
-                open = currentAnimation >= WOOD_GATE_ANIMATION_TILES.size();
-                break;
-            case GateType::STEEL:
-                open = currentAnimation >= STEEL_GATE_ANIMATION_TILES.size();
-                break;
-        }
-        animationTimer.reset();
     }
 }
 
 void GateSprite::unlock()
 {
     unlocked = true;
+    currentAnimationDelta = 0;
 }

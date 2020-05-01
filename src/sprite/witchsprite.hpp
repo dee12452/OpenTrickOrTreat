@@ -9,7 +9,7 @@ class WitchSprite : public PlayerSprite
 private:
     static const short int WITCH_NUMBER_MOVE_ANIMATIONS;
     static const SDL_Rect WITCH_INITIAL_SRC;
-    static const unsigned int SPELL_ANIMATION_DELAY;
+    static const unsigned int SPELL_ANIMATION_DURATION;
     static const unsigned short int NUMBER_SPELL_ANIMATIONS;
 
 public:
@@ -17,20 +17,18 @@ public:
     
     void update(unsigned int deltaTime, Map *map) override;
     void draw(const Window &window) const override;
+    void stop() override;
     void doAction(Map *map) override;
 
 protected:
-    void onStopX(int previousSpeed) override;
-    void onStopY(int previousSpeed) override;
     void onMoveX() override;
     void onMoveY() override;
-    bool canMove(Map *map) override;
+    bool canMove(Map *map, unsigned int x, unsigned int y) override;
 
 private:
     SpellSprite spell;
     bool usingSpell;
-    Timer spellTimer;
-    unsigned short int currentSpellAnimation;
+    unsigned int spellAnimationDelta;
 };
 
 #endif

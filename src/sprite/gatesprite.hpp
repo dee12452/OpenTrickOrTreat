@@ -19,7 +19,7 @@ private:
     static const unsigned int STEEL_GATE_TILE_ID;
     static const std::vector<unsigned int> WOOD_GATE_ANIMATION_TILES;
     static const std::vector<unsigned int> STEEL_GATE_ANIMATION_TILES;
-    static const unsigned int ANIMATION_DELAY;
+    static const unsigned int GATE_ANIMATION_DURATION;
 
 public:
     GateSprite(Tileset *tileset, GateType type, int x, int y);
@@ -33,10 +33,10 @@ public:
 
 private:
     GateType gateType;
-    unsigned short int currentAnimation;
-    Timer animationTimer;
+    unsigned int currentAnimationDelta;
     bool unlocked;
     bool open;
+    std::vector<unsigned int> gateAnimationTiles;
 };
 
 #endif

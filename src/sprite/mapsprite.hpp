@@ -14,43 +14,47 @@ enum Direction
 
 class MapSprite : public Sprite
 {
-private:
-    static const unsigned int MOVEMENT_DELAY_MS;
-
 public:
-    MapSprite(SDL_Texture *texture, const SDL_Rect &sourceRect, const SDL_Rect &destinationRect);
+    MapSprite(
+        SDL_Texture *texture, 
+        const SDL_Rect &sourceRect, 
+        const SDL_Rect &destinationRect);
+    MapSprite(
+        SDL_Texture *texture, 
+        const SDL_Rect &sourceRect, 
+        const SDL_Rect &destinationRect,
+        Direction facingDirection);
     virtual ~MapSprite() override;
     
     virtual void update(unsigned int deltaTime, Map *map);
-    
-    virtual void stopX();
-    virtual void stopY();
+    virtual void stop();
 
-    int getSpeedX() const;
-    void setSpeedX(int speedX);
+    float getSpeedX() const;
+    void setSpeedX(float speedX);
     
-    int getSpeedY() const;
-    void setSpeedY(int speedY);
+    float getSpeedY() const;
+    void setSpeedY(float speedY);
 
     Direction getMoveDirection() const;
     Direction getFacingDirection() const;
-
-    Tile * getTile(Map *map, unsigned int x, unsigned int y) const;
+    Tile * getTile(Map *map, int x, int y) const;
 
 protected:
-    virtual bool canMove(Map *map);
-    virtual void onStopX(int previousSpeed);
-    virtual void onStopY(int previousSpeed);
+    virtual bool canMove(Map *map, unsigned int x, unsigned int y);
     virtual void onMoveX();
     virtual void onMoveY();
 
     ObjectSprite * findObject(Map *map, int x, int y) const;
 
+    float getOffsetX() const;
+    float getOffsetY() const;
+
 private:
-    int speedX;
-    int speedY;
-    unsigned int deltaSpeedTimer;
-    Direction direction;
+    float offsetX;
+    float offsetY;
+    float speedX;
+    float speedY;
+    Direction facingDirection;
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 const short int WitchSprite::WITCH_NUMBER_MOVE_ANIMATIONS = 8;
 const SDL_Rect WitchSprite::WITCH_INITIAL_SRC = {0, 0, 60, 60};
-const unsigned int WitchSprite::SPELL_ANIMATION_DELAY = 100;
+const unsigned int WitchSprite::SPELL_ANIMATION_DURATION = 650;
 const unsigned short int WitchSprite::NUMBER_SPELL_ANIMATIONS = 6;
 
 WitchSprite::WitchSprite()
@@ -14,30 +14,30 @@ WitchSprite::WitchSprite()
         WITCH_NUMBER_MOVE_ANIMATIONS,
         WITCH_INITIAL_SRC.h)
     , usingSpell(false)
-    , spellTimer(SPELL_ANIMATION_DELAY)
-    , currentSpellAnimation(0)
+    , spellAnimationDelta(0)
 {}
 
 void WitchSprite::update(unsigned int deltaTime, Map *map)
 {
     PlayerSprite::update(deltaTime, map);
-    if(usingSpell && spellTimer.check())
+    if(usingSpell)
     {
+        spellAnimationDelta += deltaTime;
+        const unsigned short int currentSpellAnimation = 
+            spellAnimationDelta / (SPELL_ANIMATION_DURATION / NUMBER_SPELL_ANIMATIONS);
         if(currentSpellAnimation >= NUMBER_SPELL_ANIMATIONS)
         {
             usingSpell = false;
-            currentSpellAnimation = 0;
             setSourceX(0);
             setSourceY(getSourceY() - WITCH_INITIAL_SRC.h);
+            spellAnimationDelta = 0;
             spell.resetAnimation();
         }
         else
         {
             setSourceX(WITCH_INITIAL_SRC.w * currentSpellAnimation);
-            currentSpellAnimation++;
-            spell.nextAnimationFrame();
+            spell.setAnimationFrame(currentSpellAnimation);
         }
-        spellTimer.reset();
     }
 }
 
@@ -50,6 +50,12 @@ void WitchSprite::draw(const Window &window) const
     PlayerSprite::draw(window);
 }
 
+void WitchSprite::stop()
+{
+    if(usingSpell) return;
+    PlayerSprite::stop();
+}
+
 void WitchSprite::doAction(Map *map)
 {
     if(usingSpell) return;
@@ -57,7 +63,6 @@ void WitchSprite::doAction(Map *map)
     usingSpell = true;
     setSourceX(0);
     setSourceY(getSourceY() + WITCH_INITIAL_SRC.h);
-    currentSpellAnimation++;
     switch (getFacingDirection())
     {
         case UP:
@@ -81,19 +86,6 @@ void WitchSprite::doAction(Map *map)
             spell.setAngle(0);
             break;
     }
-    spellTimer.reset();
-}
-
-void WitchSprite::onStopX(int previousSpeed)
-{
-    if(usingSpell) return;
-    PlayerSprite::onStopX(previousSpeed);
-}
-
-void WitchSprite::onStopY(int previousSpeed)
-{
-    if(usingSpell) return;
-    PlayerSprite::onStopY(previousSpeed);
 }
 
 void WitchSprite::onMoveX()
@@ -108,8 +100,8 @@ void WitchSprite::onMoveY()
     PlayerSprite::onMoveY();
 }
 
-bool WitchSprite::canMove(Map *map)
+bool WitchSprite::canMove(Map *map, unsigned int x, unsigned int y)
 {
     if(usingSpell) return false;
-    return PlayerSprite::canMove(map);
+    return PlayerSprite::canMove(map, x, y);
 }

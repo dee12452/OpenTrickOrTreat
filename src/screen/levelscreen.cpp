@@ -53,28 +53,27 @@ void LevelScreen::onKeyboardUpdate(GameState &gameState, const unsigned char *ke
     MapSprite *player = map->getPlayer();
     if(keyboardState[SDL_SCANCODE_UP])
     {
-        player->stopX();
+        player->setSpeedX(0);
         player->setSpeedY(-Const::DEFAULT_PLAYER_SPEED);
     } 
     else if(keyboardState[SDL_SCANCODE_DOWN])
     {
-        player->stopX();
-        map->getPlayer()->setSpeedY(Const::DEFAULT_PLAYER_SPEED);
+        player->setSpeedX(0);
+        player->setSpeedY(Const::DEFAULT_PLAYER_SPEED);
     }
     else if(keyboardState[SDL_SCANCODE_LEFT])
     {
-        player->stopY();
-        map->getPlayer()->setSpeedX(-Const::DEFAULT_PLAYER_SPEED);
+        player->setSpeedX(-Const::DEFAULT_PLAYER_SPEED);
+        player->setSpeedY(0);
     }
     else if(keyboardState[SDL_SCANCODE_RIGHT])
     {
-        player->stopY();
-        map->getPlayer()->setSpeedX(Const::DEFAULT_PLAYER_SPEED);
+        player->setSpeedX(Const::DEFAULT_PLAYER_SPEED);
+        player->setSpeedY(0);
     }
     else
     {
-        map->getPlayer()->stopX();
-        map->getPlayer()->stopY();
+        player->stop();
     }
 }
 

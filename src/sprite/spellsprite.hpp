@@ -15,7 +15,7 @@ public:
     void draw(const Window &window) const override;
 
     void resetAnimation();
-    void nextAnimationFrame();
+    void setAnimationFrame(unsigned short int currentSpellAnimation);
 
     double getAngle() const;
     void setAngle(double angle);

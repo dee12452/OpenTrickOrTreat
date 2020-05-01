@@ -9,7 +9,6 @@ Map::Map(const Window &window, const std::string &pathToResourceFolder, const st
 {
     player = new WitchSprite();
     const std::string mapPath = pathToResourceFolder + Const::MAPS_FOLDER_PATH + mapFile;
-    
     json *mapJson = gahoodson_create_from_file(mapPath.c_str());
     const int mapTileWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     const int mapTileHeight = Util::getJsonPair("height", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
