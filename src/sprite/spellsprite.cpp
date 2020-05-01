@@ -1,7 +1,8 @@
 #include "spellsprite.hpp"
 #include "texturemanager.hpp"
 
-const std::vector<SDL_Rect> SpellSprite::SPELL_ANIMATION_SOURCES = {
+const std::vector<SDL_Rect> SpellSprite::SPELL_ANIMATION_SOURCES = 
+{
     {542 + 66 * 0, 0, 66, 68},
     {542 + 66 * 1, 0, 66, 68},
     {542 + 66 * 2, 0, 66, 68},

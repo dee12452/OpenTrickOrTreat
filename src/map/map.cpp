@@ -3,6 +3,7 @@
 #include "sprite/skeletonsprite.hpp"
 #include "sprite/witchsprite.hpp"
 #include "sprite/gatesprite.hpp"
+#include "sprite/costumeselectsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -169,14 +170,21 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                 json_list_element *objectJson = objectData->elements[currentObject];
                 const int mapX = Util::getJsonPair("x", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const int mapY = Util::getJsonPair("y", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
+                const SDL_Point mapPos = {mapX, mapY};
                 switch(std::stoi(
                     Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
                 {
-                    case 1:
-                        objects.push_back(new GateSprite(tileset, GateType::WOOD, mapX, mapY));
+                    case WOODEN_GATE:
+                        objects.push_back(new GateSprite(tileset, GateType::WOOD, mapPos));
                         break;
-                    case 2:
-                        objects.push_back(new GateSprite(tileset, GateType::STEEL, mapX, mapY));
+                    case STEEL_GATE:
+                        objects.push_back(new GateSprite(tileset, GateType::STEEL, mapPos));
+                        break;
+                    case COSTUME_SELECT_SKELETON:
+                        objects.push_back(new CostumeSelectSprite(tileset, CostumeType::SKELETON, mapPos));
+                        break;
+                    case COSTUME_SELECT_WITCH:
+                        objects.push_back(new CostumeSelectSprite(tileset, CostumeType::WITCH, mapPos));
                         break;
                     default:
                         break;

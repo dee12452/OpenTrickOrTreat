@@ -3,7 +3,13 @@
 
 #include <SDL_rect.h>
 
-enum CostumeType {SKELETON = 0, WITCH = 1, MONSTER = 2, VAMPIRE = 3, FISH = 4, NO_COSTUME=5};
+enum CostumeType {
+    SKELETON = 0,
+    WITCH = 1,
+    MONSTER = 2,
+    CREATURE = 3,
+    VAMPIRE = 4
+};
 
 namespace Const
 {

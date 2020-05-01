@@ -7,7 +7,7 @@ const std::vector<unsigned int> GateSprite::WOOD_GATE_ANIMATION_TILES = {70, 48,
 const std::vector<unsigned int> GateSprite::STEEL_GATE_ANIMATION_TILES = {27, 5, 27, 28, 50, 51, 25};
 const unsigned int GateSprite::GATE_ANIMATION_DURATION = 900;
 
-GateSprite::GateSprite(Tileset *tileset, GateType type, int x, int y)
+GateSprite::GateSprite(Tileset *tileset, GateType type, const SDL_Point &mapPos)
     : ObjectSprite(
         tileset->getTilesetTexture(),
         {0, 0, tileset->getTileWidth(), tileset->getTileHeight()},
@@ -17,8 +17,8 @@ GateSprite::GateSprite(Tileset *tileset, GateType type, int x, int y)
     , unlocked(false)
     , open(false)
 {
-    setX(x - x % tileset->getTileWidth());
-    setY(y - y % tileset->getTileHeight());
+    setX(mapPos.x - mapPos.x % tileset->getTileWidth());
+    setY(mapPos.y - mapPos.y % tileset->getTileHeight());
     switch (gateType)
     {
         case GateType::WOOD:
