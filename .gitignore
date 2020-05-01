@@ -6,3 +6,5 @@ OpenTrickOrTreat
 cmake_install.cmake
 .vscode/
 .DS_Store
+lib/
+include/
