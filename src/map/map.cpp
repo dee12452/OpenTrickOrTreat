@@ -102,6 +102,36 @@ void Map::setRefresh()
     refresh = true;
 }
 
+Tile * Map::findTile(int x, int y) const
+{
+    const int tileX = x / tileset->getTileWidth();
+    const int tileY = y / tileset->getTileHeight();
+    if(tileY < 0 || tileY >= grid.size())
+    {
+        return nullptr;
+    }
+    if(tileX < 0 || tileX >= grid[tileY].size())
+    {
+        return nullptr;
+    }
+    return tileset->getTile(grid[tileY][tileX]);
+}
+
+ObjectSprite * Map::findObject(int x, int y) const
+{
+    for(auto object : objects)
+    {
+        if(object->getX() <= x && object->getX() + object->getWidth() >= x)
+        {
+            if(object->getY() <= y && object->getY() + object->getHeight() >= y)
+            {
+                return object;
+            }
+        }
+    }
+    return nullptr;
+}
+
 void Map::loadMapValues(json *mapJson)
 {
     cameraWidth = 0;

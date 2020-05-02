@@ -37,17 +37,18 @@ public:
 
     Direction getMoveDirection() const;
     Direction getFacingDirection() const;
-    Tile * getTile(Map *map, int x, int y) const;
 
 protected:
-    virtual bool canMove(Map *map, unsigned int x, unsigned int y);
+    virtual bool canMove(Map *map, int x, int y);
     virtual void onMoveX();
     virtual void onMoveY();
 
-    ObjectSprite * findObject(Map *map, int x, int y) const;
-
     float getOffsetX() const;
     float getOffsetY() const;
+
+    virtual SDL_Rect getHitbox() const;
+    bool isColliding(MapSprite *otherSprite) const;
+    SDL_Point getCenter() const;
 
 private:
     float offsetX;

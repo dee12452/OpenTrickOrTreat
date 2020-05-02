@@ -89,7 +89,7 @@ void SkeletonSprite::onMoveY()
     if(!keysActive) PlayerSprite::onMoveY();
 }
 
-bool SkeletonSprite::canMove(Map *map, unsigned int x, unsigned int y)
+bool SkeletonSprite::canMove(Map *map, int x, int y)
 {
     if(keysActive) return false;
     return PlayerSprite::canMove(map, x, y);
@@ -180,8 +180,7 @@ void SkeletonSprite::unlockDoors(Map *map) const
         for(int j = -1; j <= 1; j++)
         {
             if(i == j || -i == j) continue;
-            ObjectSprite *obj = findObject(
-                map, 
+            ObjectSprite *obj = map->findObject(
                 centerX + (i * map->getTileset()->getTileWidth()),
                 centerY + (j * map->getTileset()->getTileHeight()));
             if(obj && obj->getType() == ObjectType::GATE)

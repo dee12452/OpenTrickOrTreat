@@ -22,6 +22,9 @@ public:
 
     void setRefresh();
 
+    Tile * findTile(int x, int y) const;
+    ObjectSprite * findObject(int x, int y) const;
+
 private:
     Tileset *tileset;
     SDL_Texture *bgTexture;

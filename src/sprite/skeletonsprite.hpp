@@ -25,7 +25,7 @@ public:
 protected:
     void onMoveX() override;
     void onMoveY() override;
-    bool canMove(Map *map, unsigned int x, unsigned int y) override;
+    bool canMove(Map *map, int x, int y) override;
 
 private:
     unsigned int keyDuration;

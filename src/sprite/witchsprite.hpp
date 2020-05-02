@@ -11,6 +11,9 @@ private:
     static const SDL_Rect WITCH_INITIAL_SRC;
     static const unsigned int SPELL_ANIMATION_DURATION;
     static const unsigned short int NUMBER_SPELL_ANIMATIONS;
+    static const int WITCH_HITBOX_Y_OFFSET;
+    static const int WITCH_HITBOX_W;
+    static const int WITCH_HITBOX_H;
 
 public:
     WitchSprite();
@@ -23,7 +26,9 @@ public:
 protected:
     void onMoveX() override;
     void onMoveY() override;
-    bool canMove(Map *map, unsigned int x, unsigned int y) override;
+    bool canMove(Map *map, int x, int y) override;
+
+    SDL_Rect getHitbox() const override;
 
 private:
     SpellSprite spell;

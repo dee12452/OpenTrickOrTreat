@@ -84,7 +84,7 @@ void MapSprite::setSpeedY(float sY)
     if(sY == 0) offsetY = 0;
 }
 
-bool MapSprite::canMove(Map *, unsigned int, unsigned int)
+bool MapSprite::canMove(Map *, int, int)
 {
     return true;
 }
@@ -109,36 +109,6 @@ Direction MapSprite::getFacingDirection() const
     return facingDirection;
 }
 
-Tile * MapSprite::getTile(Map *map, int x, int y) const
-{
-    const int tileX = x / map->getTileset()->getTileWidth();
-    const int tileY = y / map->getTileset()->getTileHeight();
-    if(tileY < 0 || tileY >= map->getGrid().size())
-    {
-        return nullptr;
-    }
-    if(tileX < 0 || tileX >= map->getGrid()[tileY].size())
-    {
-        return nullptr;
-    }
-    return map->getTileset()->getTile(map->getGrid()[tileY][tileX]);
-}
-
-ObjectSprite * MapSprite::findObject(Map *map, int x, int y) const
-{
-    for(auto object : map->getObjects())
-    {
-        if(object->getX() <= x && object->getX() + object->getWidth() >= x)
-        {
-            if(object->getY() <= y && object->getY() + object->getHeight() >= y)
-            {
-                return object;
-            }
-        }
-    }
-    return nullptr;
-}
-
 float MapSprite::getOffsetX() const
 {
     return offsetX;
@@ -147,4 +117,42 @@ float MapSprite::getOffsetX() const
 float MapSprite::getOffsetY() const
 {
     return offsetY;
+}
+
+SDL_Rect MapSprite::getHitbox() const
+{
+    return getDestinationRect();
+}
+
+bool MapSprite::isColliding(MapSprite *otherSprite) const
+{
+    const SDL_Rect thisHitbox = getHitbox(), thatHitbox = otherSprite->getHitbox();
+    if(thisHitbox.x <= thatHitbox.x && thisHitbox.x + thisHitbox.w >= thatHitbox.x)
+    {
+        if(thisHitbox.y <= thatHitbox.y && thisHitbox.y + thisHitbox.h >= thatHitbox.y)
+        {
+            return true;
+        }
+        else if(thisHitbox.y >= thatHitbox.y && thisHitbox.y <= thatHitbox.y + thatHitbox.h)
+        {
+            return true;
+        }
+    }
+    else if(thisHitbox.x >= thatHitbox.x && thisHitbox.x <= thatHitbox.x + thatHitbox.w)
+    {
+        if(thisHitbox.y <= thatHitbox.y && thisHitbox.y + thisHitbox.h >= thatHitbox.y)
+        {
+            return true;
+        }
+        else if(thisHitbox.y >= thatHitbox.y && thisHitbox.y <= thatHitbox.y + thatHitbox.h)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+SDL_Point MapSprite::getCenter() const
+{
+    return {getX() + getWidth() / 2, getY() + getHeight() / 2};
 }
