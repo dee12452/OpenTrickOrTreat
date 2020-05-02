@@ -39,13 +39,7 @@ GateSprite::~GateSprite()
 
 ObjectType GateSprite::getType() const
 {
-    switch (gateType)
-    {
-        case GateType::WOOD:
-            return ObjectType::WOODEN_GATE;
-        default:
-            return ObjectType::STEEL_GATE;
-    }
+    return GATE;
 }
 
 bool GateSprite::isBlocking() const

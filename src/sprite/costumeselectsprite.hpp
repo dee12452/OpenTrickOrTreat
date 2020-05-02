@@ -19,6 +19,9 @@ public:
     ObjectType getType() const override;
     bool isBlocking() const override;
 
+    CostumeType getCostumeType() const;
+    void setCostumeType(CostumeType costume);
+
 private:
     CostumeType costume;
     unsigned int animationDelta;

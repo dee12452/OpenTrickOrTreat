@@ -35,10 +35,20 @@ void CostumeSelectSprite::update(unsigned int deltaTime, Map *)
 
 ObjectType CostumeSelectSprite::getType() const
 {
-    return COSTUME_SELECT_SKELETON;
+    return COSTUME_SELECT;
 }
 
 bool CostumeSelectSprite::isBlocking() const
 {
     return false;
+}
+
+CostumeType CostumeSelectSprite::getCostumeType() const
+{
+    return costume;
+}
+
+void CostumeSelectSprite::setCostumeType(CostumeType cstm)
+{
+    costume = cstm;
 }

@@ -184,7 +184,7 @@ void SkeletonSprite::unlockDoors(Map *map) const
                 map, 
                 centerX + (i * map->getTileset()->getTileWidth()),
                 centerY + (j * map->getTileset()->getTileHeight()));
-            if(obj && (obj->getType() == ObjectType::WOODEN_GATE || obj->getType() == ObjectType::STEEL_GATE))
+            if(obj && obj->getType() == ObjectType::GATE)
             {
                 static_cast<GateSprite *> (obj)->unlock();
             }

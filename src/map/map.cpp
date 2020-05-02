@@ -134,6 +134,24 @@ void Map::loadMapValues(json *mapJson)
     }
 }
 
+static json_pair * getObjectPropertyValue(const json_list_element *objectJson, const std::string propertyName)
+{
+    const json_list *properties = Util::getJsonList("properties", objectJson->json_lists, objectJson->num_of_lists);
+    json_list_element *property = nullptr;
+    for(int index = 0; index < properties->num_of_elements; index++)
+    {
+        json_list_element *currentProperty = properties->elements[index];
+        const std::string currentPropertyName = Util::getJsonPair("name", currentProperty->json_pairs, currentProperty->num_of_pairs)->str_val->val; 
+        if(propertyName == currentPropertyName)
+        {
+            property = currentProperty;
+            break;
+        }
+    }
+    if(!property) Util::criticalError("Failed to load map: failed to find required property %s", propertyName.c_str());
+    return Util::getJsonPair("value", property->json_pairs, property->num_of_pairs);
+}
+
 void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
 {
     json_list *layers = Util::getJsonList("layers", mapJson->json_lists, mapJson->num_of_lists);
@@ -167,25 +185,25 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
             
             for(int currentObject = 0; currentObject < objectData->num_of_elements; currentObject++)
             {
-                json_list_element *objectJson = objectData->elements[currentObject];
+                const json_list_element *objectJson = objectData->elements[currentObject];
                 const int mapX = Util::getJsonPair("x", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const int mapY = Util::getJsonPair("y", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const SDL_Point mapPos = {mapX, mapY};
                 switch(std::stoi(
                     Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
                 {
-                    case WOODEN_GATE:
-                        objects.push_back(new GateSprite(tileset, GateType::WOOD, mapPos));
+                    case GATE:
+                    {
+                        json_pair *materialProperty = getObjectPropertyValue(objectJson, "material");
+                        objects.push_back(new GateSprite(tileset, static_cast<GateType> (materialProperty->int_val->val), mapPos));
                         break;
-                    case STEEL_GATE:
-                        objects.push_back(new GateSprite(tileset, GateType::STEEL, mapPos));
+                    }
+                    case COSTUME_SELECT:
+                    {
+                        json_pair *costumeProperty = getObjectPropertyValue(objectJson, "costume");
+                        objects.push_back(new CostumeSelectSprite(tileset, static_cast<CostumeType> (costumeProperty->int_val->val), mapPos));
                         break;
-                    case COSTUME_SELECT_SKELETON:
-                        objects.push_back(new CostumeSelectSprite(tileset, CostumeType::SKELETON, mapPos));
-                        break;
-                    case COSTUME_SELECT_WITCH:
-                        objects.push_back(new CostumeSelectSprite(tileset, CostumeType::WITCH, mapPos));
-                        break;
+                    }
                     default:
                         break;
                 }

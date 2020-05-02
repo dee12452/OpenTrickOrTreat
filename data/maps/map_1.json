@@ -31,6 +31,12 @@
                  "id":1,
                  "name":"gate 1",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"material",
+                         "type":"int",
+                         "value":0
+                        }],
                  "rotation":0,
                  "type":"1",
                  "visible":true,
@@ -43,8 +49,14 @@
                  "id":2,
                  "name":"gate 2",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"material",
+                         "type":"int",
+                         "value":1
+                        }],
                  "rotation":0,
-                 "type":"2",
+                 "type":"1",
                  "visible":true,
                  "width":0,
                  "x":554,
@@ -53,10 +65,10 @@
                 {
                  "height":0,
                  "id":3,
-                 "name":"trash can 1",
+                 "name":"boulder 1",
                  "point":true,
                  "rotation":0,
-                 "type":"3",
+                 "type":"2",
                  "visible":true,
                  "width":0,
                  "x":598,
@@ -65,10 +77,16 @@
                 {
                  "height":0,
                  "id":4,
-                 "name":"costume_select_1",
+                 "name":"costume select 1",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"costume",
+                         "type":"int",
+                         "value":0
+                        }],
                  "rotation":0,
-                 "type":"5",
+                 "type":"3",
                  "visible":true,
                  "width":0,
                  "x":268,
