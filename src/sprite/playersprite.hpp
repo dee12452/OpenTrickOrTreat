@@ -26,6 +26,7 @@ public:
     virtual void update(unsigned int deltaTime, Map *map) override;
     virtual void stop() override;
     virtual void doAction(Map *map) = 0;
+    virtual CostumeType getCostume() const = 0;
 
 protected:
     virtual void onMoveX() override;

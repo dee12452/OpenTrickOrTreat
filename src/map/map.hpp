@@ -25,6 +25,8 @@ public:
     Tile * findTile(int x, int y) const;
     ObjectSprite * findObject(int x, int y) const;
 
+    void changePlayerCostume(CostumeType newCostume);
+
 private:
     Tileset *tileset;
     SDL_Texture *bgTexture;

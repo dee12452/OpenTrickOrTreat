@@ -119,17 +119,38 @@ Tile * Map::findTile(int x, int y) const
 
 ObjectSprite * Map::findObject(int x, int y) const
 {
+    SDL_Rect objHitbox;
     for(auto object : objects)
     {
-        if(object->getX() <= x && object->getX() + object->getWidth() >= x)
+        objHitbox = object->getHitbox();
+        if(objHitbox.x <= x && objHitbox.x + objHitbox.w >= x)
         {
-            if(object->getY() <= y && object->getY() + object->getHeight() >= y)
+            if(objHitbox.y <= y && objHitbox.y + objHitbox.h >= y)
             {
                 return object;
             }
         }
     }
     return nullptr;
+}
+
+void Map::changePlayerCostume(CostumeType newCostume)
+{
+    PlayerSprite *newPlayer;
+    switch (newCostume)
+    {
+        case WITCH:
+            newPlayer = new WitchSprite();
+            break;
+        default:
+            newPlayer = new SkeletonSprite();
+            break;
+    }
+    const SDL_Point originalPlayerCenter = player->getCenter();
+    newPlayer->setX(originalPlayerCenter.x - newPlayer->getWidth() / 2);
+    newPlayer->setY(originalPlayerCenter.y - newPlayer->getHeight() / 2);
+    delete player;
+    player = newPlayer;
 }
 
 void Map::loadMapValues(json *mapJson)

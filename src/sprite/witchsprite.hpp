@@ -22,6 +22,7 @@ public:
     void draw(const Window &window) const override;
     void stop() override;
     void doAction(Map *map) override;
+    CostumeType getCostume() const override;
 
 protected:
     void onMoveX() override;

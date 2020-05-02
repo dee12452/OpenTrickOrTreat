@@ -38,6 +38,9 @@ public:
     Direction getMoveDirection() const;
     Direction getFacingDirection() const;
 
+    SDL_Point getCenter() const;
+    virtual SDL_Rect getHitbox() const;
+
 protected:
     virtual bool canMove(Map *map, int x, int y);
     virtual void onMoveX();
@@ -46,9 +49,7 @@ protected:
     float getOffsetX() const;
     float getOffsetY() const;
 
-    virtual SDL_Rect getHitbox() const;
     bool isColliding(MapSprite *otherSprite) const;
-    SDL_Point getCenter() const;
 
 private:
     float offsetX;

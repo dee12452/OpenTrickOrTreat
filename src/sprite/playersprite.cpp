@@ -106,17 +106,18 @@ bool PlayerSprite::canMove(Map *map, int x, int y)
         {
             const int leftX = hitbox.x;
             const int rightX = hitbox.x + hitbox.w;
-            nextTile1 = map->findTile(leftX, y);
-            nextTile2 = map->findTile(rightX, y);
-            intersectingObject1 = map->findObject(leftX, y);
-            intersectingObject2 = map->findObject(rightX, y);
+            const int nextY = hitbox.y - (getY() - y);
+            nextTile1 = map->findTile(leftX, nextY);
+            nextTile2 = map->findTile(rightX, nextY);
+            intersectingObject1 = map->findObject(leftX, nextY);
+            intersectingObject2 = map->findObject(rightX, nextY);
             break;
         }
         case Direction::RIGHT:
         {
             const int topY = hitbox.y;
             const int bottomY = hitbox.y + hitbox.h;
-            const int nextX = x + hitbox.w;
+            const int nextX = hitbox.x + hitbox.w + x - getX();
             nextTile1 = map->findTile(nextX, topY);
             nextTile2 = map->findTile(nextX, bottomY);
             intersectingObject1 = map->findObject(nextX, topY);
@@ -127,7 +128,7 @@ bool PlayerSprite::canMove(Map *map, int x, int y)
         {
             const int leftX = hitbox.x;
             const int rightX = hitbox.x + hitbox.w;
-            const int nextY = y + hitbox.h;
+            const int nextY = hitbox.y + hitbox.h + y - getY();
             nextTile1 = map->findTile(leftX, nextY);
             nextTile2 = map->findTile(rightX, nextY);
             intersectingObject1 = map->findObject(leftX, nextY);
@@ -138,10 +139,11 @@ bool PlayerSprite::canMove(Map *map, int x, int y)
         {
             const int topY = hitbox.y;
             const int bottomY = hitbox.y + hitbox.h;
-            nextTile1 = map->findTile(x, topY);
-            nextTile2 = map->findTile(x, bottomY);
-            intersectingObject1 = map->findObject(x, topY);
-            intersectingObject2 = map->findObject(x, bottomY);
+            const int nextX = hitbox.x - (getX() - x);
+            nextTile1 = map->findTile(nextX, topY);
+            nextTile2 = map->findTile(nextX, bottomY);
+            intersectingObject1 = map->findObject(nextX, topY);
+            intersectingObject2 = map->findObject(nextX, bottomY);
             break;
         }
         default:

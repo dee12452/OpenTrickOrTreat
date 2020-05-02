@@ -119,6 +119,11 @@ float MapSprite::getOffsetY() const
     return offsetY;
 }
 
+SDL_Point MapSprite::getCenter() const
+{
+    return {getX() + getWidth() / 2, getY() + getHeight() / 2};
+}
+
 SDL_Rect MapSprite::getHitbox() const
 {
     return getDestinationRect();
@@ -150,9 +155,4 @@ bool MapSprite::isColliding(MapSprite *otherSprite) const
         }
     }
     return false;
-}
-
-SDL_Point MapSprite::getCenter() const
-{
-    return {getX() + getWidth() / 2, getY() + getHeight() / 2};
 }

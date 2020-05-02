@@ -5,9 +5,9 @@ const short int WitchSprite::WITCH_NUMBER_MOVE_ANIMATIONS = 8;
 const SDL_Rect WitchSprite::WITCH_INITIAL_SRC = {0, 0, 60, 60};
 const unsigned int WitchSprite::SPELL_ANIMATION_DURATION = 650;
 const unsigned short int WitchSprite::NUMBER_SPELL_ANIMATIONS = 6;
-const int WitchSprite::WITCH_HITBOX_Y_OFFSET = 8;
-const int WitchSprite::WITCH_HITBOX_W = 15;
-const int WitchSprite::WITCH_HITBOX_H = 15;
+const int WitchSprite::WITCH_HITBOX_Y_OFFSET = 12;
+const int WitchSprite::WITCH_HITBOX_W = 30;
+const int WitchSprite::WITCH_HITBOX_H = 30;
 
 WitchSprite::WitchSprite()
     : PlayerSprite(
@@ -91,6 +91,11 @@ void WitchSprite::doAction(Map *map)
     }
 }
 
+CostumeType WitchSprite::getCostume() const
+{
+    return WITCH;
+}
+
 void WitchSprite::onMoveX()
 {
     if(usingSpell) return;
@@ -115,7 +120,7 @@ SDL_Rect WitchSprite::getHitbox() const
     return 
     {
         center.x - WITCH_HITBOX_W / 2,
-        center.y - WITCH_HITBOX_H / 2,
+        center.y - WITCH_HITBOX_H / 2 + WITCH_HITBOX_Y_OFFSET,
         WITCH_HITBOX_W,
         WITCH_HITBOX_H
     };
