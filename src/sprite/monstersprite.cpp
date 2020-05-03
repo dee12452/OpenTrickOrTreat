@@ -1,5 +1,7 @@
 #include "monstersprite.hpp"
 #include "texturemanager.hpp"
+#include "map/map.hpp"
+#include "breakablesprite.hpp"
 
 const SDL_Rect MonsterSprite::MONSTER_INITIAL_SRC = {0, 0, 56, 56};
 const short int MonsterSprite::MONSTER_NUMBER_MOVE_ANIMATIONS = 8;
@@ -38,6 +40,29 @@ void MonsterSprite::update(unsigned int deltaTime, Map *map)
         else
         {
             setSourceX(MONSTER_INITIAL_SRC.w * currentSmashingAnimation);
+        }
+        SDL_Point facingTile = getCenter();
+        switch (getFacingDirection())
+        {
+            case UP:
+                facingTile.y -= map->getTileset()->getTileHeight();
+                break;
+            case DOWN:
+                facingTile.y += map->getTileset()->getTileHeight();
+                break;
+            case LEFT:
+                facingTile.x -= map->getTileset()->getTileWidth();
+                break;
+            case RIGHT:
+                facingTile.x += map->getTileset()->getTileWidth();
+                break;
+            default:
+                break;
+        }
+        ObjectSprite *obj = map->findObject(facingTile.x, facingTile.y);
+        if(obj && obj->getType() == BREAKABLE)
+        {
+            static_cast<BreakableSprite *> (obj)->breakObject();
         }
     }
 }

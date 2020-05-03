@@ -6,7 +6,7 @@
 enum ObjectType
 {
     GATE = 1,
-    BOULDER = 2,
+    BREAKABLE = 2,
     COSTUME_SELECT = 3,
     GHOST = 4
 };

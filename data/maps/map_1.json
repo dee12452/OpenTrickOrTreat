@@ -67,6 +67,12 @@
                  "id":3,
                  "name":"boulder 1",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"breakableType",
+                         "type":"int",
+                         "value":0
+                        }],
                  "rotation":0,
                  "type":"2",
                  "visible":true,
@@ -127,6 +133,24 @@
                  "width":0,
                  "x":267,
                  "y":554
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"trash 1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"breakableType",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"2",
+                 "visible":true,
+                 "width":0,
+                 "x":598,
+                 "y":563
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -135,7 +159,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":8,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "properties":[
         {
