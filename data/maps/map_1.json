@@ -77,20 +77,20 @@
                 {
                  "height":0,
                  "id":4,
-                 "name":"costume select 1",
+                 "name":"costume select 2",
                  "point":true,
                  "properties":[
                         {
                          "name":"costume",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }],
                  "rotation":0,
                  "type":"3",
                  "visible":true,
                  "width":0,
-                 "x":268,
-                 "y":546
+                 "x":266,
+                 "y":612
                 }, 
                 {
                  "height":0,
@@ -109,6 +109,24 @@
                  "width":0,
                  "x":218,
                  "y":648
+                }, 
+                {
+                 "height":0,
+                 "id":7,
+                 "name":"costume select 1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"costume",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"3",
+                 "visible":true,
+                 "width":0,
+                 "x":267,
+                 "y":554
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -117,7 +135,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":7,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "properties":[
         {
