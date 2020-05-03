@@ -109,6 +109,11 @@ Direction MapSprite::getFacingDirection() const
     return facingDirection;
 }
 
+void MapSprite::setFacingDirection(Direction direction)
+{
+    facingDirection = direction;
+}
+
 float MapSprite::getOffsetX() const
 {
     return offsetX;

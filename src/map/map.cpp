@@ -150,6 +150,7 @@ void Map::changePlayerCostume(CostumeType newCostume)
     const SDL_Point originalPlayerCenter = player->getCenter();
     newPlayer->setX(originalPlayerCenter.x - newPlayer->getWidth() / 2);
     newPlayer->setY(originalPlayerCenter.y - newPlayer->getHeight() / 2);
+    newPlayer->setFacingDirection(player->getFacingDirection());
     delete player;
     player = newPlayer;
 }

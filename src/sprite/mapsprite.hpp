@@ -36,7 +36,9 @@ public:
     void setSpeedY(float speedY);
 
     Direction getMoveDirection() const;
+
     Direction getFacingDirection() const;
+    virtual void setFacingDirection(Direction direction); 
 
     SDL_Point getCenter() const;
     virtual SDL_Rect getHitbox() const;

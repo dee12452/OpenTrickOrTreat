@@ -43,6 +43,28 @@ void PlayerSprite::stop()
     setSourceX(0);
 }
 
+void PlayerSprite::setFacingDirection(Direction direction)
+{
+    MapSprite::setFacingDirection(direction);
+    switch (direction)
+    {
+        case UP:
+            setSourceY((initialSource.h + walkDirectionAnimationHeight) * 2);
+            break;
+        case RIGHT:
+            setSourceY((initialSource.h +  + walkDirectionAnimationHeight) * 3);
+            break;
+        case DOWN:
+            setSourceY(0);
+            break;
+        case LEFT:
+            setSourceY(initialSource.h + walkDirectionAnimationHeight);
+            break;
+        default:
+            break;
+    }
+}
+
 void PlayerSprite::onMoveX()
 {
     walking = true;

@@ -25,6 +25,7 @@ public:
 
     virtual void update(unsigned int deltaTime, Map *map) override;
     virtual void stop() override;
+    void setFacingDirection(Direction direction) override;
     virtual void doAction(Map *map) = 0;
     virtual CostumeType getCostume() const = 0;
 
