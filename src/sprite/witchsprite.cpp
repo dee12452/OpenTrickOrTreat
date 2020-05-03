@@ -25,6 +25,7 @@ void WitchSprite::update(unsigned int deltaTime, Map *map)
     PlayerSprite::update(deltaTime, map);
     if(usingSpell)
     {
+        spell.update(deltaTime, map);
         spellAnimationDelta += deltaTime;
         const unsigned short int currentSpellAnimation = 
             spellAnimationDelta / (SPELL_ANIMATION_DURATION / NUMBER_SPELL_ANIMATIONS);
@@ -46,10 +47,7 @@ void WitchSprite::update(unsigned int deltaTime, Map *map)
 
 void WitchSprite::draw(const Window &window) const
 {
-    if(usingSpell)
-    {
-        spell.draw(window);
-    }
+    if(usingSpell) spell.draw(window);
     PlayerSprite::draw(window);
 }
 
@@ -108,7 +106,7 @@ void WitchSprite::onMoveY()
     PlayerSprite::onMoveY();
 }
 
-bool WitchSprite::canMove(Map *map, int x, int y)
+bool WitchSprite::canMove(Map *map, int x, int y) const
 {
     if(usingSpell) return false;
     return PlayerSprite::canMove(map, x, y);

@@ -4,6 +4,7 @@
 #include "sprite/witchsprite.hpp"
 #include "sprite/gatesprite.hpp"
 #include "sprite/costumeselectsprite.hpp"
+#include "sprite/ghostsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -203,6 +204,9 @@ static json_pair * getObjectPropertyValue(const json_list_element *objectJson, c
     return Util::getJsonPair("value", property->json_pairs, property->num_of_pairs);
 }
 
+static int getNumberMoves(const std::string &pathStr, unsigned int &index, bool *isNeg);
+static std::vector<SDL_Point> parsePath(const std::string pathStr, const SDL_Point &mapPos);
+
 void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
 {
     json_list *layers = Util::getJsonList("layers", mapJson->json_lists, mapJson->num_of_lists);
@@ -255,6 +259,14 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                         objects.push_back(new CostumeSelectSprite(tileset, static_cast<CostumeType> (costumeProperty->int_val->val), mapPos));
                         break;
                     }
+                    case GHOST:
+                    {
+                        json_pair *pathProperty = getObjectPropertyValue(objectJson, "path");
+                        objects.push_back(new GhostSprite(
+                            tileset, 
+                            parsePath(pathProperty->str_val->val, {mapPos.x / tileset->getTileWidth(), mapPos.y / tileset->getTileHeight()}), 
+                            mapPos));
+                    }
                     default:
                         break;
                 }
@@ -293,4 +305,55 @@ void Map::refreshBackground(const Window &window) const
     }
 
     window.resetTargetTexture();
+}
+
+static int getNumberMoves(const std::string &pathStr, unsigned int &index, bool *isNeg)
+{
+    index++;
+    *isNeg = pathStr[index] == '-';
+    while(index < pathStr.size() && (pathStr[index] < '0' || pathStr[index] > '9')) index++;
+    int moves = 0;
+    while(index < pathStr.size() && pathStr[index] != ';')
+    {
+        moves *= 10;
+        moves += pathStr[index] - '0';
+        index++;
+    }
+    return moves;
+}
+
+static std::vector<SDL_Point> parsePath(const std::string pathStr, const SDL_Point &tilePos)
+{
+    std::vector<SDL_Point> path;
+    path.push_back(tilePos);
+    unsigned int index = 0;
+    while(index < pathStr.size())
+    {
+        if(pathStr[index] == 'x')
+        {
+            int movesX;
+            bool isNeg;
+            movesX = getNumberMoves(pathStr, index, &isNeg);
+            for(int i = 0; i < movesX; i++)
+            {
+                SDL_Point nextPos = path.back();
+                nextPos.x = isNeg ? nextPos.x - 1 : nextPos.x + 1;
+                path.push_back(nextPos);
+            }
+        }
+        else
+        {
+            int movesY;
+            bool isNeg;
+            movesY = getNumberMoves(pathStr, index, &isNeg);
+            for(int i = 0; i < movesY; i++)
+            {
+                SDL_Point nextPos = path.back();
+                nextPos.y = isNeg ? nextPos.y - 1 : nextPos.y + 1;
+                path.push_back(nextPos);
+            }
+        }
+        index++;
+    }
+    return path;
 }

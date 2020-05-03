@@ -31,7 +31,7 @@ public:
 protected:
     virtual void onMoveX() override;
     virtual void onMoveY() override;
-    virtual bool canMove(Map *map, int x, int y) override;
+    virtual bool canMove(Map *map, int x, int y) const override;
 
 private:
     SDL_Rect initialSource;

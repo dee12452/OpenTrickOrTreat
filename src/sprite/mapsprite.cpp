@@ -84,7 +84,7 @@ void MapSprite::setSpeedY(float sY)
     if(sY == 0) offsetY = 0;
 }
 
-bool MapSprite::canMove(Map *, int, int)
+bool MapSprite::canMove(Map *, int, int) const
 {
     return true;
 }

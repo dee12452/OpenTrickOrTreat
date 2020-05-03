@@ -1,5 +1,8 @@
 #include "spellsprite.hpp"
 #include "texturemanager.hpp"
+#include "map/map.hpp"
+#include "objectsprite.hpp"
+#include "ghostsprite.hpp"
 
 const std::vector<SDL_Rect> SpellSprite::SPELL_ANIMATION_SOURCES = 
 {
@@ -22,7 +25,13 @@ SpellSprite::SpellSprite()
 
 void SpellSprite::update(unsigned int deltaTime, Map *map)
 {
-    MapSprite::update(deltaTime, map);
+    for(auto obj : map->getObjects())
+    {
+        if(obj->getType() == GHOST && isColliding(obj))
+        {
+            static_cast<GhostSprite *> (obj)->kill();
+        }
+    }
 }
 
 void SpellSprite::draw(const Window &window) const

@@ -8,6 +8,7 @@ enum ObjectType
     GATE = 1,
     BOULDER = 2,
     COSTUME_SELECT = 3,
+    GHOST = 4
 };
 
 class ObjectSprite : public MapSprite

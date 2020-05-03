@@ -97,7 +97,7 @@ void SkeletonSprite::onMoveY()
     if(!keysActive) PlayerSprite::onMoveY();
 }
 
-bool SkeletonSprite::canMove(Map *map, int x, int y)
+bool SkeletonSprite::canMove(Map *map, int x, int y) const
 {
     if(keysActive) return false;
     return PlayerSprite::canMove(map, x, y);

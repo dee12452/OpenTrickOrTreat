@@ -93,7 +93,7 @@ void PlayerSprite::onMoveY()
     }
 }
 
-bool PlayerSprite::canMove(Map *map, int x, int y)
+bool PlayerSprite::canMove(Map *map, int x, int y) const
 {
     Tile *nextTile1 = nullptr;
     Tile *nextTile2 = nullptr;
