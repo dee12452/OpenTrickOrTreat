@@ -11,6 +11,9 @@ const SDL_Rect SkeletonSprite::KEY_INITIAL_SRC = { 440, 3, 28, 16 };
 const unsigned int SkeletonSprite::KEYS_ANIMATION_DELAY = 35;
 const unsigned short int SkeletonSprite::DEFAULT_KEY_SPEED = 8;
 const int SkeletonSprite::KEY_BUFFER = 7;
+const int SkeletonSprite::SKELETON_HITBOX_Y_OFFSET = 8;
+const int SkeletonSprite::SKELETON_HITBOX_W = 30;
+const int SkeletonSprite::SKELETON_HITBOX_H = 30;
 
 SkeletonSprite::SkeletonSprite()
     : PlayerSprite(
@@ -79,6 +82,11 @@ void SkeletonSprite::doAction(Map *map)
     setSourceX(0);
 }
 
+CostumeType SkeletonSprite::getCostume() const
+{
+    return SKELETON;
+}
+
 void SkeletonSprite::onMoveX()
 {
     if(!keysActive) PlayerSprite::onMoveX();
@@ -89,10 +97,22 @@ void SkeletonSprite::onMoveY()
     if(!keysActive) PlayerSprite::onMoveY();
 }
 
-bool SkeletonSprite::canMove(Map *map, unsigned int x, unsigned int y)
+bool SkeletonSprite::canMove(Map *map, int x, int y) const
 {
     if(keysActive) return false;
     return PlayerSprite::canMove(map, x, y);
+}
+
+SDL_Rect SkeletonSprite::getHitbox() const
+{
+    const SDL_Point center = getCenter();
+    return 
+    {
+        center.x - SKELETON_HITBOX_W / 2,
+        center.y - SKELETON_HITBOX_H / 2 + SKELETON_HITBOX_Y_OFFSET,
+        SKELETON_HITBOX_W,
+        SKELETON_HITBOX_H
+    };
 }
 
 void SkeletonSprite::resetKeys() const
@@ -180,11 +200,10 @@ void SkeletonSprite::unlockDoors(Map *map) const
         for(int j = -1; j <= 1; j++)
         {
             if(i == j || -i == j) continue;
-            ObjectSprite *obj = findObject(
-                map, 
+            ObjectSprite *obj = map->findObject(
                 centerX + (i * map->getTileset()->getTileWidth()),
                 centerY + (j * map->getTileset()->getTileHeight()));
-            if(obj && (obj->getType() == ObjectType::WOODEN_GATE || obj->getType() == ObjectType::STEEL_GATE))
+            if(obj && obj->getType() == ObjectType::GATE)
             {
                 static_cast<GateSprite *> (obj)->unlock();
             }

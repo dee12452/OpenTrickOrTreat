@@ -3,7 +3,6 @@
 #include "map/map.hpp"
 
 const unsigned int PlayerSprite::WALK_ANIMATION_CYCLE_LENGTH = 500;
-const unsigned short int PlayerSprite::WALK_BUFFER_PIXELS = 10;
 
 PlayerSprite::PlayerSprite(
     SDL_Texture *texture,
@@ -37,17 +36,33 @@ void PlayerSprite::update(unsigned int deltaTime, Map *map)
     else walkDeltaTime = 0;
 }
 
-void PlayerSprite::draw(const Window &window) const
-{
-    const SDL_Rect dstRectCentered = { getX(), getY() - getHeight() / 3, getWidth(), getHeight() };
-    window.draw(getSdlTexture(), getSourceRect(), dstRectCentered);
-}
-
 void PlayerSprite::stop()
 {
     MapSprite::stop();
     walking = false;
     setSourceX(0);
+}
+
+void PlayerSprite::setFacingDirection(Direction direction)
+{
+    MapSprite::setFacingDirection(direction);
+    switch (direction)
+    {
+        case UP:
+            setSourceY((initialSource.h + walkDirectionAnimationHeight) * 2);
+            break;
+        case RIGHT:
+            setSourceY((initialSource.h +  + walkDirectionAnimationHeight) * 3);
+            break;
+        case DOWN:
+            setSourceY(0);
+            break;
+        case LEFT:
+            setSourceY(initialSource.h + walkDirectionAnimationHeight);
+            break;
+        default:
+            break;
+    }
 }
 
 void PlayerSprite::onMoveX()
@@ -100,54 +115,57 @@ void PlayerSprite::onMoveY()
     }
 }
 
-bool PlayerSprite::canMove(Map *map, unsigned int x, unsigned int y)
+bool PlayerSprite::canMove(Map *map, int x, int y) const
 {
     Tile *nextTile1 = nullptr;
     Tile *nextTile2 = nullptr;
     ObjectSprite *intersectingObject1 = nullptr;
     ObjectSprite *intersectingObject2 = nullptr;
+    const SDL_Rect hitbox = getHitbox();
     switch (getMoveDirection())
     {
         case Direction::UP:
         {
-            const int leftX = x + WALK_BUFFER_PIXELS;
-            const int rightX = x + getWidth() - WALK_BUFFER_PIXELS;
-            nextTile1 = getTile(map, leftX, y);
-            nextTile2 = getTile(map, rightX, y);
-            intersectingObject1 = findObject(map, leftX, y);
-            intersectingObject2 = findObject(map, rightX, y);
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = hitbox.y - (getY() - y);
+            nextTile1 = map->findTile(leftX, nextY);
+            nextTile2 = map->findTile(rightX, nextY);
+            intersectingObject1 = map->findObject(leftX, nextY);
+            intersectingObject2 = map->findObject(rightX, nextY);
             break;
         }
         case Direction::RIGHT:
         {
-            const int topY = y + WALK_BUFFER_PIXELS;
-            const int bottomY = y + getHeight() - WALK_BUFFER_PIXELS;
-            const int nextX = x + getWidth();
-            nextTile1 = getTile(map, nextX, topY);
-            nextTile2 = getTile(map, nextX, bottomY);
-            intersectingObject1 = findObject(map, nextX, topY);
-            intersectingObject2 = findObject(map, nextX, bottomY);
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = hitbox.x + hitbox.w + x - getX();
+            nextTile1 = map->findTile(nextX, topY);
+            nextTile2 = map->findTile(nextX, bottomY);
+            intersectingObject1 = map->findObject(nextX, topY);
+            intersectingObject2 = map->findObject(nextX, bottomY);
             break;
         }
         case Direction::DOWN:
         {
-            const int leftX = x + WALK_BUFFER_PIXELS;
-            const int rightX = x + getWidth() - WALK_BUFFER_PIXELS;
-            const int nextY = y + getHeight() - WALK_BUFFER_PIXELS;
-            nextTile1 = getTile(map, leftX, nextY);
-            nextTile2 = getTile(map, rightX, nextY);
-            intersectingObject1 = findObject(map, leftX, nextY);
-            intersectingObject2 = findObject(map, rightX, nextY);
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = hitbox.y + hitbox.h + y - getY();
+            nextTile1 = map->findTile(leftX, nextY);
+            nextTile2 = map->findTile(rightX, nextY);
+            intersectingObject1 = map->findObject(leftX, nextY);
+            intersectingObject2 = map->findObject(rightX, nextY);
             break;
         }
         case Direction::LEFT:
         {
-            const int topY = y + WALK_BUFFER_PIXELS;
-            const int bottomY = y + getHeight() - WALK_BUFFER_PIXELS;
-            nextTile1 = getTile(map, x, topY);
-            nextTile2 = getTile(map, x, bottomY);
-            intersectingObject1 = findObject(map, x, topY);
-            intersectingObject2 = findObject(map, x, bottomY);
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = hitbox.x - (getX() - x);
+            nextTile1 = map->findTile(nextX, topY);
+            nextTile2 = map->findTile(nextX, bottomY);
+            intersectingObject1 = map->findObject(nextX, topY);
+            intersectingObject2 = map->findObject(nextX, bottomY);
             break;
         }
         default:

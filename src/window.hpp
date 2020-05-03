@@ -21,6 +21,11 @@ public:
     void draw(SDL_Texture *sdlTexture, const SDL_Rect &srcRect) const;
     void drawAll(SDL_Texture *sdlTexture) const;
     void drawAll(SDL_Texture *sdlTexture, const SDL_Rect &dstRect) const;
+    void drawRotated(
+        SDL_Texture *sdlTexture, 
+        const SDL_Rect &srcRect, 
+        const SDL_Rect &dstRect, 
+        const double angle) const;
     void render() const;
 
     SDL_Renderer * getSdlRenderer() const;

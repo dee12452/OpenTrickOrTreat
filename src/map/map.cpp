@@ -1,14 +1,16 @@
 #include "map.hpp"
 #include "GahoodSON/parse.h"
 #include "sprite/skeletonsprite.hpp"
+#include "sprite/witchsprite.hpp"
 #include "sprite/gatesprite.hpp"
+#include "sprite/costumeselectsprite.hpp"
+#include "sprite/ghostsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
 {
-    player = new SkeletonSprite();
+    player = new WitchSprite();
     const std::string mapPath = pathToResourceFolder + Const::MAPS_FOLDER_PATH + mapFile;
-    
     json *mapJson = gahoodson_create_from_file(mapPath.c_str());
     const int mapTileWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     const int mapTileHeight = Util::getJsonPair("height", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
@@ -101,6 +103,58 @@ void Map::setRefresh()
     refresh = true;
 }
 
+Tile * Map::findTile(int x, int y) const
+{
+    const int tileX = x / tileset->getTileWidth();
+    const int tileY = y / tileset->getTileHeight();
+    if(tileY < 0 || tileY >= grid.size())
+    {
+        return nullptr;
+    }
+    if(tileX < 0 || tileX >= grid[tileY].size())
+    {
+        return nullptr;
+    }
+    return tileset->getTile(grid[tileY][tileX]);
+}
+
+ObjectSprite * Map::findObject(int x, int y) const
+{
+    SDL_Rect objHitbox;
+    for(auto object : objects)
+    {
+        objHitbox = object->getHitbox();
+        if(objHitbox.x <= x && objHitbox.x + objHitbox.w >= x)
+        {
+            if(objHitbox.y <= y && objHitbox.y + objHitbox.h >= y)
+            {
+                return object;
+            }
+        }
+    }
+    return nullptr;
+}
+
+void Map::changePlayerCostume(CostumeType newCostume)
+{
+    PlayerSprite *newPlayer;
+    switch (newCostume)
+    {
+        case WITCH:
+            newPlayer = new WitchSprite();
+            break;
+        default:
+            newPlayer = new SkeletonSprite();
+            break;
+    }
+    const SDL_Point originalPlayerCenter = player->getCenter();
+    newPlayer->setX(originalPlayerCenter.x - newPlayer->getWidth() / 2);
+    newPlayer->setY(originalPlayerCenter.y - newPlayer->getHeight() / 2);
+    newPlayer->setFacingDirection(player->getFacingDirection());
+    delete player;
+    player = newPlayer;
+}
+
 void Map::loadMapValues(json *mapJson)
 {
     cameraWidth = 0;
@@ -132,6 +186,27 @@ void Map::loadMapValues(json *mapJson)
         }
     }
 }
+
+static json_pair * getObjectPropertyValue(const json_list_element *objectJson, const std::string propertyName)
+{
+    const json_list *properties = Util::getJsonList("properties", objectJson->json_lists, objectJson->num_of_lists);
+    json_list_element *property = nullptr;
+    for(int index = 0; index < properties->num_of_elements; index++)
+    {
+        json_list_element *currentProperty = properties->elements[index];
+        const std::string currentPropertyName = Util::getJsonPair("name", currentProperty->json_pairs, currentProperty->num_of_pairs)->str_val->val; 
+        if(propertyName == currentPropertyName)
+        {
+            property = currentProperty;
+            break;
+        }
+    }
+    if(!property) Util::criticalError("Failed to load map: failed to find required property %s", propertyName.c_str());
+    return Util::getJsonPair("value", property->json_pairs, property->num_of_pairs);
+}
+
+static int getNumberMoves(const std::string &pathStr, unsigned int &index, bool *isNeg);
+static std::vector<SDL_Point> parsePath(const std::string pathStr, const SDL_Point &mapPos);
 
 void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
 {
@@ -166,18 +241,33 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
             
             for(int currentObject = 0; currentObject < objectData->num_of_elements; currentObject++)
             {
-                json_list_element *objectJson = objectData->elements[currentObject];
+                const json_list_element *objectJson = objectData->elements[currentObject];
                 const int mapX = Util::getJsonPair("x", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const int mapY = Util::getJsonPair("y", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
+                const SDL_Point mapPos = {mapX, mapY};
                 switch(std::stoi(
                     Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
                 {
-                    case 1:
-                        objects.push_back(new GateSprite(tileset, GateType::WOOD, mapX, mapY));
+                    case GATE:
+                    {
+                        json_pair *materialProperty = getObjectPropertyValue(objectJson, "material");
+                        objects.push_back(new GateSprite(tileset, static_cast<GateType> (materialProperty->int_val->val), mapPos));
                         break;
-                    case 2:
-                        objects.push_back(new GateSprite(tileset, GateType::STEEL, mapX, mapY));
+                    }
+                    case COSTUME_SELECT:
+                    {
+                        json_pair *costumeProperty = getObjectPropertyValue(objectJson, "costume");
+                        objects.push_back(new CostumeSelectSprite(tileset, static_cast<CostumeType> (costumeProperty->int_val->val), mapPos));
                         break;
+                    }
+                    case GHOST:
+                    {
+                        json_pair *pathProperty = getObjectPropertyValue(objectJson, "path");
+                        objects.push_back(new GhostSprite(
+                            tileset, 
+                            parsePath(pathProperty->str_val->val, {mapPos.x / tileset->getTileWidth(), mapPos.y / tileset->getTileHeight()}), 
+                            mapPos));
+                    }
                     default:
                         break;
                 }
@@ -216,4 +306,55 @@ void Map::refreshBackground(const Window &window) const
     }
 
     window.resetTargetTexture();
+}
+
+static int getNumberMoves(const std::string &pathStr, unsigned int &index, bool *isNeg)
+{
+    index++;
+    *isNeg = pathStr[index] == '-';
+    while(index < pathStr.size() && (pathStr[index] < '0' || pathStr[index] > '9')) index++;
+    int moves = 0;
+    while(index < pathStr.size() && pathStr[index] != ';')
+    {
+        moves *= 10;
+        moves += pathStr[index] - '0';
+        index++;
+    }
+    return moves;
+}
+
+static std::vector<SDL_Point> parsePath(const std::string pathStr, const SDL_Point &tilePos)
+{
+    std::vector<SDL_Point> path;
+    path.push_back(tilePos);
+    unsigned int index = 0;
+    while(index < pathStr.size())
+    {
+        if(pathStr[index] == 'x')
+        {
+            int movesX;
+            bool isNeg;
+            movesX = getNumberMoves(pathStr, index, &isNeg);
+            for(int i = 0; i < movesX; i++)
+            {
+                SDL_Point nextPos = path.back();
+                nextPos.x = isNeg ? nextPos.x - 1 : nextPos.x + 1;
+                path.push_back(nextPos);
+            }
+        }
+        else
+        {
+            int movesY;
+            bool isNeg;
+            movesY = getNumberMoves(pathStr, index, &isNeg);
+            for(int i = 0; i < movesY; i++)
+            {
+                SDL_Point nextPos = path.back();
+                nextPos.y = isNeg ? nextPos.y - 1 : nextPos.y + 1;
+                path.push_back(nextPos);
+            }
+        }
+        index++;
+    }
+    return path;
 }

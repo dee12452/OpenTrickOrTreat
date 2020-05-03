@@ -7,10 +7,8 @@ enum TileType
 {
     GROUND = 1,
     IMPASSABLE = 2,
-    GATE = 3,
-    BREAKABLE = 4,
-    WATER = 5,
-    FLYABLE = 6
+    WATER = 3,
+    FLYABLE = 4
 };
 
 struct Tile

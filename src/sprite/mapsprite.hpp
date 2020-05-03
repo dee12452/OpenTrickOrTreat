@@ -36,18 +36,22 @@ public:
     void setSpeedY(float speedY);
 
     Direction getMoveDirection() const;
+
     Direction getFacingDirection() const;
-    Tile * getTile(Map *map, int x, int y) const;
+    virtual void setFacingDirection(Direction direction); 
+
+    SDL_Point getCenter() const;
+    virtual SDL_Rect getHitbox() const;
 
 protected:
-    virtual bool canMove(Map *map, unsigned int x, unsigned int y);
+    virtual bool canMove(Map *map, int x, int y) const;
     virtual void onMoveX();
     virtual void onMoveY();
 
-    ObjectSprite * findObject(Map *map, int x, int y) const;
-
     float getOffsetX() const;
     float getOffsetY() const;
+
+    bool isColliding(MapSprite *otherSprite) const;
 
 private:
     float offsetX;

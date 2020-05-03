@@ -75,6 +75,22 @@ void Window::drawAll(SDL_Texture *sdlTexture, const SDL_Rect &dstRect) const
     Util::sdlFuncCheck(SDL_RenderCopy(sdlRenderer, sdlTexture, nullptr, &dstRect), "SDL_RenderCopy");
 }
 
+void Window::drawRotated(
+    SDL_Texture *sdlTexture, 
+    const SDL_Rect &srcRect, 
+    const SDL_Rect &dstRect, 
+    const double angle) const
+{
+    Util::sdlFuncCheck(SDL_RenderCopyEx(
+        sdlRenderer, 
+        sdlTexture, 
+        &srcRect, 
+        &dstRect,
+        angle,
+        nullptr,
+        SDL_FLIP_NONE), "SDL_RenderCopyEx");
+}
+
 void Window::render() const
 {
     SDL_RenderPresent(sdlRenderer);

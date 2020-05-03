@@ -5,10 +5,10 @@
 
 enum ObjectType
 {
-    WOODEN_GATE = 1,
-    STEEL_GATE = 2,
-    TRASH_CAN = 3,
-    BOULDER = 4
+    GATE = 1,
+    BOULDER = 2,
+    COSTUME_SELECT = 3,
+    GHOST = 4
 };
 
 class ObjectSprite : public MapSprite

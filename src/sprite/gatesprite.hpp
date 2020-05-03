@@ -22,7 +22,7 @@ private:
     static const unsigned int GATE_ANIMATION_DURATION;
 
 public:
-    GateSprite(Tileset *tileset, GateType type, int x, int y);
+    GateSprite(Tileset *tileset, GateType type, const SDL_Point &mapPos);
     ~GateSprite() override;
 
     ObjectType getType() const override;
