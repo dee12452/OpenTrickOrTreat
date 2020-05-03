@@ -5,11 +5,13 @@
 #include "sprite/gatesprite.hpp"
 #include "sprite/costumeselectsprite.hpp"
 #include "sprite/ghostsprite.hpp"
+#include "sprite/monstersprite.hpp"
+#include "sprite/breakablesprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
 {
-    player = new WitchSprite();
+    player = new MonsterSprite();
     const std::string mapPath = pathToResourceFolder + Const::MAPS_FOLDER_PATH + mapFile;
     json *mapJson = gahoodson_create_from_file(mapPath.c_str());
     const int mapTileWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
@@ -143,6 +145,9 @@ void Map::changePlayerCostume(CostumeType newCostume)
         case WITCH:
             newPlayer = new WitchSprite();
             break;
+        case MONSTER:
+            newPlayer = new MonsterSprite();
+            break;
         default:
             newPlayer = new SkeletonSprite();
             break;
@@ -250,19 +255,25 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                 {
                     case GATE:
                     {
-                        json_pair *materialProperty = getObjectPropertyValue(objectJson, "material");
+                        const json_pair *materialProperty = getObjectPropertyValue(objectJson, "material");
                         objects.push_back(new GateSprite(tileset, static_cast<GateType> (materialProperty->int_val->val), mapPos));
+                        break;
+                    }
+                    case BREAKABLE:
+                    {
+                        const json_pair *breakableTypeProperty = getObjectPropertyValue(objectJson, "breakableType");
+                        objects.push_back(new BreakableSprite(tileset, static_cast<BreakableType> (breakableTypeProperty->int_val->val), mapPos));
                         break;
                     }
                     case COSTUME_SELECT:
                     {
-                        json_pair *costumeProperty = getObjectPropertyValue(objectJson, "costume");
+                        const json_pair *costumeProperty = getObjectPropertyValue(objectJson, "costume");
                         objects.push_back(new CostumeSelectSprite(tileset, static_cast<CostumeType> (costumeProperty->int_val->val), mapPos));
                         break;
                     }
                     case GHOST:
                     {
-                        json_pair *pathProperty = getObjectPropertyValue(objectJson, "path");
+                        const json_pair *pathProperty = getObjectPropertyValue(objectJson, "path");
                         objects.push_back(new GhostSprite(
                             tileset, 
                             parsePath(pathProperty->str_val->val, {mapPos.x / tileset->getTileWidth(), mapPos.y / tileset->getTileHeight()}), 

@@ -67,6 +67,12 @@
                  "id":3,
                  "name":"boulder 1",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"breakableType",
+                         "type":"int",
+                         "value":0
+                        }],
                  "rotation":0,
                  "type":"2",
                  "visible":true,
@@ -77,20 +83,20 @@
                 {
                  "height":0,
                  "id":4,
-                 "name":"costume select 1",
+                 "name":"costume select 2",
                  "point":true,
                  "properties":[
                         {
                          "name":"costume",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }],
                  "rotation":0,
                  "type":"3",
                  "visible":true,
                  "width":0,
-                 "x":268,
-                 "y":546
+                 "x":266,
+                 "y":612
                 }, 
                 {
                  "height":0,
@@ -109,6 +115,42 @@
                  "width":0,
                  "x":218,
                  "y":648
+                }, 
+                {
+                 "height":0,
+                 "id":7,
+                 "name":"costume select 1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"costume",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"3",
+                 "visible":true,
+                 "width":0,
+                 "x":267,
+                 "y":554
+                }, 
+                {
+                 "height":0,
+                 "id":8,
+                 "name":"trash 1",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"breakableType",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"2",
+                 "visible":true,
+                 "width":0,
+                 "x":598,
+                 "y":563
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -117,7 +159,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":7,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "properties":[
         {
