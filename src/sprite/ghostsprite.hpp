@@ -23,8 +23,8 @@ public:
     void kill();
 
 protected:
-    virtual void onMoveX();
-    virtual void onMoveY();
+    void onMoveX() override;
+    void onMoveY() override;
 
     bool canMove(Map *map, int x, int y) const override;
 
