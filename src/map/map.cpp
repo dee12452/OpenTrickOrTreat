@@ -7,11 +7,12 @@
 #include "sprite/ghostsprite.hpp"
 #include "sprite/monstersprite.hpp"
 #include "sprite/breakablesprite.hpp"
+#include "sprite/creaturesprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
 {
-    player = new MonsterSprite();
+    player = new CreatureSprite();
     const std::string mapPath = pathToResourceFolder + Const::MAPS_FOLDER_PATH + mapFile;
     json *mapJson = gahoodson_create_from_file(mapPath.c_str());
     const int mapTileWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
@@ -147,6 +148,9 @@ void Map::changePlayerCostume(CostumeType newCostume)
             break;
         case MONSTER:
             newPlayer = new MonsterSprite();
+            break;
+        case CREATURE:
+            newPlayer = new CreatureSprite();
             break;
         default:
             newPlayer = new SkeletonSprite();
