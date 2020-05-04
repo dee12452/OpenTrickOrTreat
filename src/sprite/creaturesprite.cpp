@@ -7,6 +7,7 @@ const unsigned short int CreatureSprite::CREATURE_WALK_ANIMATIONS = 8;
 const int CreatureSprite::CREATURE_HITBOX_Y_OFFSET = 12;
 const int CreatureSprite::CREATURE_HITBOX_W = 30;
 const int CreatureSprite::CREATURE_HITBOX_H = 30;
+const int CreatureSprite::CREATURE_JUMP_HITBOX_OFFSET = 4;
 const unsigned int CreatureSprite::CREATURE_JUMP_ANIMATION_DURATION = 450;
 const unsigned short int CreatureSprite::CREATURE_JUMP_NUM_ANIMATIONS = 4;
 const unsigned int CreatureSprite::CREATURE_SPLASH_ANIMATION_DURATION = 450;
@@ -211,29 +212,54 @@ void CreatureSprite::doAction(Map *map)
 {
     if(jumping) return;
     
-    const SDL_Point center = getCenter();
-    Tile *facingTile = nullptr;
-    switch(getFacingDirection())
+    Tile *nextTile1 = nullptr;
+    Tile *nextTile2 = nullptr;
+    const SDL_Rect hitbox = getHitbox();
+    switch (getFacingDirection())
     {
-        case UP:
-            facingTile = map->findTile(center.x, center.y - map->getTileset()->getTileHeight());
+        case Direction::UP:
+        {
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = getY() - CREATURE_JUMP_HITBOX_OFFSET;
+            nextTile1 = map->findTile(leftX, nextY);
+            nextTile2 = map->findTile(rightX, nextY);
             break;
-        case DOWN:
-            facingTile = map->findTile(center.x, center.y + map->getTileset()->getTileHeight());
+        }
+        case Direction::RIGHT:
+        {
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = getX() + getWidth() + CREATURE_JUMP_HITBOX_OFFSET;
+            nextTile1 = map->findTile(nextX, topY);
+            nextTile2 = map->findTile(nextX, bottomY);
             break;
-        case LEFT:
-            facingTile = map->findTile(center.x - map->getTileset()->getTileWidth(), center.y);
+        }
+        case Direction::DOWN:
+        {
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = getY() + getHeight() + CREATURE_JUMP_HITBOX_OFFSET;
+            nextTile1 = map->findTile(leftX, nextY);
+            nextTile2 = map->findTile(rightX, nextY);
             break;
-        case RIGHT:
-            facingTile = map->findTile(center.x + map->getTileset()->getTileWidth(), center.y);
+        }
+        case Direction::LEFT:
+        {
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = getX() - CREATURE_JUMP_HITBOX_OFFSET;
+            nextTile1 = map->findTile(nextX, topY);
+            nextTile2 = map->findTile(nextX, bottomY);
             break;
+        }
         default:
             break;
     }
-    if(!facingTile) return;
+    if(!nextTile1 || !nextTile2) return;
 
-    if(swimming && facingTile->type == TileType::GROUND) jumping = true;
-    else if(!swimming && facingTile->type == TileType::WATER) jumping = true;
+    if(swimming && nextTile1->type == TileType::GROUND && nextTile2->type == TileType::GROUND) jumping = true;
+    else if(!swimming && nextTile1->type == TileType::WATER && nextTile2->type == TileType::WATER) jumping = true;
 
     if(jumping)
     {

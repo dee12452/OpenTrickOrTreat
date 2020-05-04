@@ -11,6 +11,7 @@ private:
     static const int CREATURE_HITBOX_Y_OFFSET;
     static const int CREATURE_HITBOX_W;
     static const int CREATURE_HITBOX_H;
+    static const int CREATURE_JUMP_HITBOX_OFFSET;
     static const unsigned int CREATURE_JUMP_ANIMATION_DURATION;
     static const unsigned short int CREATURE_JUMP_NUM_ANIMATIONS;
     static const unsigned int CREATURE_SPLASH_ANIMATION_DURATION;
