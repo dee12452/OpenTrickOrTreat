@@ -87,8 +87,6 @@ void PlayerSprite::onMoveX()
         setSourceY(initialSource.h + walkDirectionAnimationHeight);
         setSourceX(initialSource.w * currentAnimationIndex);
     }
-
-
 }
 
 void PlayerSprite::onMoveY()
