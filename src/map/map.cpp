@@ -127,9 +127,9 @@ ObjectSprite * Map::findObject(int x, int y) const
     for(auto object : objects)
     {
         objHitbox = object->getHitbox();
-        if(objHitbox.x <= x && objHitbox.x + objHitbox.w >= x)
+        if(objHitbox.x < x && objHitbox.x + objHitbox.w > x)
         {
-            if(objHitbox.y <= y && objHitbox.y + objHitbox.h >= y)
+            if(objHitbox.y < y && objHitbox.y + objHitbox.h > y)
             {
                 return object;
             }

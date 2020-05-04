@@ -21,13 +21,12 @@ CreatureSprite::CreatureSprite()
 
 void CreatureSprite::update(unsigned int deltaTime, Map *map)
 {
-
+    PlayerSprite::update(deltaTime, map);
 }
 
 void CreatureSprite::doAction(Map *map)
 {
     if(jumping) return;
-    
 }
 
 CostumeType CreatureSprite::getCostume() const
