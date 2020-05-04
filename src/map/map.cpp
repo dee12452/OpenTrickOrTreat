@@ -8,6 +8,7 @@
 #include "sprite/monstersprite.hpp"
 #include "sprite/breakablesprite.hpp"
 #include "sprite/creaturesprite.hpp"
+#include "sprite/vampiresprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -151,6 +152,9 @@ void Map::changePlayerCostume(CostumeType newCostume)
             break;
         case CREATURE:
             newPlayer = new CreatureSprite();
+            break;
+        case VAMPIRE:
+            newPlayer = new VampireSprite();
             break;
         default:
             newPlayer = new SkeletonSprite();
