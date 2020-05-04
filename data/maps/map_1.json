@@ -187,6 +187,24 @@
                  "width":0,
                  "x":888,
                  "y":505
+                }, 
+                {
+                 "height":0,
+                 "id":12,
+                 "name":"costume select 5",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"costume",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"3",
+                 "visible":true,
+                 "width":0,
+                 "x":601,
+                 "y":459
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -195,7 +213,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":11,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -211,7 +229,7 @@
         {
          "name":"startx",
          "type":"int",
-         "value":4
+         "value":17
         }, 
         {
          "name":"starty",
