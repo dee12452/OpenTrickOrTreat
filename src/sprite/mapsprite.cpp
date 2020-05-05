@@ -28,9 +28,9 @@ MapSprite::~MapSprite()
 
 void MapSprite::update(unsigned int deltaTime, Map *map)
 {
-    const unsigned int nextX = getX() + static_cast<int> (offsetX + speedX * deltaTime);
-    const unsigned int nextY = getY() + static_cast<int> (offsetY + speedY * deltaTime);
-    if(canMove(map, nextX, nextY))
+    const int nextX = getX() + static_cast<int> (offsetX + speedX * deltaTime);
+    const int nextY = getY() + static_cast<int> (offsetY + speedY * deltaTime);
+    if(canMove(map, {nextX, nextY}))
     {
         offsetX += speedX * deltaTime;
         offsetY += speedY * deltaTime;
@@ -84,7 +84,7 @@ void MapSprite::setSpeedY(float sY)
     if(sY == 0) offsetY = 0;
 }
 
-bool MapSprite::canMove(Map *, int, int) const
+bool MapSprite::canMove(Map *, const SDL_Point &) const
 {
     return true;
 }

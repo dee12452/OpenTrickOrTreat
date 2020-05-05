@@ -99,9 +99,9 @@ void MonsterSprite::onMoveY()
     PlayerSprite::onMoveY();
 }
 
-bool MonsterSprite::canMove(Map *map, int x, int y) const
+bool MonsterSprite::canMove(Map *map, const SDL_Point &pos) const
 {
-    return !smashing && PlayerSprite::canMove(map, x, y);
+    return !smashing && PlayerSprite::canMove(map, pos);
 }
 
 SDL_Rect MonsterSprite::getHitbox() const

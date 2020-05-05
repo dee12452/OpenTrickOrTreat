@@ -65,6 +65,11 @@ void PlayerSprite::setFacingDirection(Direction direction)
     }
 }
 
+bool PlayerSprite::isFlying() const
+{
+    return false;
+}
+
 void PlayerSprite::onMoveX()
 {
     walking = true;
@@ -113,62 +118,13 @@ void PlayerSprite::onMoveY()
     }
 }
 
-bool PlayerSprite::canMove(Map *map, int x, int y) const
+bool PlayerSprite::canMove(Map *map, const SDL_Point &pos) const
 {
     Tile *nextTile1 = nullptr;
     Tile *nextTile2 = nullptr;
     ObjectSprite *intersectingObject1 = nullptr;
     ObjectSprite *intersectingObject2 = nullptr;
-    const SDL_Rect hitbox = getHitbox();
-    switch (getMoveDirection())
-    {
-        case Direction::UP:
-        {
-            const int leftX = hitbox.x;
-            const int rightX = hitbox.x + hitbox.w;
-            const int nextY = hitbox.y - (getY() - y);
-            nextTile1 = map->findTile(leftX, nextY);
-            nextTile2 = map->findTile(rightX, nextY);
-            intersectingObject1 = map->findObject(leftX, nextY);
-            intersectingObject2 = map->findObject(rightX, nextY);
-            break;
-        }
-        case Direction::RIGHT:
-        {
-            const int topY = hitbox.y;
-            const int bottomY = hitbox.y + hitbox.h;
-            const int nextX = hitbox.x + hitbox.w + x - getX();
-            nextTile1 = map->findTile(nextX, topY);
-            nextTile2 = map->findTile(nextX, bottomY);
-            intersectingObject1 = map->findObject(nextX, topY);
-            intersectingObject2 = map->findObject(nextX, bottomY);
-            break;
-        }
-        case Direction::DOWN:
-        {
-            const int leftX = hitbox.x;
-            const int rightX = hitbox.x + hitbox.w;
-            const int nextY = hitbox.y + hitbox.h + y - getY();
-            nextTile1 = map->findTile(leftX, nextY);
-            nextTile2 = map->findTile(rightX, nextY);
-            intersectingObject1 = map->findObject(leftX, nextY);
-            intersectingObject2 = map->findObject(rightX, nextY);
-            break;
-        }
-        case Direction::LEFT:
-        {
-            const int topY = hitbox.y;
-            const int bottomY = hitbox.y + hitbox.h;
-            const int nextX = hitbox.x - (getX() - x);
-            nextTile1 = map->findTile(nextX, topY);
-            nextTile2 = map->findTile(nextX, bottomY);
-            intersectingObject1 = map->findObject(nextX, topY);
-            intersectingObject2 = map->findObject(nextX, bottomY);
-            break;
-        }
-        default:
-            return true;
-    }
+    findCollisions(map, pos, nextTile1, nextTile2, intersectingObject1, intersectingObject2);
     if(!nextTile1 || !nextTile2 || nextTile1->type != TileType::GROUND || nextTile2->type != TileType::GROUND)
     {
         return false;
@@ -182,4 +138,64 @@ bool PlayerSprite::canMove(Map *map, int x, int y) const
         return false;
     }
     return true;
+}
+
+void PlayerSprite::findCollisions(
+    Map *map, 
+    const SDL_Point &pos, 
+    Tile * &tile1, 
+    Tile * &tile2, 
+    ObjectSprite * &obj1, 
+    ObjectSprite * &obj2) const
+{
+    const SDL_Rect hitbox = getHitbox();
+    switch (getFacingDirection())
+    {
+        case Direction::UP:
+        {
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = hitbox.y - (getY() - pos.y);
+            tile1 = map->findTile(leftX, nextY);
+            tile2 = map->findTile(rightX, nextY);
+            obj1 = map->findObject(leftX, nextY);
+            obj2 = map->findObject(rightX, nextY);
+            break;
+        }
+        case Direction::RIGHT:
+        {
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = hitbox.x + hitbox.w + pos.x - getX();
+            tile1 = map->findTile(nextX, topY);
+            tile2 = map->findTile(nextX, bottomY);
+            obj1 = map->findObject(nextX, topY);
+            obj2 = map->findObject(nextX, bottomY);
+            break;
+        }
+        case Direction::DOWN:
+        {
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = hitbox.y + hitbox.h + pos.y - getY();
+            tile1 = map->findTile(leftX, nextY);
+            tile2 = map->findTile(rightX, nextY);
+            obj1 = map->findObject(leftX, nextY);
+            obj2 = map->findObject(rightX, nextY);
+            break;
+        }
+        case Direction::LEFT:
+        {
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = hitbox.x - (getX() - pos.x);
+            tile1 = map->findTile(nextX, topY);
+            tile2 = map->findTile(nextX, bottomY);
+            obj1 = map->findObject(nextX, topY);
+            obj2 = map->findObject(nextX, bottomY);
+            break;
+        }
+        default:
+            break;
+    }
 }

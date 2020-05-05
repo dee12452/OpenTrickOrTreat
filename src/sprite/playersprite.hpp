@@ -28,11 +28,20 @@ public:
     void setFacingDirection(Direction direction) override;
     virtual void doAction(Map *map) = 0;
     virtual CostumeType getCostume() const = 0;
+    virtual bool isFlying() const;
 
 protected:
     virtual void onMoveX() override;
     virtual void onMoveY() override;
-    virtual bool canMove(Map *map, int x, int y) const override;
+    virtual bool canMove(Map *map, const SDL_Point &pos) const override;
+
+    void findCollisions(
+        Map *map, 
+        const SDL_Point &pos, 
+        Tile * &tile1, 
+        Tile * &tile2, 
+        ObjectSprite * &obj1, 
+        ObjectSprite * &obj2) const;
 
 private:
     SDL_Rect initialSource;

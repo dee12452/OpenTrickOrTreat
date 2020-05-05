@@ -36,7 +36,7 @@ void CostumeSelectSprite::update(unsigned int deltaTime, Map *map)
     setSourceY(getSourceHeight() * animationIndex);
     if(isColliding(map->getPlayer()) && map->getPlayer()->getCostume() != costume)
     {
-        if(active)
+        if(active && !map->getPlayer()->isFlying())
         {
             const CostumeType currentCostume = costume;
             setCostumeType(map->getPlayer()->getCostume());

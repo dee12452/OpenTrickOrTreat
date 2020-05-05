@@ -27,7 +27,7 @@ public:
 protected:
     void onMoveX() override;
     void onMoveY() override;
-    bool canMove(Map *map, int x, int y) const override;
+    bool canMove(Map *map, const SDL_Point &pos) const override;
 
     SDL_Rect getHitbox() const override;
 

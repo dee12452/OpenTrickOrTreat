@@ -168,7 +168,7 @@ void GhostSprite::onMoveY()
     }
 }
 
-bool GhostSprite::canMove(Map *map, int x, int y) const
+bool GhostSprite::canMove(Map *map, const SDL_Point &pos) const
 {
     return !isColliding(map->getPlayer());
 }

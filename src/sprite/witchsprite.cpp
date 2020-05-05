@@ -106,10 +106,10 @@ void WitchSprite::onMoveY()
     PlayerSprite::onMoveY();
 }
 
-bool WitchSprite::canMove(Map *map, int x, int y) const
+bool WitchSprite::canMove(Map *map, const SDL_Point &pos) const
 {
     if(usingSpell) return false;
-    return PlayerSprite::canMove(map, x, y);
+    return PlayerSprite::canMove(map, pos);
 }
 
 SDL_Rect WitchSprite::getHitbox() const

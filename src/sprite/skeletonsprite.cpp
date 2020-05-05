@@ -97,10 +97,10 @@ void SkeletonSprite::onMoveY()
     if(!keysActive) PlayerSprite::onMoveY();
 }
 
-bool SkeletonSprite::canMove(Map *map, int x, int y) const
+bool SkeletonSprite::canMove(Map *map, const SDL_Point &pos) const
 {
     if(keysActive) return false;
-    return PlayerSprite::canMove(map, x, y);
+    return PlayerSprite::canMove(map, pos);
 }
 
 SDL_Rect SkeletonSprite::getHitbox() const

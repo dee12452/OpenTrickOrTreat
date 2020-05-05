@@ -44,7 +44,7 @@ public:
     virtual SDL_Rect getHitbox() const;
 
 protected:
-    virtual bool canMove(Map *map, int x, int y) const;
+    virtual bool canMove(Map *map, const SDL_Point &pos) const;
     virtual void onMoveX();
     virtual void onMoveY();
 

@@ -354,65 +354,21 @@ void CreatureSprite::onMoveY()
     }
 }
 
-bool CreatureSprite::canMove(Map *map, int x, int y) const
+bool CreatureSprite::canMove(Map *map, const SDL_Point &pos) const
 {
     if(jumping) return false;
 
     if(swimming)
     {
-        Tile *nextTile1 = nullptr;
-        Tile *nextTile2 = nullptr;
-        const SDL_Rect hitbox = getHitbox();
-        switch (getMoveDirection())
-        {
-            case Direction::UP:
-            {
-                const int leftX = hitbox.x;
-                const int rightX = hitbox.x + hitbox.w;
-                const int nextY = hitbox.y - (getY() - y);
-                nextTile1 = map->findTile(leftX, nextY);
-                nextTile2 = map->findTile(rightX, nextY);
-                break;
-            }
-            case Direction::RIGHT:
-            {
-                const int topY = hitbox.y;
-                const int bottomY = hitbox.y + hitbox.h;
-                const int nextX = hitbox.x + hitbox.w + x - getX();
-                nextTile1 = map->findTile(nextX, topY);
-                nextTile2 = map->findTile(nextX, bottomY);
-                break;
-            }
-            case Direction::DOWN:
-            {
-                const int leftX = hitbox.x;
-                const int rightX = hitbox.x + hitbox.w;
-                const int nextY = hitbox.y + hitbox.h + y - getY();
-                nextTile1 = map->findTile(leftX, nextY);
-                nextTile2 = map->findTile(rightX, nextY);
-                break;
-            }
-            case Direction::LEFT:
-            {
-                const int topY = hitbox.y;
-                const int bottomY = hitbox.y + hitbox.h;
-                const int nextX = hitbox.x - (getX() - x);
-                nextTile1 = map->findTile(nextX, topY);
-                nextTile2 = map->findTile(nextX, bottomY);
-                break;
-            }
-            default:
-                return true;
-        }
-        if(nextTile1 && nextTile2 && nextTile1->type == TileType::WATER && nextTile2->type == TileType::WATER)
-        {
-            return true;
-        }
-        return false;
+        Tile *nextTile1 = nullptr, *nextTile2 = nullptr;
+        ObjectSprite *obj1 = nullptr, *obj2 = nullptr;
+        findCollisions(map, pos, nextTile1, nextTile2, obj1, obj2);
+        return nextTile1 && nextTile2 && 
+            nextTile1->type == TileType::WATER && nextTile2->type == TileType::WATER;
     }
     else
     {
-        return PlayerSprite::canMove(map, x, y);   
+        return PlayerSprite::canMove(map, pos);   
     }
 }
 
