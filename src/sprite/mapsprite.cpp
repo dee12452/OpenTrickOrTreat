@@ -30,16 +30,6 @@ void MapSprite::update(unsigned int deltaTime, Map *map)
 {
     const int nextX = getX() + static_cast<int> (offsetX + speedX * deltaTime);
     const int nextY = getY() + static_cast<int> (offsetY + speedY * deltaTime);
-    if(canMove(map, {nextX, nextY}))
-    {
-        offsetX += speedX * deltaTime;
-        offsetY += speedY * deltaTime;
-        setX(nextX);
-        setY(nextY);
-        float whole;
-        offsetX = modf(offsetX, &whole);
-        offsetY = modf(offsetY, &whole);
-    }
     if(speedX != 0)
     {
         if(speedX > 0) facingDirection = RIGHT;
@@ -51,6 +41,16 @@ void MapSprite::update(unsigned int deltaTime, Map *map)
         if(speedY > 0) facingDirection = DOWN;
         if(speedY < 0) facingDirection = UP;
         onMoveY();
+    }
+    if(canMove(map, {nextX, nextY}))
+    {
+        offsetX += speedX * deltaTime;
+        offsetY += speedY * deltaTime;
+        setX(nextX);
+        setY(nextY);
+        float whole;
+        offsetX = modf(offsetX, &whole);
+        offsetY = modf(offsetY, &whole);
     }
 }
 
