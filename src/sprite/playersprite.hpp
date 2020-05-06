@@ -28,9 +28,12 @@ public:
     void setFacingDirection(Direction direction) override;
     virtual void doAction(Map *map) = 0;
     virtual CostumeType getCostume() const = 0;
-    virtual bool isFlying() const;
+    
+    bool isFlying() const;
 
 protected:
+    bool flying;
+
     virtual void onMoveX() override;
     virtual void onMoveY() override;
     virtual bool canMove(Map *map, const SDL_Point &pos) const override;

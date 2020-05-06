@@ -17,7 +17,6 @@ VampireSprite::VampireSprite()
         VAMPIRE_INITIAL_SRC,
         VAMPIRE_INITIAL_SRC,
         VAMPIRE_NUM_WALKING_ANIMATIONS)
-    , flying(false)
     , vampireFlapDeltaTime(0)
 {}
 
@@ -77,11 +76,6 @@ void VampireSprite::doAction(Map *map)
 CostumeType VampireSprite::getCostume() const
 {
     return VAMPIRE;
-}
-
-bool VampireSprite::isFlying() const
-{
-    return flying;
 }
 
 bool VampireSprite::canMove(Map *map, const SDL_Point &pos) const

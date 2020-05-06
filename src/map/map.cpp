@@ -9,6 +9,7 @@
 #include "sprite/breakablesprite.hpp"
 #include "sprite/creaturesprite.hpp"
 #include "sprite/vampiresprite.hpp"
+#include "sprite/candysprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -52,7 +53,10 @@ Map::~Map()
 
 void Map::update(unsigned int deltaTime)
 {
-    for(auto object : objects) object->update(deltaTime, this);
+    for(auto object : objects) 
+    {
+        if(!object->isConsumed()) object->update(deltaTime, this);
+    }
     player->update(deltaTime, this);
 }
 
@@ -67,7 +71,10 @@ void Map::draw(const Window &window)
     window.setTargetTexture(mapTexture);
     window.clear();
     window.drawAll(bgTexture);
-    for(auto object : objects) object->draw(window);
+    for(auto object : objects) 
+    {
+        if(!object->isConsumed()) object->draw(window);
+    }
     player->draw(window);
     window.resetTargetTexture();
 
@@ -286,6 +293,12 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                             tileset, 
                             parsePath(pathProperty->str_val->val, {mapPos.x / tileset->getTileWidth(), mapPos.y / tileset->getTileHeight()}), 
                             mapPos));
+                        break;
+                    }
+                    case CANDY:
+                    {
+                        objects.push_back(new CandySprite(tileset, mapPos));
+                        break;
                     }
                     default:
                         break;

@@ -9,3 +9,8 @@ ObjectSprite::ObjectSprite(
 
 ObjectSprite::~ObjectSprite()
 {}
+
+bool ObjectSprite::isConsumed() const
+{
+    return consumed;
+}

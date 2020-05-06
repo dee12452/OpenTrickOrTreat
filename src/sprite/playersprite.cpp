@@ -24,6 +24,7 @@ PlayerSprite::PlayerSprite(
     , walkDeltaTime(0)
     , walking(false)
     , walkDirectionAnimationHeight(height)
+    , flying(false)
 {}
 
 PlayerSprite::~PlayerSprite()
@@ -67,7 +68,7 @@ void PlayerSprite::setFacingDirection(Direction direction)
 
 bool PlayerSprite::isFlying() const
 {
-    return false;
+    return flying;
 }
 
 void PlayerSprite::onMoveX()

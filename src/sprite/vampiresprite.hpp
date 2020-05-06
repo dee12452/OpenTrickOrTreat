@@ -22,15 +22,12 @@ public:
     void doAction(Map *map) override;
     CostumeType getCostume() const override;
 
-    bool isFlying() const override;
-
 protected:
     bool canMove(Map *map, const SDL_Point &pos) const override;
 
     SDL_Rect getHitbox() const override;
 
 private:
-    bool flying;
     unsigned int vampireFlapDeltaTime;
 };
 
