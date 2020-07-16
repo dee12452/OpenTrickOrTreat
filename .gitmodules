@@ -1,0 +1,3 @@
+[submodule "thirdparty/GahoodSON"]
+	path = thirdparty/GahoodSON
+	url = git@github.com:dee12452/GahoodSON.git
