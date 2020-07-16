@@ -1,5 +1,5 @@
 # OpenTrickOrTreat
-An open source recreation of the cartoon network online flash game T.R.I.C.K. O.R. T.R.E.A.T. written in C++ using SDL2.
+An open source recreation of the cartoon network online flash game Operation T.R.I.C.K. Or T.R.E.A.T. written in C++ using SDL2.
 
 ## Setup / Install
 
