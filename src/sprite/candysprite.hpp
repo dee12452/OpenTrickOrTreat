@@ -17,9 +17,9 @@ private:
 public:
     CandySprite(Tileset *tileset, const SDL_Point &mapPos);
 
-    void update(unsigned int deltaTime, Map *map);
-    ObjectType getType() const;
-    bool isBlocking() const;
+    void update(unsigned int deltaTime, Map *map) override;
+    ObjectType getType() const override;
+    bool isBlocking() const override;
 
 protected:
     SDL_Rect getHitbox() const override;

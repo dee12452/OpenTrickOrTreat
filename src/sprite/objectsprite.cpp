@@ -5,6 +5,7 @@ ObjectSprite::ObjectSprite(
     const SDL_Rect &sourceRect, 
     const SDL_Rect &destinationRect)
     : MapSprite(texture, sourceRect, destinationRect)
+    , consumed(false)
 {}
 
 ObjectSprite::~ObjectSprite()
