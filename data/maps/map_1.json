@@ -289,6 +289,18 @@
                  "width":0,
                  "x":506,
                  "y":409
+                }, 
+                {
+                 "height":0,
+                 "id":20,
+                 "name":"power ball",
+                 "point":true,
+                 "rotation":0,
+                 "type":"7",
+                 "visible":true,
+                 "width":0,
+                 "x":454,
+                 "y":213
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -297,7 +309,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":20,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -321,7 +333,7 @@
          "value":4
         }],
  "renderorder":"right-down",
- "tiledversion":"1.3.3",
+ "tiledversion":"1.4.1",
  "tileheight":48,
  "tilesets":[
         {
@@ -2456,6 +2468,6 @@
         }],
  "tilewidth":48,
  "type":"map",
- "version":1.2,
+ "version":1.4,
  "width":30
 }

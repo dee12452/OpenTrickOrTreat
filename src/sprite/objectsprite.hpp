@@ -10,7 +10,8 @@ enum ObjectType
     COSTUME_SELECT = 3,
     GHOST = 4,
     CANDY = 5,
-    COIN = 6
+    COIN = 6,
+    STAR_BALL = 7
 };
 
 class ObjectSprite : public MapSprite

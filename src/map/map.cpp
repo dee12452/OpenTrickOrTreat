@@ -11,6 +11,7 @@
 #include "sprite/vampiresprite.hpp"
 #include "sprite/candysprite.hpp"
 #include "sprite/coinsprite.hpp"
+#include "sprite/starballsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -303,6 +304,11 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                     case COIN:
                     {
                         objects.push_back(new CoinSprite(tileset, mapPos));
+                        break;
+                    }
+                    case STAR_BALL:
+                    {
+                        objects.push_back(new StarBallSprite(tileset, mapPos));
                         break;
                     }
                     default:
