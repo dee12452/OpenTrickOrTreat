@@ -13,10 +13,12 @@ private:
     static const unsigned short int CANDY_HITBOX_H;
     static const unsigned int CANDY_ANIMATION_DURATION;
     static const unsigned short int CANDY_NUM_ANIMATIONS;
+    static const SDL_Point SHADOW_SRC_CENTER;
 
 public:
     CandySprite(Tileset *tileset, const SDL_Point &mapPos);
 
+    void draw(const Window &window) const override;
     void update(unsigned int deltaTime, Map *map) override;
     ObjectType getType() const override;
     bool isBlocking() const override;

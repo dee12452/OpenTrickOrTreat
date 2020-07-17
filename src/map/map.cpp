@@ -10,6 +10,7 @@
 #include "sprite/creaturesprite.hpp"
 #include "sprite/vampiresprite.hpp"
 #include "sprite/candysprite.hpp"
+#include "sprite/coinsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -265,8 +266,7 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                 const int mapX = Util::getJsonPair("x", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const int mapY = Util::getJsonPair("y", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const SDL_Point mapPos = {mapX, mapY};
-                switch(std::stoi(
-                    Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
+                switch(std::stoi(Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
                 {
                     case GATE:
                     {
@@ -298,6 +298,11 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                     case CANDY:
                     {
                         objects.push_back(new CandySprite(tileset, mapPos));
+                        break;
+                    }
+                    case COIN:
+                    {
+                        objects.push_back(new CoinSprite(tileset, mapPos));
                         break;
                     }
                     default:
