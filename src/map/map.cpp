@@ -12,6 +12,7 @@
 #include "sprite/candysprite.hpp"
 #include "sprite/coinsprite.hpp"
 #include "sprite/starballsprite.hpp"
+#include "sprite/housesprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -309,6 +310,12 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                     case STAR_BALL:
                     {
                         objects.push_back(new StarBallSprite(tileset, mapPos));
+                        break;
+                    }
+                    case HOUSE:
+                    {
+                        const json_pair *houseTypeProperty = getObjectPropertyValue(objectJson, "houseType");
+                        objects.push_back(new HouseSprite(tileset, static_cast<HouseType> (houseTypeProperty->int_val->val), mapPos));
                         break;
                     }
                     default:

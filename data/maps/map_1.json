@@ -301,6 +301,24 @@
                  "width":0,
                  "x":454,
                  "y":213
+                }, 
+                {
+                 "height":0,
+                 "id":21,
+                 "name":"house",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"houseType",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"8",
+                 "visible":true,
+                 "width":0,
+                 "x":688,
+                 "y":203
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -309,7 +327,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":21,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "properties":[
         {
