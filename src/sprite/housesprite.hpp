@@ -2,6 +2,7 @@
 #define _OPEN_TOT_HOUSE_SPRITE_HPP_
 
 #include "objectsprite.hpp"
+#include "treatexplosionsprite.hpp"
 
 class Tileset;
 
@@ -35,9 +36,11 @@ public:
     SDL_Rect getHitbox() const override;
 
 private:
+    bool collected;
     HouseType type;
     int hitboxW;
     int hitboxH;
+    TreatExplosionSprite treatExplosionSprite;
 };
 
 #endif

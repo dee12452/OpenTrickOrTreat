@@ -28,10 +28,17 @@ HouseSprite::HouseSprite(Tileset *tileset, HouseType houseType, const SDL_Point 
     : ObjectSprite(
         tileset->getTilesetTexture()
         , HOUSE_SRC_RECTS[static_cast<unsigned int> (houseType) - 1]
-        , {})
+        , {
+            mapPos.x - mapPos.x % tileset->getTileWidth()
+            , mapPos.y - mapPos.y % tileset->getTileHeight()
+            , HOUSE_SRC_RECTS[static_cast<unsigned int> (houseType) - 1].w
+            , HOUSE_SRC_RECTS[static_cast<unsigned int> (houseType) - 1].y
+        })
+    , collected(false)
     , type(houseType)
     , hitboxW(tileset->getTileWidth() + HITBOX_BUFFER_PIXELS)
     , hitboxH(tileset->getTileHeight() + HITBOX_BUFFER_PIXELS)
+    , treatExplosionSprite({getHitbox().x + getHitbox().w / 2, getHitbox().y + getHitbox().h / 2})
 {
     setWidth(getSourceWidth());
     setHeight(getSourceHeight());
@@ -41,15 +48,28 @@ HouseSprite::HouseSprite(Tileset *tileset, HouseType houseType, const SDL_Point 
 
 void HouseSprite::draw(const Window &window) const
 {
-    ObjectSprite::draw(window);
+    if(!collected)
+    {
+        ObjectSprite::draw(window);
+    }
+    else
+    {
+        treatExplosionSprite.draw(window);
+    }
+    
 }
 
 void HouseSprite::update(unsigned int deltaTime, Map *map)
 {
-    if(!consumed)
+    if(!collected)
     {
-        consumed = isColliding(map->getPlayer());
+        collected = isColliding(map->getPlayer());
     }
+    else
+    {
+        treatExplosionSprite.update(deltaTime, map);
+    }
+    
 }
 
 ObjectType HouseSprite::getType() const
