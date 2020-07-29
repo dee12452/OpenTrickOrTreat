@@ -22,6 +22,8 @@ private:
     static const std::vector<SDL_Rect> HOUSE_SRC_RECTS;
     static const std::vector<SDL_Point> HOUSE_SRC_HITBOX_CENTERS;
     static const unsigned int HITBOX_BUFFER_PIXELS;
+    static const unsigned int NUM_COINS;
+    static const unsigned int NUM_CANDIES;
 
 public:
     /**

@@ -6,18 +6,19 @@ const std::vector<SDL_Rect> TreatExplosionSprite::TREAT_SRC_RECTS =
     {3, 312, 31, 19},
     {73, 311, 22, 22}
 };
-const unsigned int TreatExplosionSprite::NUM_TREATS = 8;
-const unsigned int TreatExplosionSprite::TREAT_SPAWN_DELAY = 150;
-const unsigned int TreatExplosionSprite::TREAT_ANIMATION_DURATION = 275;
-const unsigned int TreatExplosionSprite::TREAT_ANIMATION_Y_DISPLACEMENT = 75;
+const unsigned int TreatExplosionSprite::TREAT_SPAWN_DELAY = 100;
+const unsigned int TreatExplosionSprite::TREAT_ANIMATION_DURATION = 200;
+const unsigned int TreatExplosionSprite::TREAT_ANIMATION_Y_DISPLACEMENT = 100;
 
-TreatExplosionSprite::TreatExplosionSprite(const SDL_Point &mapLoc)
+TreatExplosionSprite::TreatExplosionSprite(const SDL_Point &mapLoc, unsigned int numCandies, unsigned int numCoins)
     : MapSprite(
         TextureManager::getInstance()->getTexture(Const::IMAGE_MISC)
         , {}
         , {})
     , location(mapLoc)
     , treatSpawnDelta(0)
+    , numCoins(numCoins)
+    , numCandies(numCandies)
 {}
 
 void TreatExplosionSprite::draw(const Window &window) const
@@ -62,24 +63,33 @@ void TreatExplosionSprite::update(unsigned int deltaTime, Map *map)
         
     }
 
-    if(treats.size() < NUM_TREATS)
+    if(treats.size() < numCoins + numCandies)
     {
         treatSpawnDelta += deltaTime;
         if(treatSpawnDelta >= TREAT_SPAWN_DELAY)
         {
-            treatSpawnDelta = 0;
-            int treatRand = Util::randomNumber(15, 20);
-            const SDL_Rect treatSrc = treatRand % 2 ? TREAT_SRC_RECTS[0] : TREAT_SRC_RECTS[1];
-            treats.push_back(
-                {
-                    treatSrc
-                    , {location.x - treatSrc.w / 2, location.y - treatSrc.h / 2, treatSrc.w, treatSrc.h}
-                    , treatRand
-                    , 0
-                }
-            );
+            if(treats.size() < numCoins)
+            {
+                addTreat(TREAT_SRC_RECTS[1]);
+            }
+            else
+            {
+                addTreat(TREAT_SRC_RECTS[0]);
+            }
             treatSpawnDelta = 0;
         }
     }
+}
 
+void TreatExplosionSprite::addTreat(const SDL_Rect &treatSrcRect)
+{
+    int treatRand = Util::randomNumber(15, 20);
+    treats.push_back(
+        {
+            treatSrcRect
+            , {location.x - treatSrcRect.w / 2, location.y - treatSrcRect.h / 2, treatSrcRect.w, treatSrcRect.h}
+            , treatRand
+            , 0
+        }
+    );   
 }

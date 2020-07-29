@@ -14,14 +14,13 @@ struct Treat
 class TreatExplosionSprite : public MapSprite
 {
 private:
-    static const std::vector<SDL_Rect> TREAT_SRC_RECTS; 
-    static const unsigned int NUM_TREATS;
+    static const std::vector<SDL_Rect> TREAT_SRC_RECTS;
     static const unsigned int TREAT_SPAWN_DELAY;
     static const unsigned int TREAT_ANIMATION_DURATION;
     static const unsigned int TREAT_ANIMATION_Y_DISPLACEMENT;
 
 public:
-    TreatExplosionSprite(const SDL_Point &mapLoc);
+    TreatExplosionSprite(const SDL_Point &mapLoc, unsigned int numCoins, unsigned int numCandies);
 
     void draw(const Window &window) const override;
     void update(unsigned int deltaTime, Map *map) override;
@@ -30,6 +29,10 @@ private:
     SDL_Point location;
     std::vector<Treat> treats;
     unsigned int treatSpawnDelta;
+    unsigned int numCoins;
+    unsigned int numCandies;
+
+    void addTreat(const SDL_Rect &treatSrcRect);
 };
 
 #endif

@@ -23,6 +23,8 @@ const std::vector<SDL_Point> HouseSprite::HOUSE_SRC_HITBOX_CENTERS =
 };
 
 const unsigned int HouseSprite::HITBOX_BUFFER_PIXELS = 12;
+const unsigned int HouseSprite::NUM_COINS = 4;
+const unsigned int HouseSprite::NUM_CANDIES = 4;
 
 HouseSprite::HouseSprite(Tileset *tileset, HouseType houseType, const SDL_Point &mapPos)
     : ObjectSprite(
@@ -38,7 +40,7 @@ HouseSprite::HouseSprite(Tileset *tileset, HouseType houseType, const SDL_Point 
     , type(houseType)
     , hitboxW(tileset->getTileWidth() + HITBOX_BUFFER_PIXELS)
     , hitboxH(tileset->getTileHeight() + HITBOX_BUFFER_PIXELS)
-    , treatExplosionSprite({getHitbox().x + getHitbox().w / 2, getHitbox().y + getHitbox().h / 2})
+    , treatExplosionSprite({getHitbox().x + getHitbox().w / 2, getHitbox().y + getHitbox().h / 2}, NUM_COINS, NUM_CANDIES)
 {
     setWidth(getSourceWidth());
     setHeight(getSourceHeight());
