@@ -6,7 +6,7 @@ TextSprite::TextSprite(
         , const std::string &text
         , const std::string &font
         , const SDL_Color &color) :
-    TextSprite(window, text, font, color, {0,0,0,0}, {0,0,0,0})
+    TextSprite(window, text, font, color, Const::EMPTY_RECT)
 {}
 
 TextSprite::TextSprite(
@@ -14,9 +14,8 @@ TextSprite::TextSprite(
         , const std::string &text
         , const std::string &font
         , const SDL_Color &color
-        , const SDL_Rect &sourceRect
         , const SDL_Rect &destinationRect)
-    : Sprite(nullptr, sourceRect, destinationRect)
+    : Sprite(nullptr, Const::EMPTY_RECT, destinationRect)
       , text(text)
       , font(font)
       , color(color)

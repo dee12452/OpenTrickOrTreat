@@ -23,7 +23,7 @@ Map::Map(const Window &window, const std::string &pathToResourceFolder, const st
     const int mapTileWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     const int mapTileHeight = Util::getJsonPair("height", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     loadMapValues(mapJson);
-    loadGrid(mapJson, mapTileWidth, mapTileHeight);
+    loadGrid(window, mapJson, mapTileWidth, mapTileHeight);
     gahoodson_delete(mapJson);
 
     const int mapTextureWidth = mapTileWidth * tileset->getTileWidth();
@@ -231,7 +231,7 @@ static json_pair * getObjectPropertyValue(const json_list_element *objectJson, c
 static int getNumberMoves(const std::string &pathStr, unsigned int &index, bool *isNeg);
 static std::vector<SDL_Point> parsePath(const std::string pathStr, const SDL_Point &mapPos);
 
-void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
+void Map::loadGrid(const Window &window, json *mapJson, int mapTileWidth, int mapTileHeight)
 {
     json_list *layers = Util::getJsonList("layers", mapJson->json_lists, mapJson->num_of_lists);
     for(int layer = 0; layer < layers->num_of_elements; layer++)
@@ -315,7 +315,7 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                     case HOUSE:
                     {
                         const json_pair *houseTypeProperty = getObjectPropertyValue(objectJson, "houseType");
-                        objects.push_back(new HouseSprite(tileset, static_cast<HouseType> (houseTypeProperty->int_val->val), mapPos));
+                        objects.push_back(new HouseSprite(window, tileset, static_cast<HouseType> (houseTypeProperty->int_val->val), mapPos));
                         break;
                     }
                     default:

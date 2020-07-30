@@ -91,6 +91,38 @@ void Window::drawRotated(
         SDL_FLIP_NONE), "SDL_RenderCopyEx");
 }
 
+void Window::drawColorModulated(
+    SDL_Texture *sdlTexture, 
+    const SDL_Rect &srcRect, 
+    const SDL_Rect &dstRect, 
+    const SDL_Color &color) const
+{
+    Util::sdlFuncCheck(SDL_SetTextureColorMod(sdlTexture, color.r, color.g, color.b), "SDL_SetTextureColorMod");
+    draw(sdlTexture, srcRect, dstRect);
+    Util::sdlFuncCheck(SDL_SetTextureColorMod(sdlTexture, 255, 255, 255), "SDL_SetTextureColorMod");
+}
+
+void Window::drawAlphaModulated(
+    SDL_Texture *sdlTexture, 
+    const SDL_Rect &srcRect, 
+    const SDL_Rect &dstRect, 
+    unsigned char alphaMod) const
+{
+    Util::sdlFuncCheck(SDL_SetTextureAlphaMod(sdlTexture, alphaMod), "SDL_SetTextureAlphaMod");
+    draw(sdlTexture, srcRect, dstRect);
+    Util::sdlFuncCheck(SDL_SetTextureAlphaMod(sdlTexture, Color::BLACK.a), "SDL_SetTextureAlphaMod");
+}
+
+void Window::drawAlphaModulated(
+    SDL_Texture *sdlTexture, 
+    const SDL_Rect &dstRect, 
+    unsigned char alphaMod) const
+{
+    Util::sdlFuncCheck(SDL_SetTextureAlphaMod(sdlTexture, alphaMod), "SDL_SetTextureAlphaMod");
+    drawAll(sdlTexture, dstRect);
+    Util::sdlFuncCheck(SDL_SetTextureAlphaMod(sdlTexture, Color::BLACK.a), "SDL_SetTextureAlphaMod");
+}
+
 void Window::render() const
 {
     SDL_RenderPresent(sdlRenderer);

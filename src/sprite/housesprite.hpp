@@ -3,6 +3,7 @@
 
 #include "objectsprite.hpp"
 #include "treatexplosionsprite.hpp"
+#include "textsprite.hpp"
 
 class Tileset;
 
@@ -24,12 +25,17 @@ private:
     static const unsigned int HITBOX_BUFFER_PIXELS;
     static const unsigned int NUM_COINS;
     static const unsigned int NUM_CANDIES;
+    static const unsigned int TREAT_EXPLOSION_BUFFER_Y_PIXELS;
+    static const std::string TRICK_OR_TREAT_MESSAGE;
+    static const unsigned int TRICK_OR_TREAT_MESSAGE_W;
+    static const unsigned int TRICK_OR_TREAT_MESSAGE_H;
+    static const unsigned int TRICK_OR_TREAT_MESSAGE_DURATION;
 
 public:
     /**
      * @param mapPos Different than other objects, this represents where it will be created from the top-left instead of center
      */
-    HouseSprite(Tileset *tileset, HouseType houseType, const SDL_Point &mapPos);
+    HouseSprite(const Window &window, Tileset *tileset, HouseType houseType, const SDL_Point &mapPos);
 
     void draw(const Window &window) const override;
     void update(unsigned int deltaTime, Map *map) override;
@@ -43,6 +49,8 @@ private:
     int hitboxW;
     int hitboxH;
     TreatExplosionSprite treatExplosionSprite;
+    TextSprite trickOrTreatTextSprite;
+    unsigned int trickOrTreatMessageDelta;
 };
 
 #endif

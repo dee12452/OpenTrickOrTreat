@@ -47,7 +47,8 @@ namespace Color
 {
     extern const SDL_Color BLACK; 
     extern const SDL_Color WHITE; 
-    extern const SDL_Color TRANSPARENT; 
+    extern const SDL_Color TRANSPARENT;
+    extern const SDL_Color YELLOW;
 }
 
 #endif

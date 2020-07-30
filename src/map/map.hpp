@@ -39,7 +39,7 @@ private:
     std::vector<ObjectSprite *> objects;
 
     void loadMapValues(json *mapJson);
-    void loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight);
+    void loadGrid(const Window &window, json *mapJson, int mapTileWidth, int mapTileHeight);
     void refreshBackground(const Window &window) const;
 };
 

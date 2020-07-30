@@ -6,6 +6,7 @@
 struct Treat
 {
     SDL_Rect src;
+    SDL_Rect srcWhite;
     SDL_Rect dst;
     int displacement;
     unsigned int animationDelta;
@@ -15,6 +16,7 @@ class TreatExplosionSprite : public MapSprite
 {
 private:
     static const std::vector<SDL_Rect> TREAT_SRC_RECTS;
+    static const std::vector<SDL_Point> TREAT_WHITE_SRC_POINTS;
     static const unsigned int TREAT_SPAWN_DELAY;
     static const unsigned int TREAT_ANIMATION_DURATION;
     static const unsigned int TREAT_ANIMATION_Y_DISPLACEMENT;
@@ -32,7 +34,7 @@ private:
     unsigned int numCoins;
     unsigned int numCandies;
 
-    void addTreat(const SDL_Rect &treatSrcRect);
+    void addTreat(const SDL_Rect &treatSrcRect, const SDL_Rect &treatSrcWhiteRect);
 };
 
 #endif

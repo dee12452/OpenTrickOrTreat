@@ -3,6 +3,10 @@
 #include "objectsprite.hpp"
 #include "map/map.hpp"
 
+MapSprite::MapSprite(SDL_Texture *texture)
+    : MapSprite(texture, Const::EMPTY_RECT, Const::EMPTY_RECT)
+{}
+
 MapSprite::MapSprite(
     SDL_Texture *texture, 
     const SDL_Rect &sourceRect, 

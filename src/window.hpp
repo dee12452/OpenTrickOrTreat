@@ -26,6 +26,20 @@ public:
         const SDL_Rect &srcRect, 
         const SDL_Rect &dstRect, 
         const double angle) const;
+    void drawColorModulated(
+        SDL_Texture *sdlTexture, 
+        const SDL_Rect &srcRect, 
+        const SDL_Rect &dstRect, 
+        const SDL_Color &color) const;
+    void drawAlphaModulated(
+        SDL_Texture *sdlTexture, 
+        const SDL_Rect &srcRect, 
+        const SDL_Rect &dstRect, 
+        unsigned char alphaMod) const;
+    void drawAlphaModulated(
+        SDL_Texture *sdlTexture, 
+        const SDL_Rect &dstRect, 
+        unsigned char alphaMod) const;
     void render() const;
 
     SDL_Renderer * getSdlRenderer() const;

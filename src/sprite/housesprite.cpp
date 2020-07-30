@@ -1,5 +1,6 @@
 #include "housesprite.hpp"
 #include "playersprite.hpp"
+#include "textsprite.hpp"
 #include "map/map.hpp"
 
 const std::vector<SDL_Rect> HouseSprite::HOUSE_SRC_RECTS =
@@ -25,27 +26,62 @@ const std::vector<SDL_Point> HouseSprite::HOUSE_SRC_HITBOX_CENTERS =
 const unsigned int HouseSprite::HITBOX_BUFFER_PIXELS = 12;
 const unsigned int HouseSprite::NUM_COINS = 4;
 const unsigned int HouseSprite::NUM_CANDIES = 4;
+const unsigned int HouseSprite::TREAT_EXPLOSION_BUFFER_Y_PIXELS = 50;
+const std::string HouseSprite::TRICK_OR_TREAT_MESSAGE = "Trick or Treat";
+const unsigned int HouseSprite::TRICK_OR_TREAT_MESSAGE_W = 115;
+const unsigned int HouseSprite::TRICK_OR_TREAT_MESSAGE_H = 15;
+const unsigned int HouseSprite::TRICK_OR_TREAT_MESSAGE_DURATION = 2000;
 
-HouseSprite::HouseSprite(Tileset *tileset, HouseType houseType, const SDL_Point &mapPos)
+static SDL_Point getTreatExplosionLocation(const SDL_Rect &houseHitbox, unsigned int yOffset)
+{
+    return 
+    {
+        houseHitbox.x + houseHitbox.w / 2
+        , houseHitbox.y + houseHitbox.h / 2 - static_cast<int> (yOffset)
+    };
+}
+
+static SDL_Rect getHouseDstRect(
+    Tileset *tileset
+    , HouseType houseType
+    , const SDL_Point &mapPos
+    , const std::vector<SDL_Rect> &houseSrcRects)
+{
+    return 
+    {
+        mapPos.x - mapPos.x % tileset->getTileWidth()
+        , mapPos.y - mapPos.y % tileset->getTileHeight()
+        , houseSrcRects[static_cast<unsigned int> (houseType) - 1].w
+        , houseSrcRects[static_cast<unsigned int> (houseType) - 1].h
+    };
+}
+
+HouseSprite::HouseSprite(const Window &window, Tileset *tileset, HouseType houseType, const SDL_Point &mapPos)
     : ObjectSprite(
         tileset->getTilesetTexture()
         , HOUSE_SRC_RECTS[static_cast<unsigned int> (houseType) - 1]
-        , {
-            mapPos.x - mapPos.x % tileset->getTileWidth()
-            , mapPos.y - mapPos.y % tileset->getTileHeight()
-            , HOUSE_SRC_RECTS[static_cast<unsigned int> (houseType) - 1].w
-            , HOUSE_SRC_RECTS[static_cast<unsigned int> (houseType) - 1].y
-        })
+        , getHouseDstRect(tileset, houseType, mapPos, HOUSE_SRC_RECTS))
     , collected(false)
     , type(houseType)
     , hitboxW(tileset->getTileWidth() + HITBOX_BUFFER_PIXELS)
     , hitboxH(tileset->getTileHeight() + HITBOX_BUFFER_PIXELS)
-    , treatExplosionSprite({getHitbox().x + getHitbox().w / 2, getHitbox().y + getHitbox().h / 2}, NUM_COINS, NUM_CANDIES)
+    , treatExplosionSprite(
+        getTreatExplosionLocation(getHitbox()
+        , TREAT_EXPLOSION_BUFFER_Y_PIXELS)
+        , NUM_COINS, NUM_CANDIES)
+    , trickOrTreatTextSprite(window, TRICK_OR_TREAT_MESSAGE, Const::FONT_TYPEWRITER, Color::YELLOW)
+    , trickOrTreatMessageDelta(0)
 {
     setWidth(getSourceWidth());
     setHeight(getSourceHeight());
     setX(mapPos.x - mapPos.x % tileset->getTileWidth());
     setY(mapPos.y - mapPos.y % tileset->getTileHeight());
+
+    trickOrTreatTextSprite.setWidth(TRICK_OR_TREAT_MESSAGE_W);
+    trickOrTreatTextSprite.setHeight(TRICK_OR_TREAT_MESSAGE_H);
+    const SDL_Point treatExplosionLoc = getTreatExplosionLocation(getHitbox(), TREAT_EXPLOSION_BUFFER_Y_PIXELS);
+    trickOrTreatTextSprite.setX(treatExplosionLoc.x - trickOrTreatTextSprite.getWidth() / 2);
+    trickOrTreatTextSprite.setY(treatExplosionLoc.y + trickOrTreatTextSprite.getHeight());
 }
 
 void HouseSprite::draw(const Window &window) const
@@ -57,6 +93,34 @@ void HouseSprite::draw(const Window &window) const
     else
     {
         treatExplosionSprite.draw(window);
+        if(trickOrTreatMessageDelta < TRICK_OR_TREAT_MESSAGE_DURATION)
+        {
+            if(trickOrTreatMessageDelta < TRICK_OR_TREAT_MESSAGE_DURATION / 3)
+            {
+                const unsigned char textAlpha = static_cast<unsigned char> (
+                    static_cast<float> (Color::YELLOW.a) * trickOrTreatMessageDelta / (TRICK_OR_TREAT_MESSAGE_DURATION / 3)
+                );
+                window.drawAlphaModulated(
+                    trickOrTreatTextSprite.getSdlTexture()
+                    , trickOrTreatTextSprite.getDestinationRect()
+                    , textAlpha);
+            }
+            else if(trickOrTreatMessageDelta > TRICK_OR_TREAT_MESSAGE_DURATION * 2 / 3)
+            {
+                const unsigned char textAlpha = static_cast<unsigned char> (
+                    static_cast<float> (Color::YELLOW.a) * (1.0f - static_cast<float> (trickOrTreatMessageDelta - TRICK_OR_TREAT_MESSAGE_DURATION * 2 / 3)
+                        / (TRICK_OR_TREAT_MESSAGE_DURATION / 3))
+                );
+                window.drawAlphaModulated(
+                    trickOrTreatTextSprite.getSdlTexture()
+                    , trickOrTreatTextSprite.getDestinationRect()
+                    , textAlpha);
+            }
+            else
+            {
+                trickOrTreatTextSprite.draw(window);
+            }
+        }
     }
     
 }
@@ -70,6 +134,10 @@ void HouseSprite::update(unsigned int deltaTime, Map *map)
     else
     {
         treatExplosionSprite.update(deltaTime, map);
+        if(trickOrTreatMessageDelta <= TRICK_OR_TREAT_MESSAGE_DURATION)
+        {
+            trickOrTreatMessageDelta += deltaTime;
+        }
     }
     
 }
@@ -96,5 +164,11 @@ SDL_Rect HouseSprite::getHitbox() const
     const SDL_Point srcHitboxPoint = HOUSE_SRC_HITBOX_CENTERS[static_cast<unsigned int> (type) - 1];
     const int hitboxDeltaX = srcHitboxPoint.x - getSourceX();
     const int hitboxDeltaY = srcHitboxPoint.y - getSourceY();
-    return {getX() + hitboxDeltaX - hitboxW / 2, getY() + hitboxDeltaY - hitboxH / 2, hitboxW, hitboxH};
+    return 
+    {
+        getX() + hitboxDeltaX - hitboxW / 2
+        , getY() + hitboxDeltaY - hitboxH / 2
+        , hitboxW
+        , hitboxH
+    };
 }

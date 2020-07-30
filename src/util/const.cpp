@@ -6,7 +6,7 @@ const char * const Const::TEXTURES_FOLDER_PATH = "textures/";
 const char * const Const::FONTS_FOLDER_PATH = "fonts/";
 const char * const Const::TILESETS_FOLDER_PATH = "tilesets/";
 const char * const Const::MAPS_FOLDER_PATH = "maps/";
-const int Const::DEFAULT_FONT_PT_SIZE = 20;
+const int Const::DEFAULT_FONT_PT_SIZE = 120;
 const float Const::DEFAULT_PLAYER_SPEED = 0.15f;
 
 const char * const Const::IMAGE_CHARACTERS_SKELETON = "characters_skeleton.png";
@@ -29,3 +29,4 @@ const SDL_Rect Const::EMPTY_RECT = {0, 0, 0, 0};
 const SDL_Color Color::BLACK = {0, 0, 0, 255}; 
 const SDL_Color Color::WHITE = {255, 255, 255, 255}; 
 const SDL_Color Color::TRANSPARENT = {0, 0, 0, 0}; 
+const SDL_Color Color::YELLOW = {255, 255, 0, 255};

@@ -15,6 +15,7 @@ enum Direction
 class MapSprite : public Sprite
 {
 public:
+    MapSprite(SDL_Texture *texture);
     MapSprite(
         SDL_Texture *texture, 
         const SDL_Rect &sourceRect, 
