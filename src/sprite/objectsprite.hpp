@@ -12,7 +12,8 @@ enum ObjectType
     CANDY = 5,
     COIN = 6,
     STAR_BALL = 7,
-    HOUSE = 8
+    HOUSE = 8,
+    TREAT_DROP = 9
 };
 
 class ObjectSprite : public MapSprite

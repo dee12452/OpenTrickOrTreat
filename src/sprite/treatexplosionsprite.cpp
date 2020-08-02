@@ -15,7 +15,7 @@ const unsigned int TreatExplosionSprite::TREAT_SPAWN_DELAY = 100;
 const unsigned int TreatExplosionSprite::TREAT_ANIMATION_DURATION = 200;
 const unsigned int TreatExplosionSprite::TREAT_ANIMATION_Y_DISPLACEMENT = 100;
 
-TreatExplosionSprite::TreatExplosionSprite(const SDL_Point &mapLoc, unsigned int numCandies, unsigned int numCoins)
+TreatExplosionSprite::TreatExplosionSprite(const SDL_Point &mapLoc, unsigned int numCoins, unsigned int numCandies)
     : MapSprite(TextureManager::getInstance()->getTexture(Const::IMAGE_MISC))
     , location(mapLoc)
     , treatSpawnDelta(0)

@@ -13,6 +13,7 @@
 #include "sprite/coinsprite.hpp"
 #include "sprite/starballsprite.hpp"
 #include "sprite/housesprite.hpp"
+#include "sprite/treatdropsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -316,6 +317,12 @@ void Map::loadGrid(const Window &window, json *mapJson, int mapTileWidth, int ma
                     {
                         const json_pair *houseTypeProperty = getObjectPropertyValue(objectJson, "houseType");
                         objects.push_back(new HouseSprite(window, tileset, static_cast<HouseType> (houseTypeProperty->int_val->val), mapPos));
+                        break;
+                    }
+                    case TREAT_DROP:
+                    {
+                        const json_pair *treatDropTypeProperty = getObjectPropertyValue(objectJson, "treatDropType");
+                        objects.push_back(new TreatDropSprite(tileset, mapPos,  static_cast<TreatDropType> (treatDropTypeProperty->int_val->val)));
                         break;
                     }
                     default:
