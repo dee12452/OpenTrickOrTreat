@@ -53,6 +53,7 @@ protected:
     float getOffsetY() const;
 
     bool isColliding(MapSprite *otherSprite) const;
+    bool isColliding(const SDL_Rect &otherHitbox) const;
 
 private:
     float offsetX;

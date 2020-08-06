@@ -140,7 +140,12 @@ SDL_Rect MapSprite::getHitbox() const
 
 bool MapSprite::isColliding(MapSprite *otherSprite) const
 {
-    const SDL_Rect thisHitbox = getHitbox(), thatHitbox = otherSprite->getHitbox();
+    return isColliding(otherSprite->getHitbox());
+}
+
+bool MapSprite::isColliding(const SDL_Rect &thatHitbox) const
+{
+    const SDL_Rect thisHitbox = getHitbox();
     if(thisHitbox.x <= thatHitbox.x && thisHitbox.x + thisHitbox.w >= thatHitbox.x)
     {
         if(thisHitbox.y <= thatHitbox.y && thisHitbox.y + thisHitbox.h >= thatHitbox.y)
