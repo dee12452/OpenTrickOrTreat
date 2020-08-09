@@ -12,31 +12,19 @@ enum Direction
     NONE, UP, DOWN, LEFT, RIGHT 
 };
 
-struct Hitbox
-{
-    int width;
-    int height;
-};
-
 class MapSprite : public Sprite
 {
 public:
+    MapSprite(SDL_Texture *texture);
     MapSprite(
-        SDL_Texture *texture
-        , const SDL_Rect &sourceRect
-        , const SDL_Rect &destinationRect);
+        SDL_Texture *texture, 
+        const SDL_Rect &sourceRect, 
+        const SDL_Rect &destinationRect);
     MapSprite(
-        SDL_Texture *texture
-        , const SDL_Rect &sourceRect
-        , const SDL_Rect &destinationRect
-        , Direction facingDirection);
-    MapSprite(
-        SDL_Texture *texture
-        , const SDL_Rect &sourceRect
-        , const SDL_Rect &destinationRect
-        , Direction facingDirection
-        , const Hitbox &collisionHitbox
-        , const Hitbox &blockingHitbox);
+        SDL_Texture *texture, 
+        const SDL_Rect &sourceRect, 
+        const SDL_Rect &destinationRect,
+        Direction facingDirection);
     virtual ~MapSprite() override;
     
     virtual void update(unsigned int deltaTime, Map *map);
@@ -53,18 +41,8 @@ public:
     Direction getFacingDirection() const;
     virtual void setFacingDirection(Direction direction); 
 
-    const Hitbox & getBlockingHitbox() const;
-    void setBlockingHitbox(const Hitbox &hitbox);
-
-    const Hitbox & getCollisionHitbox() const;
-    void setCollisionHitbox(const Hitbox &hitbox);
-
     SDL_Point getCenter() const;
-
-    bool isColliding(MapSprite *otherSprite) const;
-    bool isColliding(const SDL_Point &mapLoc, const Hitbox &otherHitbox) const;
-
-    SDL_Rect getHitboxRect(const Hitbox &hitbox) const;
+    virtual SDL_Rect getHitbox() const;
 
 protected:
     virtual bool canMove(Map *map, const SDL_Point &pos) const;
@@ -74,7 +52,8 @@ protected:
     float getOffsetX() const;
     float getOffsetY() const;
 
-    bool checkHitboxCollision(const SDL_Point &mapLoc1, const Hitbox &hitbox1, const SDL_Point &mapLoc2, const Hitbox &hitbox2) const;
+    bool isColliding(MapSprite *otherSprite) const;
+    bool isColliding(const SDL_Rect &otherHitbox) const;
 
 private:
     float offsetX;
@@ -82,8 +61,6 @@ private:
     float speedX;
     float speedY;
     Direction facingDirection;
-    Hitbox blockingHitbox;
-    Hitbox collisionHitbox;
 };
 
 #endif

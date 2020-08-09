@@ -135,13 +135,13 @@ Tile * Map::findTile(int x, int y) const
 
 ObjectSprite * Map::findObject(int x, int y) const
 {
-    SDL_Rect objHitboxRect;
+    SDL_Rect objHitbox;
     for(auto object : objects)
     {
-        objHitboxRect = object->getHitboxRect(object->getCollisionHitbox());
-        if(objHitboxRect.x <= x && objHitboxRect.x + objHitboxRect.w >= x)
+        objHitbox = object->getHitbox();
+        if(objHitbox.x <= x && objHitbox.x + objHitbox.w >= x)
         {
-            if(objHitboxRect.y <= y && objHitboxRect.y + objHitboxRect.h >= y)
+            if(objHitbox.y <= y && objHitbox.y + objHitbox.h >= y)
             {
                 return object;
             }

@@ -149,14 +149,14 @@ void PlayerSprite::findCollisions(
     ObjectSprite * &obj1, 
     ObjectSprite * &obj2) const
 {
-    const SDL_Rect hitboxRect = getHitboxRect(getCollisionHitbox());
+    const SDL_Rect hitbox = getHitbox();
     switch (getFacingDirection())
     {
         case Direction::UP:
         {
-            const int leftX = hitboxRect.x;
-            const int rightX = hitboxRect.x + hitboxRect.w;
-            const int nextY = hitboxRect.y - (getY() - pos.y);
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = hitbox.y - (getY() - pos.y);
             tile1 = map->findTile(leftX, nextY);
             tile2 = map->findTile(rightX, nextY);
             obj1 = map->findObject(leftX, nextY);
@@ -165,9 +165,9 @@ void PlayerSprite::findCollisions(
         }
         case Direction::RIGHT:
         {
-            const int topY = hitboxRect.y;
-            const int bottomY = hitboxRect.y + hitboxRect.h;
-            const int nextX = hitboxRect.x + hitboxRect.w + pos.x - getX();
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = hitbox.x + hitbox.w + pos.x - getX();
             tile1 = map->findTile(nextX, topY);
             tile2 = map->findTile(nextX, bottomY);
             obj1 = map->findObject(nextX, topY);
@@ -176,9 +176,9 @@ void PlayerSprite::findCollisions(
         }
         case Direction::DOWN:
         {
-            const int leftX = hitboxRect.x;
-            const int rightX = hitboxRect.x + hitboxRect.w;
-            const int nextY = hitboxRect.y + hitboxRect.h + pos.y - getY();
+            const int leftX = hitbox.x;
+            const int rightX = hitbox.x + hitbox.w;
+            const int nextY = hitbox.y + hitbox.h + pos.y - getY();
             tile1 = map->findTile(leftX, nextY);
             tile2 = map->findTile(rightX, nextY);
             obj1 = map->findObject(leftX, nextY);
@@ -187,9 +187,9 @@ void PlayerSprite::findCollisions(
         }
         case Direction::LEFT:
         {
-            const int topY = hitboxRect.y;
-            const int bottomY = hitboxRect.y + hitboxRect.h;
-            const int nextX = hitboxRect.x - (getX() - pos.x);
+            const int topY = hitbox.y;
+            const int bottomY = hitbox.y + hitbox.h;
+            const int nextX = hitbox.x - (getX() - pos.x);
             tile1 = map->findTile(nextX, topY);
             tile2 = map->findTile(nextX, bottomY);
             obj1 = map->findObject(nextX, topY);
