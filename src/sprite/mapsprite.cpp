@@ -3,28 +3,46 @@
 #include "objectsprite.hpp"
 #include "map/map.hpp"
 
-MapSprite::MapSprite(SDL_Texture *texture)
-    : MapSprite(texture, Const::EMPTY_RECT, Const::EMPTY_RECT)
+MapSprite::MapSprite(
+    SDL_Texture *texture
+    , const SDL_Rect &sourceRect
+    , const SDL_Rect &destinationRect)
+    : MapSprite(
+        texture
+        , sourceRect
+        , destinationRect
+        , NONE)
 {}
 
 MapSprite::MapSprite(
-    SDL_Texture *texture, 
-    const SDL_Rect &sourceRect, 
-    const SDL_Rect &destinationRect)
-    : MapSprite(texture, sourceRect, destinationRect, NONE)
+    SDL_Texture *texture
+    , const SDL_Rect &sourceRect
+    , const SDL_Rect &destinationRect
+    , Direction facingDirection)
+    : MapSprite(
+        texture
+        , sourceRect
+        , destinationRect
+        , facingDirection
+        , destinationRect
+        , Const::EMPTY_RECT)
 {}
 
 MapSprite::MapSprite(
-    SDL_Texture *texture, 
-    const SDL_Rect &sourceRect,
-    const SDL_Rect &destinationRect,
-    Direction facingDir)
+    SDL_Texture *texture
+    , const SDL_Rect &sourceRect
+    , const SDL_Rect &destinationRect
+    , Direction facingDirection
+    , const Hitbox &collisionHitbox
+    , const Hitbox &blockingHitbox)
     : Sprite(texture, sourceRect, destinationRect)
     , offsetX(0)
     , offsetY(0)
     , speedX(0)
     , speedY(0)
-    , facingDirection(facingDir)
+    , facingDirection(facingDirection)
+    , collisionHitbox(collisionHitbox)
+    , blockingHitbox(blockingHitbox)
 {}
 
 MapSprite::~MapSprite()
@@ -133,19 +151,46 @@ SDL_Point MapSprite::getCenter() const
     return {getX() + getWidth() / 2, getY() + getHeight() / 2};
 }
 
-SDL_Rect MapSprite::getHitbox() const
+const Hitbox & MapSprite::getBlockingHitbox() const
 {
-    return getDestinationRect();
+    return blockingHitbox;
+}
+
+void MapSprite::setBlockingHitbox(const Hitbox &hitbox)
+{
+    blockingHitbox = hitbox;
+}
+
+const Hitbox & MapSprite::getCollisionHitbox() const
+{
+    return collisionHitbox;
+}
+
+void MapSprite::setCollisionHitbox(const Hitbox &hitbox)
+{
+    collisionHitbox = hitbox;
 }
 
 bool MapSprite::isColliding(MapSprite *otherSprite) const
 {
-    return isColliding(otherSprite->getHitbox());
+    return isColliding({otherSprite->getX(), otherSprite->getY()}, otherSprite->getCollisionHitbox());
 }
 
-bool MapSprite::isColliding(const SDL_Rect &thatHitbox) const
+bool MapSprite::isColliding(const SDL_Point &otherMapLoc, const Hitbox &otherHitbox) const
 {
-    const SDL_Rect thisHitbox = getHitbox();
+    return checkHitboxCollision({getX(), getY()}, collisionHitbox, otherMapLoc, otherHitbox);
+}
+
+SDL_Rect MapSprite::getHitboxRect(const Hitbox &hitbox) const
+{
+    const SDL_Point center = getCenter();
+    return {center.x - hitbox.width / 2, center.y - hitbox.height / 2, hitbox.width, hitbox.height};
+}
+
+bool MapSprite::checkHitboxCollision(const SDL_Point &mapLoc1, const Hitbox &hitbox1, const SDL_Point &mapLoc2, const Hitbox &hitbox2) const
+{
+    const SDL_Rect thisHitbox = {mapLoc1.x, mapLoc1.y, hitbox1.width, hitbox1.height};
+    const SDL_Rect thatHitbox = {mapLoc2.x, mapLoc2.y, hitbox2.width, hitbox2.height};
     if(thisHitbox.x <= thatHitbox.x && thisHitbox.x + thisHitbox.w >= thatHitbox.x)
     {
         if(thisHitbox.y <= thatHitbox.y && thisHitbox.y + thisHitbox.h >= thatHitbox.y)
