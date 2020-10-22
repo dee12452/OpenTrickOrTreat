@@ -26,7 +26,6 @@ void LaunchScreen::onStart(const GameState &gameState, const Window & window)
             , LOADING_TEXT
             , Const::FONT_TYPEWRITER
             , Color::WHITE
-            , Const::EMPTY_RECT
             , LaunchScreen::LOADING_TEXT_DESTINATION_RECT);
     loadingText->center();
 }

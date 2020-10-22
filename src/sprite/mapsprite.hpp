@@ -15,6 +15,7 @@ enum Direction
 class MapSprite : public Sprite
 {
 public:
+    MapSprite(SDL_Texture *texture);
     MapSprite(
         SDL_Texture *texture, 
         const SDL_Rect &sourceRect, 
@@ -52,6 +53,7 @@ protected:
     float getOffsetY() const;
 
     bool isColliding(MapSprite *otherSprite) const;
+    bool isColliding(const SDL_Rect &otherHitbox) const;
 
 private:
     float offsetX;

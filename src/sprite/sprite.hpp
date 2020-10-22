@@ -40,7 +40,6 @@ public:
     SDL_Rect getDestinationRect() const;
     void setDestinationRect(const SDL_Rect &rect);
 
-protected:
     SDL_Texture * getSdlTexture() const;
     void setSdlTexture(SDL_Texture *newTexture);
 

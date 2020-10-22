@@ -1,4 +1,8 @@
 #include "util.hpp"
+#include <stdlib.h>
+#include <time.h>
+
+bool Util::randomSeeded = false;
 
 void Util::log(const char *message, ...)
 {
@@ -94,4 +98,14 @@ json_pair * Util::getJsonPair(const std::string &name, json_pair **jsonPairArray
     }
     log("Warning: Failed to find Json pair %s", name.c_str());
     return nullptr;
+}
+
+int Util::randomNumber(int min, int max)
+{
+    if(!randomSeeded)
+    {
+        srand(time(NULL));
+        randomSeeded = true;
+    }
+    return rand() % max + min;
 }

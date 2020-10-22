@@ -22,8 +22,11 @@ public:
     static json_list * getJsonList(const std::string &name, json_list **jsonListArray, int arraySize);
     static json_pair * getJsonPair(const std::string &name, json_pair **jsonPairArray, int arraySize);
 
+    static int randomNumber(int min, int max);
 private:
     Util() {}
+
+    static bool randomSeeded;
 };
 
 #endif

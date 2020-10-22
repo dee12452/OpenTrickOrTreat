@@ -16,7 +16,6 @@ public:
             , const std::string &text
             , const std::string &font
             , const SDL_Color &color
-            , const SDL_Rect &sourceRect
             , const SDL_Rect &destinationRect);
     ~TextSprite() override;
 

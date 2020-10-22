@@ -9,7 +9,11 @@ enum ObjectType
     BREAKABLE = 2,
     COSTUME_SELECT = 3,
     GHOST = 4,
-    CANDY = 5
+    CANDY = 5,
+    COIN = 6,
+    STAR_BALL = 7,
+    HOUSE = 8,
+    TREAT_DROP = 9
 };
 
 class ObjectSprite : public MapSprite

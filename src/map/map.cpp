@@ -10,6 +10,10 @@
 #include "sprite/creaturesprite.hpp"
 #include "sprite/vampiresprite.hpp"
 #include "sprite/candysprite.hpp"
+#include "sprite/coinsprite.hpp"
+#include "sprite/starballsprite.hpp"
+#include "sprite/housesprite.hpp"
+#include "sprite/treatdropsprite.hpp"
 
 Map::Map(const Window &window, const std::string &pathToResourceFolder, const std::string &mapFile, Tileset *ts)
     : tileset(ts), refresh(false)
@@ -20,7 +24,7 @@ Map::Map(const Window &window, const std::string &pathToResourceFolder, const st
     const int mapTileWidth = Util::getJsonPair("width", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     const int mapTileHeight = Util::getJsonPair("height", mapJson->pairs, mapJson->num_of_pairs)->int_val->val;
     loadMapValues(mapJson);
-    loadGrid(mapJson, mapTileWidth, mapTileHeight);
+    loadGrid(window, mapJson, mapTileWidth, mapTileHeight);
     gahoodson_delete(mapJson);
 
     const int mapTextureWidth = mapTileWidth * tileset->getTileWidth();
@@ -135,9 +139,9 @@ ObjectSprite * Map::findObject(int x, int y) const
     for(auto object : objects)
     {
         objHitbox = object->getHitbox();
-        if(objHitbox.x < x && objHitbox.x + objHitbox.w > x)
+        if(objHitbox.x <= x && objHitbox.x + objHitbox.w >= x)
         {
-            if(objHitbox.y < y && objHitbox.y + objHitbox.h > y)
+            if(objHitbox.y <= y && objHitbox.y + objHitbox.h >= y)
             {
                 return object;
             }
@@ -228,7 +232,7 @@ static json_pair * getObjectPropertyValue(const json_list_element *objectJson, c
 static int getNumberMoves(const std::string &pathStr, unsigned int &index, bool *isNeg);
 static std::vector<SDL_Point> parsePath(const std::string pathStr, const SDL_Point &mapPos);
 
-void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
+void Map::loadGrid(const Window &window, json *mapJson, int mapTileWidth, int mapTileHeight)
 {
     json_list *layers = Util::getJsonList("layers", mapJson->json_lists, mapJson->num_of_lists);
     for(int layer = 0; layer < layers->num_of_elements; layer++)
@@ -265,8 +269,7 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                 const int mapX = Util::getJsonPair("x", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const int mapY = Util::getJsonPair("y", objectJson->json_pairs, objectJson->num_of_pairs)->int_val->val;
                 const SDL_Point mapPos = {mapX, mapY};
-                switch(std::stoi(
-                    Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
+                switch(std::stoi(Util::getJsonPair("type", objectJson->json_pairs, objectJson->num_of_pairs)->str_val->val))
                 {
                     case GATE:
                     {
@@ -298,6 +301,28 @@ void Map::loadGrid(json *mapJson, int mapTileWidth, int mapTileHeight)
                     case CANDY:
                     {
                         objects.push_back(new CandySprite(tileset, mapPos));
+                        break;
+                    }
+                    case COIN:
+                    {
+                        objects.push_back(new CoinSprite(tileset, mapPos));
+                        break;
+                    }
+                    case STAR_BALL:
+                    {
+                        objects.push_back(new StarBallSprite(tileset, mapPos));
+                        break;
+                    }
+                    case HOUSE:
+                    {
+                        const json_pair *houseTypeProperty = getObjectPropertyValue(objectJson, "houseType");
+                        objects.push_back(new HouseSprite(window, tileset, static_cast<HouseType> (houseTypeProperty->int_val->val), mapPos));
+                        break;
+                    }
+                    case TREAT_DROP:
+                    {
+                        const json_pair *treatDropTypeProperty = getObjectPropertyValue(objectJson, "treatDropType");
+                        objects.push_back(new TreatDropSprite(tileset, mapPos,  static_cast<TreatDropType> (treatDropTypeProperty->int_val->val)));
                         break;
                     }
                     default:
