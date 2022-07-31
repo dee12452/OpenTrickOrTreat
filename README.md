@@ -1,6 +1,10 @@
 # OpenTrickOrTreat
 An open source recreation of the cartoon network online flash game Operation T.R.I.C.K. Or T.R.E.A.T. written in C++ using SDL2.
 
+## ARCHIVED
+This project has been archived due to the lack of available resources (mainly audio and some fonts) to recreate the game fully.
+As of now you can still play the game using a program called [Flashpoint](https://bluemaxima.org/flashpoint).
+
 ## Setup / Install
 
 You'll need to make sure you have make, cmake, and SDL2 installed using your system's package manager.<br/>
