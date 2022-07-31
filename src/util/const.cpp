@@ -22,8 +22,8 @@ const char * const Const::FONT_TYPEWRITER = "veteran_typewriter.ttf";
 const char * const Const::MAP_1 = "map_1.json";
 const char * const Const::TILESET_1 = "tileset_1.json";
 
-const int Const::DEFAULT_WINDOW_WIDTH = 500;
-const int Const::DEFAULT_WINDOW_HEIGHT = 500;
+const int Const::DEFAULT_WINDOW_WIDTH = 800;
+const int Const::DEFAULT_WINDOW_HEIGHT = 600;
 const SDL_Rect Const::EMPTY_RECT = {0, 0, 0, 0};
 
 const SDL_Color Color::BLACK = {0, 0, 0, 255}; 

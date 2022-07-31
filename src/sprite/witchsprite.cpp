@@ -83,7 +83,7 @@ void WitchSprite::doAction(Map *map)
             break;
         default:
             spell.setX(getX() + getWidth() / 2 - spell.getWidth() / 2);
-            spell.setY(getY() + getHeight() / 2);
+            spell.setY(getY() + getHeight());
             spell.setAngle(0);
             break;
     }

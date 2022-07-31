@@ -22,6 +22,9 @@ public:
     static json_list * getJsonList(const std::string &name, json_list **jsonListArray, int arraySize);
     static json_pair * getJsonPair(const std::string &name, json_pair **jsonPairArray, int arraySize);
 
+    static float toRads(float degrees);
+    static float toDegrees(float rads);
+
 private:
     Util() {}
 };

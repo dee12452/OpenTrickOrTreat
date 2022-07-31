@@ -10,9 +10,7 @@ private:
     static const unsigned int SKELETON_ANIMATIONS;
     static const unsigned int KEYS_ANIMATION_DURATION;
     static const SDL_Rect KEY_INITIAL_SRC;
-    static const unsigned int KEYS_ANIMATION_DELAY;
-    static const unsigned short int DEFAULT_KEY_SPEED;
-    static const int KEY_BUFFER;
+    static const float KEY_SPEED;
     static const int SKELETON_HITBOX_Y_OFFSET;
     static const int SKELETON_HITBOX_W;
     static const int SKELETON_HITBOX_H;

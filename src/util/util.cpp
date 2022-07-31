@@ -95,3 +95,11 @@ json_pair * Util::getJsonPair(const std::string &name, json_pair **jsonPairArray
     log("Warning: Failed to find Json pair %s", name.c_str());
     return nullptr;
 }
+
+float Util::toRads(float degrees) {
+    return degrees * M_PI / 180;
+}
+
+float Util::toDegrees(float rads) {
+    return rads * 180 / M_PI;
+}

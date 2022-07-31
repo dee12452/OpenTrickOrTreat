@@ -8,3 +8,6 @@ cmake_install.cmake
 .DS_Store
 lib/
 include/
+.cmake/
+.idea/
+Testing/
