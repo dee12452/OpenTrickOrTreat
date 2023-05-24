@@ -1,3 +1,28 @@
 [submodule "thirdparty/GahoodSON"]
 	path = thirdparty/GahoodSON
 	url = git@github.com:dee12452/GahoodSON.git
+[submodule "SDL2"]
+	path = third-party/SDL
+	url = https://github.com/libsdl-org/SDL
+	branch = SDL2
+[submodule "SDL2_image"]
+	path = third-party/SDL_image
+	url = https://github.com/libsdl-org/SDL_image
+	branch = SDL2
+[submodule "SDL2_ttf"]
+	path = third-party/SDL_ttf
+	url = https://github.com/libsdl-org/SDL_ttf
+	branch = SDL2
+[submodule "third-party/GahoodSON"]
+	path = third-party/GahoodSON
+	url = git@github.com:dee12452/GahoodSON.git
+[submodule "third-party/enet-vita"]
+	path = third-party/enet-vita
+	url = https://github.com/dee12452/enet-vita
+[submodule "third-party/box2d"]
+	path = third-party/box2d
+	url = https://github.com/erincatto/box2d
+[submodule "SDL2_mixer"]
+	path = third-party/SDL_mixer
+	url = https://github.com/libsdl-org/SDL_mixer
+	branch = SDL2
