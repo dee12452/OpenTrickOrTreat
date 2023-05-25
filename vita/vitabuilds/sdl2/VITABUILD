@@ -1,0 +1,28 @@
+pkgname=sdl2
+pkgver=2.26.5
+pkgrel=1
+gitrev=ac13ca9ab691e13e8eebe9684740ddcb0d716203
+url='https://www.libsdl.org'
+source=(
+  "https://github.com/libsdl-org/SDL/archive/${gitrev}.tar.gz"
+ )
+sha256sums=(
+  SKIP
+)
+
+prepare() {
+  cd "SDL-${gitrev}"
+}
+
+build() {
+  cd "SDL-${gitrev}"
+  mkdir build && cd build
+  cmake .. -DCMAKE_TOOLCHAIN_FILE=$VITASDK/share/vita.toolchain.cmake -DCMAKE_INSTALL_PREFIX=$prefix -DCMAKE_BUILD_TYPE=Release -DSDL_TEST=OFF
+  make -j$(nproc)
+}
+
+package () {
+  cd "SDL-${gitrev}"
+  cd build
+  make DESTDIR=$pkgdir install
+}
