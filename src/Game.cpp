@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Compat.h"
 
 int Game::TARGET_FRAMES_PER_SECOND = 60;
 int Game::TICKS_PER_SECOND = 20;

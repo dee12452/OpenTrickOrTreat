@@ -4,6 +4,7 @@
 
 #ifndef __vita__
 
+#include "Compat.h"
 #include "Util.h"
 
 int Compat::getWindowFlags() {

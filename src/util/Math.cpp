@@ -1,4 +1,5 @@
 #include "Util.h"
+#include "Compat.h"
 
 template<typename T>
 T Math::max(T first, T second) {

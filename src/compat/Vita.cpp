@@ -4,7 +4,7 @@
 
 #ifdef __vita__
 
-#include <SDL2/SDL.h>
+#include "Compat.h"
 #include "Util.h"
 
 int Compat::getWindowFlags() {

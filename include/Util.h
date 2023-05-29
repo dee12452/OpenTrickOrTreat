@@ -19,11 +19,6 @@
 #include <vector>
 #include <map>
 
-namespace Compat {
-    int getWindowFlags();
-    double getPi();
-}
-
 namespace Logger {
     void debug(const std::string& message);
     void info(const std::string& message);
